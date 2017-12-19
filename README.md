@@ -5,14 +5,14 @@ Laravel TDD Generator Helper
 
 * Adds `Route::apiResource` routes to your specified routes file. 
 * Generates stubs for:
-* * Controller
-* * Events 
-* * Factory
-* * Migration
-* * Model
-* * Requests
-* * Feature Test 
-* * Unit Test
+  * Controller
+  * Events 
+  * Factory
+  * Migration
+  * Model
+  * Requests
+  * Feature Test 
+  * Unit Test
 
 ## Usage
 
