@@ -3,7 +3,7 @@
 namespace Ingenious\TddGenerator\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Ingenious\TddGenerate\Commands\TddGenerate;
+use Ingenious\TddGenerator\Commands\TddGenerate;
 
 class TddGeneratorServiceProvider extends ServiceProvider
 {

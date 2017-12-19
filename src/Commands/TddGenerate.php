@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingenious\TddGenerate\Commands;
+namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddGenerator;
