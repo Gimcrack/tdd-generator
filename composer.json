@@ -18,7 +18,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ingenious\\TddGenerator\\TddGeneratorServiceProvider"
+                "Ingenious\\TddGenerator\\Providers\\TddGeneratorServiceProvider"
             ]
         }
     }
