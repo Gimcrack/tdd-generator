@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\[Thing];
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\New[Thing]Request;
+use App\Http\Requests\Update[Thing]Request;
+
+class [Thing]Controller extends Controller
+{
+
+    /**
+     * Get a listing of the resource
+     *
+     * @return JsonResponse
+     */
+    public function index()
+    {
+        return response()->json([Thing]::all(), 200);
+    }
+
+    /**
+     * Store the new [thing]
+     * @method store
+     *
+     * @param New[Thing]Request $request
+     * @return JsonResponse
+     */
+    public function store(New[Thing]Request $request)
+    {
+        [Thing]::create( $request->validated() );
+
+        return response([], 201);
+    }
+
+    /**
+     * Update the selected [thing] record
+     *
+     * @param Update[Thing]Request $request
+     * @param [Thing] $[thing]
+     * @return JsonResponse
+     */
+    public function update(Update[Thing]Request $request, [Thing] $[thing])
+    {
+        $[thing]->update( $request->validated() );
+
+        return response([],202);
+    }
+
+    /**
+     * Destroy the selected [thing] record
+     *
+     * @param [Thing] $[thing]
+     * @return JsonResponse
+     */
+    public function destroy([Thing] $[thing])
+    {
+        $[thing]->delete();
+
+        return response([], 202);
+    }
+}

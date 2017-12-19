@@ -1,0 +1,111 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\[Thing];
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class [Thing]Test extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function it_can_get_a_listing_of_the_resource()
+    {
+        $[things] = create([Thing]::class,3);
+
+        $this->actingAsUser()
+            ->get("[things].index")
+            ->response()
+            ->assertStatus(200)
+            ->assertJsonCount(3)
+            ->assertJsonModelCollection($[things]);
+    }
+
+    /** @test */
+    public function it_can_get_a_single_resource()
+    {
+        $[thing] = create([Thing]::class);
+
+        $this->actingAsUser()
+            ->get(["[things].show",$[thing]])
+            ->response()
+            ->assertStatus(200)
+            ->assertJsonModel($[thing]);
+    }
+
+    /** @test */
+    public function it_can_store_a_new_[thing]()
+    {
+        $atts = make_array([Thing]::class);
+
+        $this->actingAsUser()
+            ->post("[things].store",$atts)
+            ->response()
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas('[things]',$atts);
+    }
+
+    /** @test */
+    public function it_wont_store_a_new_[thing]_without_a_name()
+    {
+        $atts = make_array([Thing]::class, [
+            'name' => null
+        ]);
+
+        $this->actingAsUser()
+             ->post("[things].store",$atts)
+             ->response()
+             ->assertStatus(422)
+             ->assertJsonValidationErrors('name');
+
+        $this->assertDatabaseMissing('[things]',$atts);
+    }
+
+    /** @test */
+    public function it_wont_store_a_new_[thing]_with_a_duplicate_name()
+    {
+        create([Thing]::class, ['name' => '[Thing] Name']);
+
+
+        $atts = make_array([Thing]::class, [
+            'name' => '[Thing] Name'
+        ]);
+
+        $this->actingAsUser()
+             ->post("[things].store",$atts)
+             ->response()
+             ->assertStatus(422)
+             ->assertJsonValidationErrors('name');
+    }
+
+    /** @test */
+    public function it_can_update_a_[thing]()
+    {
+        $[thing] = create([Thing]::class, ['name' => '[Thing] Name']);
+
+        $this->actingAsUser()
+            ->patch(["[things].update", $[thing]], ['name' => 'New Name'])
+            ->response()
+            ->assertStatus(202);
+
+        $this->assertDatabaseHas('[things]',['name' => 'New Name']);
+    }
+
+    /** @test */
+    public function it_can_delete_a_[thing]()
+    {
+        $[thing] = create([Thing]::class);
+
+        $this->actingAsUser()
+             ->delete(["[things].destroy", $[thing]])
+             ->response()
+             ->assertStatus(202);
+
+        $this->assertCount(0, [Thing]::all());
+    }
+ }

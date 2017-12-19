@@ -1,0 +1,25 @@
+{
+    "name": "ingenious/tdd-generator",
+    "description": "A simple generator for speeding up the tdd workflow",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeremy Bloomstrom",
+            "email": "jeremy.bloomstrom@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Ingenious\\TddGenerator\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ingenious\\TddGenerator\\TddGeneratorServiceProvider"
+            ]
+        }
+    }
+}

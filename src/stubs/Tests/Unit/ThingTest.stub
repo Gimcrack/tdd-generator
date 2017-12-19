@@ -1,0 +1,38 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\[Thing];
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class [Thing]Test extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @test
+     * @expectedException \Illuminate\Database\QueryException
+     */
+    public function it_must_have_a_name()
+    {
+        create([Thing]::class, [
+            'name' => null
+        ]);
+    }
+
+    /**
+     * @test
+     * @expectedException \Illuminate\Database\QueryException
+     */
+    public function it_must_have_a_unique_name()
+    {
+        create([Thing]::class, [
+            'name' => '[Thing] Name'
+        ]);
+
+        create([Thing]::class, [
+            'name' => '[Thing] Name'
+        ]);
+    }
+ }

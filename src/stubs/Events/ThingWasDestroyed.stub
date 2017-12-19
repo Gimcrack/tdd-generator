@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Events;
+
+use App\[Thing];
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class [Thing]WasDestroyed implements ShouldBroadcast
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $[thing];
+
+    /**
+     * Create a new event instance.
+     *
+     * @param [Thing] $[thing]
+     */
+    public function __construct([Thing] $[thing])
+    {
+        $this->[thing] = $[thing];
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return Channel|array
+     */
+    public function broadcastOn()
+    {
+        return new Channel("[things].{$this->[thing]->id}");
+    }
+}
