@@ -1,9 +1,18 @@
-# tdd-generator
+# TDD Generator
 Laravel TDD Generator Helper
 
 ## Description
-For Laravel TDD Workflow. Adds Routes and generates stubs for Controller, Events, Factory, Migration, Model, 
-Requests, and Feature Test and Unit Test in one command.
+
+* Adds `Route::apiResource` routes to your specified routes file. 
+* Generates stubs for:
+* * Controller
+* * Events 
+* * Factory
+* * Migration
+* * Model
+* * Requests
+* * Feature Test 
+* * Unit Test
 
 ## Usage
 
@@ -13,3 +22,10 @@ php artisan tdd:generate
     { routes? : The routes file to use } 
     { --force : Force overwriting existing files }
 ```
+
+To generate stubs for the `Group` model and add the routes to the `api-admin.php` routes file, you would use the following:
+
+```
+php artisan tdd:generate Group api-admin.php
+```
+

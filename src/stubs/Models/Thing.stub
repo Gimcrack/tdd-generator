@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Events\[Thing]WasCreated;
+use App\Events\[Thing]WasUpdated;
+use App\Events\[Thing]WasDestroyed;
 use Illuminate\Database\Eloquent\Model;
 
 /**
