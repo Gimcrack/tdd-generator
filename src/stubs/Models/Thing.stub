@@ -12,4 +12,11 @@ use Illuminate\Database\Eloquent\Model;
 class [Thing] extends Model
 {
     protected $guarded = [];
+
+
+    protected $dispatchesEvents = [
+        'created' => [Thing]WasCreated::class,
+        'updated' => [Thing]WasUpdated::class,
+        'deleting' => [Thing]WasDestroyed::class,
+    ];
 }

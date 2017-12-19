@@ -35,4 +35,38 @@ class [Thing]Test extends TestCase
             'name' => '[Thing] Name'
         ]);
     }
+
+    /** @test */
+    function an_event_is_dispatched_when_a_[thing]_is_created()
+    {
+        Event::fake();
+        $[thing] = create([Thing]::class);
+        $this->assertEvent([Thing]WasCreated::class, [ '[thing]' => $[thing] ]);
+    }
+
+    /** @test */
+    function an_event_is_dispatched_when_a_[thing]_is_updated()
+    {
+        Event::fake();
+        // given a [thing]
+        $[thing] = create([Thing]::class);
+
+        // act - update the [thing]
+        $[thing]->update([
+            'name' => 'New Name'
+        ]);
+        $this->assertEvent([Thing]WasUpdated::class, [ '[thing]' => $[thing] ]);
+    }
+
+    /** @test */
+    function an_event_is_dispatched_when_a_[thing]_is_destroyed()
+    {
+        Event::fake();
+        // given a [thing]
+        $[thing] = create([Thing]::class);
+
+        // act - delete the [thing]
+        $[thing]->delete();
+        $this->assertEvent([Thing]WasDestroyed::class, [ '[thing]' => $[thing] ]);
+    }
  }
