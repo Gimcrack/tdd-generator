@@ -82,6 +82,8 @@ class TddGenerator {
 
         $this->output[] = $this->handleRoutes();
 
+        $this->output[] = $this->handleTestCase();
+
         $this->stubs->each( function( $path, $stub ) {
             $this->output[] = $this->convertStub($stub, $path);
         });
@@ -232,5 +234,31 @@ class TddGenerator {
         file_put_contents($routes, $new_contents);
 
         return "New routes added";
+    }
+
+    /**
+     * Handle the Base TestCase
+     * @method handleTestCase
+     *
+     * @return   mixed
+     */
+    private function handleTestCase()
+    {
+        $new_contents = file_get_contents( $this->getStubPath("Tests/TestCase") );
+
+        $original = base_path("tests/TestCase.php");
+
+        if ( file_exists( $original ) ) {
+            $original_contents = file_get_contents($original);
+
+            if ($new_contents == $original_contents) {
+                return "Base TestCase already in place.";
+            }
+
+            File::move($original, $original . ".bak");
+        }
+
+        file_put_contents($original, $new_contents);
+        return "Copying Base TestCase... Done.";
     }
 }
