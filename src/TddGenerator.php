@@ -84,6 +84,8 @@ class TddGenerator {
 
         $this->output[] = $this->handleTestCase();
 
+        $this->output[] = $this->handlePhpunit();
+
         $this->stubs->each( function( $path, $stub ) {
             $this->output[] = $this->convertStub($stub, $path);
         });
@@ -264,5 +266,31 @@ class TddGenerator {
 
         file_put_contents($original, $new_contents);
         return "Copying Base TestCase... Done.";
+    }
+
+    /**
+     * Handle the phpunit.xml
+     * @method handlePhpunit
+     *
+     * @return   mixed
+     */
+    private function handlePhpunit()
+    {
+        $new_contents = file_get_contents( $this->getStubPath("phpunit") );
+
+        $original = base_path("phpunit.xml");
+
+        if ( file_exists( $original ) ) {
+            $original_contents = file_get_contents($original);
+
+            if ($new_contents == $original_contents) {
+                return "Base phpunit.xml already in place.";
+            }
+
+            File::move($original, $original . ".bak");
+        }
+
+        file_put_contents($original, $new_contents);
+        return "Copying Base phpunit.xml ... Done.";
     }
 }
