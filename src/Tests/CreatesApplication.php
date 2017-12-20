@@ -4,7 +4,7 @@ namespace  {
     require_once( 'helpers.php' );
 }
 
-namespace Tests {
+namespace Ingenious\TddGenerator\Tests {
 
     use Illuminate\Contracts\Console\Kernel;
     use Illuminate\Support\Facades\Event;
@@ -19,7 +19,14 @@ namespace Tests {
          */
         public function createApplication()
         {
-            $app = require __DIR__.'../../../../../bootstrap/app.php';
+            if ( file_exists( __DIR__.'../bootstrap/app.php' )  )
+                $app = require __DIR__.'/../bootstrap/app.php';
+
+            elseif ( file_exists(__DIR__.'../../../../../bootstrap/app.php') )
+                $app = require __DIR__.'/../../../../../bootstrap/app.php';
+
+            //elseif ( file_exists( __DIR__ . '../../../projectboard2/bootstrap/app.php' ) )
+                $app = require __DIR__.'/../../../projectboard2/bootstrap/app.php';
 
             $app->make(Kernel::class)->bootstrap();
 

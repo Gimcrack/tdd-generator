@@ -17,7 +17,7 @@ use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
+class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
