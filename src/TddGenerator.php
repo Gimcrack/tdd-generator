@@ -211,6 +211,13 @@ class TddGenerator {
             File::delete($file);
         }
 
+        $files = File::glob( base_path("tests") . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*Example*");
+
+        foreach( $files as $file ) {
+            $output[] = "Removing Example Test {$file}... Done.";
+            File::delete($file);
+        }
+
         return $output;
         // everything else will be overwritten
     }
