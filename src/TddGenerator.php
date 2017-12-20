@@ -105,6 +105,10 @@ class TddGenerator {
         $stub_content = file_get_contents($stub_path);
         $new_content = $this->convertText($stub_content);
 
+        if ( ! file_exists( dirname( $output ) ) ) {
+            mkdir( dirname($output) );
+        }
+
         if ( ! file_put_contents($output, $new_content) ) {
             throw new Exception("Could not write to $output");
         }
