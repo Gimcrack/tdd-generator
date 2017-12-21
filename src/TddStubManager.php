@@ -21,6 +21,8 @@ class TddStubManager {
      */
     public $stub_path;
 
+    public $count = 0;
+
     /**
      * The stubs collection
      */
@@ -59,17 +61,18 @@ class TddStubManager {
     {
         $output = [];
 
-        // convert all the stubs
-        $this->stubs->each( function( $path, $stub ) use ($output) {
+        foreach( $this->stubs as $stub => $path ) {
 
             // convert the current stub
             $this->converter->process(
                 $this->getStubContent($stub),
-                $this->getNewPath($stub, $path)
+                $this->getNewPath($path, $stub)
             );
 
             $output[] = $this->getConversionMessage($path, $stub);
-        });
+
+            $this->count++;
+        }
 
         return implode("\n",$output);
     }
@@ -136,18 +139,10 @@ class TddStubManager {
      */
     private function getNewPath($path, $stub)
     {
-        $new_path = $path
+        return $path
             . DIRECTORY_SEPARATOR
             . $this->converter->interpolate( $this->getStubFilename($stub) )
             . ".php";
-
-        if ( file_exists($new_path) && ! $this->force )
-            throw new \Exception($new_path . " already exists. Try using the force option --f");
-
-        if ( ! file_exists( dirname( $new_path ) ) )
-            mkdir( dirname($new_path) );
-
-        return $new_path;
     }
 
     /**
@@ -183,7 +178,7 @@ class TddStubManager {
      *
      * @return   void
      */
-    private function migrationExists()
+    public function migrationExists()
     {
         $migration = "*_create_{$this->converter->model_lower_plural}_table*";
 

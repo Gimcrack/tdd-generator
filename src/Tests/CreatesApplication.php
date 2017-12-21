@@ -25,8 +25,8 @@ namespace Ingenious\TddGenerator\Tests {
             elseif ( file_exists(__DIR__.'/../../../../../bootstrap/app.php') )
                 $app = require __DIR__.'/../../../../../bootstrap/app.php';
 
-            elseif ( file_exists( __DIR__.'/../../../../tdd-generator-test/bootstrap/app.php') )
-                $app = require __DIR__.'/../../../../tdd-generator-test/bootstrap/app.php';
+            elseif ( file_exists( __DIR__.'/../../../tdd-generator-test/bootstrap/app.php') )
+                $app = require __DIR__.'/../../../tdd-generator-test/bootstrap/app.php';
 
             $app->make(Kernel::class)->bootstrap();
 

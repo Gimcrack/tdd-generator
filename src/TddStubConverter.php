@@ -19,7 +19,9 @@ class TddStubConverter {
 
     public $model_lower_plural;
 
-    public function __construct($model = null)
+    protected $force;
+
+    public function __construct($model = null, $force = false)
     {
         if ( $model ) {
             $this->model = $model;
@@ -30,6 +32,8 @@ class TddStubConverter {
             $this->model_lower = Str::lower($this->model);
             $this->model_lower_plural = Str::lower( Str::plural($this->model) );
         }
+
+        $this->force = $force;
     }
 
     /**
@@ -41,6 +45,12 @@ class TddStubConverter {
     public function process($stub_content, $output)
     {
         $new_content = $this->interpolate($stub_content);
+
+        if ( ! file_exists( dirname( $output ) ) )
+            mkdir( dirname($output) );
+
+        if ( ! $this->force && file_exists($output) )
+            throw new \Exception($output . " already exists. Try using the force option --f");
 
         if ( ! file_put_contents($output, $new_content) ) {
             throw new Exception("Could not write to $output");

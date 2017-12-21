@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Commands;
 use File;
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddGenerator;
+use Ingenious\TddGenerator\TddSetupManager;
 
 class TddSetup extends Command
 {
@@ -39,11 +40,11 @@ class TddSetup extends Command
      */
     public function handle()
     {
-        $manager = new TddSetupManager();
+        $setup = new TddSetupManager();
 
-        $manager->setup();
+        $setup->process();
 
-        foreach( $manager->output as $comment ) {
+        foreach( $setup->output as $comment ) {
             $this->comment($comment);
         }
     }
