@@ -170,7 +170,7 @@ class TddStubManager {
      */
     private function getNewPath($path, $stub)
     {
-        return $path
+        return str_replace(["\\","/"],DIRECTORY_SEPARATOR,$path)
             . DIRECTORY_SEPARATOR
             . $this->converter->interpolate( $this->getStubFilename($stub) )
             . ".php";
