@@ -57,9 +57,11 @@ class TddStubManager {
      *
      * @return   void
      */
-    public static function admin($force = false)
+    public static function admin($force = false, $prefix = '')
     {
-        $manager = new static(null, $force, collect([
+        $converter = new TddStubConverter(null, $force, $prefix);
+
+        $manager = new static($converter, $force, collect([
             "Routes/api-admin" => base_path("routes"),
             "Routes/api-user" => base_path("routes"),
             "Models/User" => app_path(),

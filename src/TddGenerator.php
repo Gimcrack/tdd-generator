@@ -30,13 +30,13 @@ class TddGenerator {
 
     public $output = [];
 
-    public function __construct($model = null, $force = false, $routes = "api.php", $prefix = '')
+    public function __construct($model = null, $force = false, $routes = "api.php", $prefix = '', $admin = false)
     {
         $this->model = $model;
 
         $this->force = $force;
 
-        $converter = new TddStubConverter($model, $prefix);
+        $converter = new TddStubConverter($model, $force, $prefix, $admin);
 
         $this->stubs = new TddStubManager($converter, $force);
 
@@ -50,9 +50,9 @@ class TddGenerator {
      *
      * @return   void
      */
-    public static function handle($model, $force = false, $routes = "api.php", $prefix = '')
+    public static function handle($model, $force = false, $routes = "api.php", $prefix = '', $admin = false)
     {
-        $generator = new static($model, $force, $routes);
+        $generator = new static($model, $force, $routes, $prefix, $admin);
 
         $generator
             ->init()
@@ -72,7 +72,9 @@ class TddGenerator {
     {
         $generator = new static(null. $force, "api.php", $prefix);
 
-        $generator->stubs = TddStubManager::admin($force);
+        $generator->stubs = TddStubManager::admin($force, $prefix);
+
+        //dd($generator->stubs);
 
         $generator->process();
 

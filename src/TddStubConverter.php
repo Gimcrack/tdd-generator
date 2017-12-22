@@ -19,11 +19,13 @@ class TddStubConverter {
 
     public $model_lower_plural;
 
-    protected $force;
+    public $force;
 
-    protected $prefix;
+    public $prefix;
 
-    public function __construct($model = null, $force = false, $prefix = null)
+    public $admin;
+
+    public function __construct($model = null, $force = false, $prefix = null, $admin = false)
     {
         if ( $model ) {
             $this->model = $model;
@@ -39,6 +41,8 @@ class TddStubConverter {
         $this->prefix = ( $prefix ) ? "{$prefix}." : "";
 
         $this->force = $force;
+
+        $this->admin = $admin;
     }
 
     /**
@@ -81,6 +85,7 @@ class TddStubConverter {
             ,  'thing'
             ,  'XXXX_XX_XX_XXXXXX'
             , '[prefix]'
+            , 'actingAsUser()'
         ];
 
         $replace = [
@@ -94,6 +99,7 @@ class TddStubConverter {
             , $this->model_lower
             , date('Y_m_d_His')
             , $this->prefix
+            , ( $this->admin ) ? 'actingAsAdmin()' : 'actingAsUser()'
         ];
 
         return str_replace($search

@@ -18,6 +18,7 @@ class TddGenerate extends Command
         { routes? : The routes file to use }
         { prefix? : The route name prefix to use e.g. admin }
         { --force : Overwrite existing files without confirmation }
+        { --admin : Only allow admin access to the generated routes }
     ';
 
     /**
@@ -48,7 +49,8 @@ class TddGenerate extends Command
             $this->argument('model'),
             (bool) $this->option('force'),
             $this->getRoutesFile(),
-            $this->argument('prefix')
+            $this->argument('prefix'),
+            (bool) $this->option('admin')
         );
 
         foreach( $generator->output as $comment ) {
