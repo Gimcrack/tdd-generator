@@ -16,6 +16,7 @@ class TddGenerate extends Command
     protected $signature = 'tdd:generate
         { model : The new model name }
         { routes? : The routes file to use }
+        { prefix? : The route name prefix to use e.g. admin }
         { --force : Overwrite existing files without confirmation }
     ';
 
@@ -46,7 +47,8 @@ class TddGenerate extends Command
         $generator = TddGenerator::handle(
             $this->argument('model'),
             (bool) $this->option('force'),
-            $this->getRoutesFile()
+            $this->getRoutesFile(),
+            $this->argument('prefix')
         );
 
         foreach( $generator->output as $comment ) {

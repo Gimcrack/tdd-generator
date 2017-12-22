@@ -21,7 +21,9 @@ class TddStubConverter {
 
     protected $force;
 
-    public function __construct($model = null, $force = false)
+    protected $prefix;
+
+    public function __construct($model = null, $force = false, $prefix = null)
     {
         if ( $model ) {
             $this->model = $model;
@@ -31,7 +33,10 @@ class TddStubConverter {
 
             $this->model_lower = Str::lower($this->model);
             $this->model_lower_plural = Str::lower( Str::plural($this->model) );
+
         }
+
+        $this->prefix = ( $prefix ) ? "{$prefix}." : "";
 
         $this->force = $force;
     }
@@ -75,6 +80,7 @@ class TddStubConverter {
             ,  'Thing'
             ,  'thing'
             ,  'XXXX_XX_XX_XXXXXX'
+            , '[prefix]'
         ];
 
         $replace = [
@@ -87,6 +93,7 @@ class TddStubConverter {
             , $this->model_capped
             , $this->model_lower
             , date('Y_m_d_His')
+            , $this->prefix
         ];
 
         return str_replace($search

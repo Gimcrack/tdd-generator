@@ -18,9 +18,10 @@ Laravel TDD Generator Helper
 
 ```
 php artisan tdd:generate 
-    { model : The model name to be generated } 
-    { routes? : The routes file to use } 
-    { --force : Force overwriting existing files }
+    { model : The new model name }
+    { routes? : The routes file to use }
+    { prefix? : The route name prefix to use e.g. admin }
+    { --force : Overwrite existing files without confirmation }
 ```
 
 To generate stubs for the `Group` model and add the routes to the `api-admin.php` routes file, you would use the following:

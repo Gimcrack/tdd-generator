@@ -14,7 +14,10 @@ class TddAdminSetup extends Command
      *
      * @var string
      */
-    protected $signature = 'tdd:admin-setup { --force : Force overwriting of existing files }';
+    protected $signature = 'tdd:admin-setup
+        { prefix? : The route name prefix to use e.g. admin }
+        { --force : Force overwriting of existing files }
+    ';
 
     /**
      * The console command description.
@@ -48,7 +51,10 @@ class TddAdminSetup extends Command
             $this->comment($comment);
         }
 
-        $generator = TddGenerator::admin( (bool) $this->option('force') );
+        $generator = TddGenerator::admin(
+            (bool) $this->option('force'),
+            $this->argument('prefix')
+        );
 
         foreach( $generator->output as $comment ) {
             $this->comment($comment);

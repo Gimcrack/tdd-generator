@@ -26,19 +26,22 @@ class TddGenerator {
      */
     protected $manager;
 
+    protected $prefix;
+
     public $output = [];
 
-    public function __construct($model = null, $force = false, $routes = "api.php")
+    public function __construct($model = null, $force = false, $routes = "api.php", $prefix = '')
     {
         $this->model = $model;
 
         $this->force = $force;
 
-        $converter = new TddStubConverter($model);
+        $converter = new TddStubConverter($model, $prefix);
 
         $this->stubs = new TddStubManager($converter, $force);
 
         $this->routes = new TddRoutesManager($converter, $routes);
+        $this->prefix = $prefix;
     }
 
     /**
@@ -47,7 +50,7 @@ class TddGenerator {
      *
      * @return   void
      */
-    public static function handle($model, $force = false, $routes = "api.php")
+    public static function handle($model, $force = false, $routes = "api.php", $prefix = '')
     {
         $generator = new static($model, $force, $routes);
 
@@ -65,9 +68,9 @@ class TddGenerator {
      *
      * @return   void
      */
-    public static function admin($force = false)
+    public static function admin($force = false, $prefix = '')
     {
-        $generator = new static(null. $force, "api.php");
+        $generator = new static(null. $force, "api.php", $prefix);
 
         $generator->stubs = TddStubManager::admin($force);
 

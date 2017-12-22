@@ -23,7 +23,7 @@ class UserAdminTest extends TestCase
 
         $this
             ->actingAsAdmin()
-            ->post("users.store", $atts)
+            ->post("[prefix]users.store", $atts)
             ->response()
             ->assertStatus(201);
 
@@ -43,7 +43,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->post("users.store", $atts)
+            ->post("[prefix]users.store", $atts)
             ->response()
             ->assertStatus(422)
             ->assertJsonValidationErrors('name');
@@ -61,7 +61,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->post("users.store", $atts)
+            ->post("[prefix]users.store", $atts)
             ->response()
             ->assertStatus(422)
             ->assertJsonValidationErrors('email');
@@ -79,7 +79,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->post("users.store", $atts)
+            ->post("[prefix]users.store", $atts)
             ->response()
             ->assertStatus(422)
             ->assertJsonValidationErrors('password');
@@ -95,7 +95,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->post(["users.promotion.store", $user])
+            ->post(["[prefix]users.promotion.store", $user])
             ->response()
             ->assertStatus(202);
 
@@ -110,7 +110,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->delete(["users.promotion.destroy", $user])
+            ->delete(["[prefix]users.promotion.destroy", $user])
             ->response()
             ->assertStatus(202);
 
@@ -125,7 +125,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsUser()
-            ->post(["users.promotion.store", $user])
+            ->post(["[prefix]users.promotion.store", $user])
             ->response()
             ->assertStatus(422);
 
@@ -140,7 +140,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsUser()
-            ->delete(["users.promotion.destroy", $admin])
+            ->delete(["[prefix]users.promotion.destroy", $admin])
             ->response()
             ->assertStatus(422);
 
@@ -155,7 +155,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->get("users.index")
+            ->get("[prefix]users.index")
             ->response()
                 ->assertStatus(200)
                 ->assertJsonCount(4)
@@ -170,7 +170,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->delete(["users.destroy",$user])
+            ->delete(["[prefix]users.destroy",$user])
             ->response()
             ->assertStatus(202);
 
@@ -185,7 +185,7 @@ class UserAdminTest extends TestCase
         $this
             ->api()
             ->actingAsAdmin()
-            ->delete(["users.destroy",$user])
+            ->delete(["[prefix]users.destroy",$user])
             ->response()
             ->assertStatus(403);
 
@@ -198,7 +198,7 @@ class UserAdminTest extends TestCase
 
         $this->api()
             ->actingAsAdmin()
-            ->patch(["users.update",$user], [
+            ->patch(["[prefix]users.update",$user], [
                 'name' => 'valid name',
                 'email' => 'newEmail@example.com'
             ])
