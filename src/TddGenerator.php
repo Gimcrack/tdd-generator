@@ -67,7 +67,7 @@ class TddGenerator {
     public function init()
     {
         if ( ! $this->force && $this->stubs->migrationExists() )
-            throw new Exception("Migration found for {$this->model} table. If you wish to overwrite it, try the command again with the --force option.");
+            throw new \Exception("Migration found for {$this->model} table. If you wish to overwrite it, try the command again with the --force option.");
 
         if ( $this->force )
             $this->output[] = $this->stubs->cleanUp();
