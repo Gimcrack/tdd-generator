@@ -53,7 +53,7 @@ class TddAdminSetup extends Command
 
         $generator = TddGenerator::admin(
             (bool) $this->option('force'),
-            $this->argument('prefix')
+            $this->getPrefix()
         );
 
         foreach( $generator->output as $comment ) {
@@ -86,5 +86,21 @@ class TddAdminSetup extends Command
         $chosen = $this->ask("> Select one. [0]") ?? 0;
 
         return File::name( $files[$chosen] ) . ".php";
+    }
+
+    /**
+     * Get the route prefix
+     * @method getPrefix
+     *
+     * @return   string
+     */
+    private function getPrefix()
+    {
+        if ( !! $this->argument('prefix') )
+            return $this->argument('prefix');
+
+        $this->comment("\n\nWhat prefix should the new routes have? Optional");
+
+        return $this->ask("> Enter a prefix", false);
     }
 }

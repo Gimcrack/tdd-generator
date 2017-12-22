@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Commands;
 use File;
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddGenerator;
+use Symfony\Component\Process\Process;
 
 class TddGenerate extends Command
 {
@@ -49,13 +50,15 @@ class TddGenerate extends Command
             $this->argument('model'),
             (bool) $this->option('force'),
             $this->getRoutesFile(),
-            $this->argument('prefix'),
+            $this->getPrefix(),
             (bool) $this->option('admin')
         );
 
         foreach( $generator->output as $comment ) {
             $this->comment($comment);
         }
+
+        $this->info("\nProcessing complete.");
     }
 
     /**
@@ -66,8 +69,17 @@ class TddGenerate extends Command
      */
     private function getRoutesFile()
     {
-        if ( !! $this->argument('routes') )
-            return $this->argument('routes');
+        if ( !! $this->argument('routes') ) {
+            $routes = $this->argument('routes');
+
+            $files = File::glob( base_path("routes" . DIRECTORY_SEPARATOR . "*{$routes}*" ) );
+
+            if ( count($files) )
+                return File::name($files[0]) . ".php";
+
+            else
+                throw new \Exception("Could not find routes file matching {$routes}");
+        }
 
         $files = File::glob( base_path("routes" . DIRECTORY_SEPARATOR . "*api*.php" ) );
 
@@ -80,8 +92,24 @@ class TddGenerate extends Command
             $this->comment( " [{$key}] ". File::name($file) . ".php");
         }
 
-        $chosen = $this->ask("> Select one. [0]") ?? 0;
+        $chosen = $this->ask("> Select one", 0);
 
         return File::name( $files[$chosen] ) . ".php";
+    }
+
+    /**
+     * Get the route prefix
+     * @method getPrefix
+     *
+     * @return   string
+     */
+    private function getPrefix()
+    {
+        if ( !! $this->argument('prefix') )
+            return $this->argument('prefix');
+
+        $this->comment("\n\nWhat prefix should the new routes have? Optional");
+
+        return $this->ask("> Enter a prefix", false);
     }
 }

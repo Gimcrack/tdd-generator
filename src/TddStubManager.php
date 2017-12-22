@@ -202,7 +202,7 @@ class TddStubManager {
         $stub_path = $this->getStubPath($stub);
         $new_path = $this->getNewPath($path, $stub);
 
-        return "Copying [{$stub_path}] to [{$new_path}]... Done.";
+        return str_pad( "Creating [" . $this->converter->interpolate( $stub ) . "] ", 75, "-") . "  Done.";
     }
 
     /**
