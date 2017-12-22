@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Providers;
 use Illuminate\Support\ServiceProvider;
 use Ingenious\TddGenerator\Commands\TddSetup;
 use Ingenious\TddGenerator\Commands\TddGenerate;
+use Ingenious\TddGenerator\Commands\TddAdminSetup;
 
 class TddGeneratorServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,7 @@ class TddGeneratorServiceProvider extends ServiceProvider
     {
         $this->commands([
             TddSetup::class,
+            TddAdminSetup::class,
             TddGenerate::class,
         ]);
     }

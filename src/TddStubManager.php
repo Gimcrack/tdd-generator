@@ -28,7 +28,7 @@ class TddStubManager {
      */
     public $stubs;
 
-    public function __construct($converter = null, $force = false)
+    public function __construct($converter = null, $force = false, $stubs = null)
     {
         $this->converter = $converter ?? new TddStubConverter;
 
@@ -36,7 +36,7 @@ class TddStubManager {
 
         $this->stub_path = __DIR__ . DIRECTORY_SEPARATOR . "stubs";
 
-        $this->stubs = collect( [
+        $this->stubs = $stubs ?? collect( [
             "Controllers/ThingController" => app_path("Http\Controllers"),
             "Events/ThingWasCreated" => app_path("Events"),
             "Events/ThingWasDestroyed" => app_path("Events"),
@@ -49,6 +49,37 @@ class TddStubManager {
             "Tests/Unit/ThingTest" => base_path("tests\Unit"),
             "Tests/Feature/ThingTest" => base_path("tests\Feature")
         ]);
+    }
+
+    /**
+     * Admin Stub manager
+     * @method admin
+     *
+     * @return   void
+     */
+    public static function admin($force = false)
+    {
+        $manager = new static(null, $force, collect([
+            "Routes/api-admin" => base_path("routes"),
+            "Routes/api-user" => base_path("routes"),
+            "Models/User" => app_path(),
+            "Controllers/UserController" => app_path("Http/Controllers"),
+            "Controllers/UserPromotionController" => app_path("Http/Controllers"),
+            "Middleware/AuthenticateAsAdmin" => app_path("Http/Middleware"),
+            "Middleware/Kernel" => app_path("Http"),
+            "Migrations/2014_10_12_000000_create_users_table" => database_path("Migrations"),
+            "Tests/Unit/UserTest" => base_path("tests/Unit"),
+            "Tests/Feature/UserTest" => base_path("tests/Feature"),
+            "Factories/UserFactory" => database_path("Factories"),
+            "Providers/RouteServiceProvider" => app_path("Providers"),
+            "Requests/NewUserRequest" => app_path("Http\Requests"),
+            "Requests/UpdateUserRequest" => app_path("Http\Requests"),
+            "Events/UserWasCreated" => app_path("Events"),
+            "Events/UserWasDestroyed" => app_path("Events"),
+            "Events/UserWasUpdated" => app_path("Events"),
+        ]));
+
+        return $manager;
     }
 
     /**

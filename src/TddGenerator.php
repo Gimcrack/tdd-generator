@@ -53,7 +53,25 @@ class TddGenerator {
 
         $generator
             ->init()
+            ->routes()
             ->process();
+
+        return $generator;
+    }
+
+    /**
+     * Setup the admin files
+     * @method admin
+     *
+     * @return   void
+     */
+    public static function admin($force = false)
+    {
+        $generator = new static(null. $force, "api.php");
+
+        $generator->stubs = TddStubManager::admin($force);
+
+        $generator->process();
 
         return $generator;
     }
@@ -76,6 +94,19 @@ class TddGenerator {
     }
 
     /**
+     * Process the routes
+     * @method routes
+     *
+     * @return   void
+     */
+    private function routes()
+    {
+        $this->output[] = $this->routes->process();
+
+        return $this;
+    }
+
+    /**
      * Convert the stubs
      * @method convert
      *
@@ -83,8 +114,6 @@ class TddGenerator {
      */
     public function process()
     {
-        $this->output[] = $this->routes->process();
-
         $this->output[] = $this->stubs->process();
 
         return $this;

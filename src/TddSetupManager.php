@@ -36,6 +36,25 @@ class TddSetupManager {
     }
 
     /**
+     * Setup the admin files
+     * @method admin
+     *
+     * @return   $this
+     */
+    public function admin()
+    {
+        $this->output[] = $this->setupUserFactory();
+
+        $this->output[] = $this->setupUsersMigration();
+
+        $this->output[] = $this->setupRouteServiceProvider();
+
+        $this->output[] = $this->setupHttpKernel();
+
+        $this->output[] = $this->setupUserModel();
+    }
+
+    /**
      * Handle the phpunit.xml
      * @method setupPhpunit
      *
@@ -100,6 +119,101 @@ class TddSetupManager {
 
         foreach( $files as $file ) {
             $output[] = "Renaming Example Test {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Setup the UserFactory
+     * @method setupUserFactory
+     *
+     * @return   void
+     */
+    private function setupUserFactory()
+    {
+        $output = [];
+        $files = File::glob( database_path("Factories") . DIRECTORY_SEPARATOR . "UserFactory*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Setup the UsersMigration
+     * @method setupUsersMigration
+     *
+     * @return   void
+     */
+    private function setupUsersMigration()
+    {
+        $output = [];
+        $files = File::glob( database_path("Migrations") . DIRECTORY_SEPARATOR . "2014_10_12_000000_create_users_table*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Setup the Route Service Provider
+     * @method setupRouteServiceProvider
+     *
+     * @return   void
+     */
+    private function setupRouteServiceProvider()
+    {
+        $output = [];
+        $files = File::glob( app_path("Providers") . DIRECTORY_SEPARATOR . "RouteServiceProvider*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Setup the Http Kernel
+     * @method setupHttpKernel
+     *
+     * @return   void
+     */
+    private function setupHttpKernel()
+    {
+        $output = [];
+        $files = File::glob( app_path("Http") . DIRECTORY_SEPARATOR . "Kernel*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Setup the User model
+     * @method setupUserModel
+     *
+     * @return   void
+     */
+    private function setupUserModel()
+    {
+        $output = [];
+        $files = File::glob( app_path() . DIRECTORY_SEPARATOR . "User*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming {$file}... Done.";
             File::move($file,"{$file}.bak");
         }
 
