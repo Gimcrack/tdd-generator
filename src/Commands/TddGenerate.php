@@ -48,10 +48,10 @@ class TddGenerate extends Command
     {
         $generator = TddGenerator::handle(
             $this->argument('model'),
-            (bool) $this->option('force'),
+            $this->getForce(),
             $this->getRoutesFile(),
             $this->getPrefix(),
-            (bool) $this->option('admin')
+            $this->getAdmin()
         );
 
         foreach( $generator->output as $comment ) {
@@ -111,5 +111,33 @@ class TddGenerate extends Command
         $this->comment("\n\nWhat prefix should the new routes have? Optional");
 
         return $this->ask("> Enter a prefix", false);
+    }
+
+    /**
+     * Force overwriting of existing files?
+     * @method getForce
+     *
+     * @return   bool
+     */
+    private function getForce()
+    {
+        if ( !! $this->option('force') )
+            return true;
+
+        return (bool) $this->ask("> Force overwriting of existing files?", false);
+    }
+
+    /**
+     * Admin only routes?
+     * @method getForce
+     *
+     * @return   bool
+     */
+    private function getAdmin()
+    {
+        if ( !! $this->option('admin') )
+            return true;
+
+        return (bool) $this->ask("> Admin only routes?", false);
     }
 }

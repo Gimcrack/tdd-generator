@@ -52,7 +52,7 @@ class TddAdminSetup extends Command
         }
 
         $generator = TddGenerator::admin(
-            (bool) $this->option('force'),
+            $this-getForce(),
             $this->getPrefix()
         );
 
@@ -102,5 +102,19 @@ class TddAdminSetup extends Command
         $this->comment("\n\nWhat prefix should the new routes have? Optional");
 
         return $this->ask("> Enter a prefix", false);
+    }
+
+    /**
+     * Force overwriting of existing files?
+     * @method getForce
+     *
+     * @return   bool
+     */
+    private function getForce()
+    {
+        if ( !! $this->option('force') )
+            return true;
+
+        return (bool) $this->ask("> Force overwriting of existing files?", false);
     }
 }
