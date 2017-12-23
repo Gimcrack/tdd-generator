@@ -30,11 +30,11 @@ class TddStubConverter {
         if ( $model ) {
             $this->model = $model;
 
-            $this->model_capped = Str::title($this->model);
-            $this->model_capped_plural = Str::title( Str::plural($this->model) );
+            $this->model_capped = Str::studly($this->model);
+            $this->model_capped_plural = Str::studly( Str::plural($this->model) );
 
-            $this->model_lower = Str::lower($this->model);
-            $this->model_lower_plural = Str::lower( Str::plural($this->model) );
+            $this->model_lower = Str::lower( Str::snake($this->model) );
+            $this->model_lower_plural = Str::lower( Str::snake(Str::plural($this->model) ) );
 
         }
 
