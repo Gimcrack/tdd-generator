@@ -6,8 +6,9 @@ namespace  {
 
 namespace Ingenious\TddGenerator\Tests {
 
-    use Illuminate\Contracts\Console\Kernel;
+    use Illuminate\Support\Facades\Hash;
     use Illuminate\Support\Facades\Event;
+    use Illuminate\Contracts\Console\Kernel;
     use Illuminate\Support\Facades\Notification;
 
     trait CreatesApplication
@@ -32,6 +33,8 @@ namespace Ingenious\TddGenerator\Tests {
 
             //Event::fake();
             Notification::fake();
+
+            Hash::setRounds(4);
 
             return $app;
         }
