@@ -1,0 +1,140 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\[Thing];
+use App\[Parent];
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class [Parent][Thing]Test extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function it_can_get_a_listing_of_[parent]_[things]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[parent]
+                ->[things]()
+                ->saveMany( make([Thing]::class, ['[parent]_id' => null], 3) );
+
+            $this->actingAsUser()
+                ->get( ["[prefix][parents].[things].index", $[parent]] )
+                ->response()
+                ->assertStatus(200)
+                ->assertJsonCount(3)
+                ->assertJsonModelCollection( [Thing]::all() );
+        });
+    }
+
+    /** @test */
+    public function it_can_get_a_single_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[parent]
+                ->[things]()
+                ->save( make([Thing]::class, ['[parent]_id' => null]) );
+
+            $[thing] = [Thing]::first();
+
+            $this->actingAsUser()
+                ->get(["[prefix][parents].[things].show", $[parent], $[thing]])
+                ->response()
+                ->assertStatus(200)
+                ->assertJsonModel($[thing]);
+        });
+    }
+
+    /** @test */
+    public function it_can_store_a_new_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $atts = make_array([Thing]::class, ['[parent]_id' => null]);
+
+            $this->actingAsUser()
+                ->post(["[prefix][parents].[things].store", $[parent]], $atts)
+                ->response()
+                ->assertStatus(201);
+
+            $this->assertDatabaseHas('[things]', array_merge($atts, [
+                '[parent]_id' => $[parent]->id
+            ]) );
+        });
+    }
+
+    /** @test */
+    public function it_wont_store_a_new_[parent]_[thing]_without_a_name()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $atts = make_array([Thing]::class, [
+                'name' => null,
+                '[parent]_id' => null
+            ]);
+
+            $this->actingAsUser()
+                 ->post( ["[prefix][parents].[things].store", $[parent]], $atts )
+                 ->response()
+                 ->assertStatus(422)
+                 ->assertJsonValidationErrors('name');
+
+            $this->assertDatabaseMissing('[things]',$atts);
+        });
+    }
+
+    /** @test */
+    public function it_wont_store_a_new_[parent]_[thing]_with_a_duplicate_name()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            create( [Thing]::class, ['name' => '[Thing] Name', '[parent]_id' => $[parent]->id]);
+
+            $atts = make_array([Thing]::class, [
+                'name' => '[Thing] Name'
+            ]);
+
+            $this->actingAsUser()
+                 ->post( ["[prefix][parents].[things].store", $[parent]], $atts )
+                 ->response()
+                 ->assertStatus(422)
+                 ->assertJsonValidationErrors('name');
+        });
+    }
+
+    /** @test */
+    public function it_can_update_a_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[thing] = create([Thing]::class, ['name' => '[Parent][Thing] Name', '[parent]_id' => $[parent]->id]);
+
+            $this->actingAsUser()
+                ->patch(["[prefix][parents].[things].update", $[parent], $[thing]], ['name' => 'New Name'])
+                ->response()
+                ->assertStatus(202);
+
+            $this->assertDatabaseHas('[things]',['name' => 'New Name']);
+        });
+    }
+
+    /** @test */
+    public function it_can_delete_a_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+            $[thing] = create([Thing]::class, ['name' => '[Parent][Thing] Name', '[parent]_id' => $[parent]->id]);
+
+            $this->actingAsUser()
+                 ->delete(["[prefix][parents].[things].destroy", $[parent], $[thing]])
+                 ->response()
+                 ->assertStatus(202);
+
+            $this->assertCount(0, [Thing]::all());
+        });
+    }
+ }

@@ -4,8 +4,9 @@ namespace Ingenious\TddGenerator\Commands;
 
 use File;
 use Illuminate\Console\Command;
-use Ingenious\TddGenerator\TddGenerator;
+use Ingenious\TddGenerator\TddParams;
 use Symfony\Component\Process\Process;
+use Ingenious\TddGenerator\TddGenerator;
 
 class TddGenerate extends Command
 {
@@ -16,10 +17,12 @@ class TddGenerate extends Command
      */
     protected $signature = 'tdd:generate
         { model : The new model name }
+        { parent? : The parent model }
         { routes? : The routes file to use }
         { prefix? : The route name prefix to use e.g. admin }
         { --force : Overwrite existing files without confirmation }
         { --admin : Only allow admin access to the generated routes }
+        { --defaults : Supress prompts, use defaults }
     ';
 
     /**
@@ -46,13 +49,15 @@ class TddGenerate extends Command
      */
     public function handle()
     {
-        $generator = TddGenerator::handle(
-            $this->argument('model'),
-            $this->getForce(),
-            $this->getRoutesFile(),
-            $this->getPrefix(),
-            $this->getAdmin()
-        );
+        $params = ( new TddParams )
+            ->setModel( $this->argument('model') )
+            ->setParent( $this->getParent() )
+            ->setPrefix( $this->getPrefix() )
+            ->setRoutes( $this->getRoutesFile() )
+            ->setAdmin( $this->getAdmin() )
+            ->setForce( $this->getForce() );
+
+        $generator = TddGenerator::handle( $params );
 
         foreach( $generator->output as $comment ) {
             $this->comment($comment);
@@ -86,6 +91,10 @@ class TddGenerate extends Command
         if ( count($files) == 1 )
             return File::name($files[0]) . ".php";
 
+        if ( $this->option('defaults') ) {
+            return File::name( $files[0] ) . ".php";
+        }
+
         $this->comment("\n\nWhat routes files should the new routes be added to?");
 
         foreach( $files as $key => $file ) {
@@ -108,9 +117,31 @@ class TddGenerate extends Command
         if ( !! $this->argument('prefix') )
             return $this->argument('prefix');
 
+        if ( $this->option('defaults') )
+            return null;
+
         $this->comment("\n\nWhat prefix should the new routes have? Optional");
 
         return $this->ask("> Enter a prefix", false);
+    }
+
+    /**
+     * Get the model Parent
+     * @method getParent
+     *
+     * @return   string
+     */
+    private function getParent()
+    {
+        if ( !! $this->argument('parent') )
+            return $this->argument('parent');
+
+        if ( $this->option('defaults') )
+            return null;
+
+        $this->comment("\n\nDoes the model have a parent model? Optional");
+
+        return $this->ask("> Enter a parent", false);
     }
 
     /**
@@ -123,6 +154,9 @@ class TddGenerate extends Command
     {
         if ( !! $this->option('force') )
             return true;
+
+        if ( $this->option('defaults') )
+            return false;
 
         return (bool) $this->ask("> Force overwriting of existing files?", false);
     }
@@ -137,6 +171,9 @@ class TddGenerate extends Command
     {
         if ( !! $this->option('admin') )
             return true;
+
+        if ( $this->option('defaults') )
+            return false;
 
         return (bool) $this->ask("> Admin only routes?", false);
     }

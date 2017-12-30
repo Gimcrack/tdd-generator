@@ -12,76 +12,55 @@ class TddStubManager {
     public $converter;
 
     /**
-     * Force overwriting of existing files
-     */
-    public $force;
-
-    /**
-     * The stub path
-     */
-    public $stub_path;
-
-    public $count = 0;
-
-    /**
      * The stubs collection
      */
     public $stubs;
 
-    public function __construct($converter = null, $force = false, $stubs = null)
+    /**
+     * The stub path
+     */
+    public $stub_path = __DIR__ . DIRECTORY_SEPARATOR . "stubs";
+
+    public $count = 0;
+
+    public function __construct($converter = null, $stubs = null)
     {
-        $this->converter = $converter ?? new TddStubConverter;
+        $this->converter = $converter;
 
-        $this->force = $force;
+        $this->stubs = $stubs;
+    }
 
-        $this->stub_path = __DIR__ . DIRECTORY_SEPARATOR . "stubs";
-
-        $this->stubs = $stubs ?? collect( [
-            "Controllers/ThingController" => app_path("Http\Controllers"),
-            "Events/ThingWasCreated" => app_path("Events"),
-            "Events/ThingWasDestroyed" => app_path("Events"),
-            "Events/ThingWasUpdated" => app_path("Events"),
-            "Factories/ThingFactory" => database_path("Factories"),
-            "Migrations/XXXX_XX_XX_XXXXXX_create_things_table" => database_path("Migrations"),
-            "Models/Thing" => app_path(),
-            "Requests/NewThingRequest" => app_path("Http\Requests"),
-            "Requests/UpdateThingRequest" => app_path("Http\Requests"),
-            "Tests/Unit/ThingTest" => base_path("tests\Unit"),
-            "Tests/Feature/ThingTest" => base_path("tests\Feature")
-        ]);
+    /**
+     * Base Stubs manager
+     * @method base
+     *
+     * @return   static
+     */
+    public static function base(TddParams $params)
+    {
+        return new static( new TddStubConverter($params), TddBaseStubs::get() );
     }
 
     /**
      * Admin Stub manager
      * @method admin
      *
-     * @return   void
+     * @return   static
      */
-    public static function admin($force = false, $prefix = '')
+    public static function admin(TddParams $params)
     {
-        $converter = new TddStubConverter(null, $force, $prefix);
+        return new static( new TddStubConverter($params), TddAdminStubs::get() );
+    }
 
-        $manager = new static($converter, $force, collect([
-            "Routes/api-admin" => base_path("routes"),
-            "Routes/api-user" => base_path("routes"),
-            "Models/User" => app_path(),
-            "Controllers/UserController" => app_path("Http/Controllers"),
-            "Controllers/UserPromotionController" => app_path("Http/Controllers"),
-            "Middleware/AuthenticateAsAdmin" => app_path("Http/Middleware"),
-            "Middleware/Kernel" => app_path("Http"),
-            "Migrations/2014_10_12_000000_create_users_table" => database_path("Migrations"),
-            "Tests/Unit/UserTest" => base_path("tests/Unit"),
-            "Tests/Feature/UserTest" => base_path("tests/Feature"),
-            "Factories/UserFactory" => database_path("Factories"),
-            "Providers/RouteServiceProvider" => app_path("Providers"),
-            "Requests/NewUserRequest" => app_path("Http\Requests"),
-            "Requests/UpdateUserRequest" => app_path("Http\Requests"),
-            "Events/UserWasCreated" => app_path("Events"),
-            "Events/UserWasDestroyed" => app_path("Events"),
-            "Events/UserWasUpdated" => app_path("Events"),
-        ]));
-
-        return $manager;
+    /**
+     * Parent Stub manager
+     * @method parent
+     *
+     * @return   static
+     */
+    public static function parent(TddParams $params)
+    {
+        return new static( new TddStubConverter($params), TddParentStubs::get() );
     }
 
     /**
@@ -121,7 +100,7 @@ class TddStubManager {
         $output = [];
 
         // cleanup migration, if it exists
-        $migration = "*_create_{$this->converter->model_lower_plural}_table*";
+        $migration = "*_create_{$this->converter->model->lower_plural}_table*";
 
         $files = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . $migration );
 
@@ -213,7 +192,7 @@ class TddStubManager {
      */
     public function migrationExists()
     {
-        $migration = "*_create_{$this->converter->model_lower_plural}_table*";
+        $migration = "*_create_{$this->converter->model->lower_plural}_table*";
 
         $files = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . $migration );
 

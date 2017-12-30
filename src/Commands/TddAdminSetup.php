@@ -4,6 +4,7 @@ namespace Ingenious\TddGenerator\Commands;
 
 use File;
 use Illuminate\Console\Command;
+use Ingenious\TddGenerator\TddParams;
 use Ingenious\TddGenerator\TddGenerator;
 use Ingenious\TddGenerator\TddSetupManager;
 
@@ -16,7 +17,9 @@ class TddAdminSetup extends Command
      */
     protected $signature = 'tdd:admin-setup
         { prefix? : The route name prefix to use e.g. admin }
+        { routes? : The routes file to use }
         { --force : Force overwriting of existing files }
+        { --defaults : Supress prompts, use defaults }
     ';
 
     /**
@@ -51,10 +54,12 @@ class TddAdminSetup extends Command
             $this->comment($comment);
         }
 
-        $generator = TddGenerator::admin(
-            $this-getForce(),
-            $this->getPrefix()
-        );
+        $params = ( new TddParams )
+            ->setRoutes( $this->getRoutesFile() )
+            ->setPrefix( $this->getPrefix() )
+            ->setForce( $this->getForce() );
+
+        $generator = TddGenerator::admin( $params );
 
         foreach( $generator->output as $comment ) {
             $this->comment($comment);
@@ -76,6 +81,10 @@ class TddAdminSetup extends Command
 
         if ( count($files) == 1 )
             return File::name($files[0]) . ".php";
+
+        if ( $this->option('defaults') ) {
+            return File::name( $files[0] ) . ".php";
+        }
 
         $this->comment("\n\nWhat routes files should the new routes be added to?");
 
@@ -99,6 +108,9 @@ class TddAdminSetup extends Command
         if ( !! $this->argument('prefix') )
             return $this->argument('prefix');
 
+        if ( $this->option('defaults') )
+            return null;
+
         $this->comment("\n\nWhat prefix should the new routes have? Optional");
 
         return $this->ask("> Enter a prefix", false);
@@ -114,6 +126,9 @@ class TddAdminSetup extends Command
     {
         if ( !! $this->option('force') )
             return true;
+
+        if ( $this->option('defaults') )
+            return false;
 
         return (bool) $this->ask("> Force overwriting of existing files?", false);
     }

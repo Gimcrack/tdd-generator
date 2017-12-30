@@ -2,47 +2,32 @@
 
 namespace Ingenious\TddGenerator;
 
-use Illuminate\Support\Str;
-
 class TddStubConverter {
 
-    /**
-     * The model
-     */
     public $model;
 
-    public $model_capped;
+    public $parent;
 
-    public $model_capped_plural;
+    public $params;
 
-    public $model_lower;
-
-    public $model_lower_plural;
-
-    public $force;
-
-    public $prefix;
-
-    public $admin;
-
-    public function __construct($model = null, $force = false, $prefix = null, $admin = false)
+    /**
+     * Initialize a new StubConverter
+     * @method init
+     *
+     * @return   static
+     */
+    public static function init(TddParams $params)
     {
-        if ( $model ) {
-            $this->model = $model;
+        return new static($params);
+    }
 
-            $this->model_capped = Str::studly($this->model);
-            $this->model_capped_plural = Str::studly( Str::plural($this->model) );
+    public function __construct( TddParams $params )
+    {
+        $this->params = $params;
 
-            $this->model_lower = Str::lower( Str::snake($this->model) );
-            $this->model_lower_plural = Str::lower( Str::snake(Str::plural($this->model) ) );
+        $this->model = optional( new TddCaseManager($this->params->model) );
 
-        }
-
-        $this->prefix = ( $prefix ) ? "{$prefix}." : "";
-
-        $this->force = $force;
-
-        $this->admin = $admin;
+        $this->parent = optional( new TddCaseManager($this->params->parent) );
     }
 
     /**
@@ -58,11 +43,11 @@ class TddStubConverter {
         if ( ! file_exists( dirname( $output ) ) )
             mkdir( dirname($output) );
 
-        if ( ! $this->force && file_exists($output) )
+        if ( ! $this->params->force && file_exists($output) )
             throw new \Exception($output . " already exists. Try using the force option --f");
 
         if ( ! file_put_contents($output, $new_content) ) {
-            throw new Exception("Could not write to $output");
+            throw new \Exception("Could not write to $output");
         }
     }
 
@@ -75,31 +60,45 @@ class TddStubConverter {
     public function interpolate($text)
     {
         $search = [
-              '[Things]'
-            , '[things]'
-            , '[Thing]'
-            , '[thing]'
+               '[Things]'
+            ,  '[things]'
+            ,  '[Thing]'
+            ,  '[thing]'
             ,  'Things'
             ,  'things'
             ,  'Thing'
             ,  'thing'
+            ,  '[Parents]'
+            ,  '[parents]'
+            ,  '[Parent]'
+            ,  '[parent]'
+            ,  'Parents'
+            ,  'parents'
+            ,  'Parent'
             ,  'XXXX_XX_XX_XXXXXX'
             , '[prefix]'
             , 'actingAsUser()'
         ];
 
         $replace = [
-              $this->model_capped_plural
-            , $this->model_lower_plural
-            , $this->model_capped
-            , $this->model_lower
-            , $this->model_capped_plural
-            , $this->model_lower_plural
-            , $this->model_capped
-            , $this->model_lower
+              $this->model->capped_plural
+            , $this->model->lower_plural
+            , $this->model->capped
+            , $this->model->lower
+            , $this->model->capped_plural
+            , $this->model->lower_plural
+            , $this->model->capped
+            , $this->model->lower
+            , $this->parent->capped_plural
+            , $this->parent->lower_plural
+            , $this->parent->capped
+            , $this->parent->lower
+            , $this->parent->capped_plural
+            , $this->parent->lower_plural
+            , $this->parent->capped
             , date('Y_m_d_His')
-            , $this->prefix
-            , ( $this->admin ) ? 'actingAsAdmin()' : 'actingAsUser()'
+            , $this->params->prefix
+            , ( $this->params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()'
         ];
 
         return str_replace($search

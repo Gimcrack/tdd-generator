@@ -7,41 +7,31 @@ use File;
 class TddGenerator {
 
     /**
-     * The new model name to create
+     * The Stub Manager
      */
-    protected $model;
+    protected $stubs;
 
     /**
-     * Force overwriting of existing files
-     */
-    protected $force;
-
-    /**
-     * The routes helper
+     * The Routes Manager
      */
     protected $routes;
 
     /**
-     * The Stub manager
+     * The Params object
      */
-    protected $manager;
-
-    protected $prefix;
+    protected $params;
 
     public $output = [];
 
-    public function __construct($model = null, $force = false, $routes = "api.php", $prefix = '', $admin = false)
+    public function __construct( TddParams $params )
     {
-        $this->model = $model;
+        $this->params = $params;
 
-        $this->force = $force;
+        $this->stubs = TddStubManager::base( $this->params );
 
-        $converter = new TddStubConverter($model, $force, $prefix, $admin);
-
-        $this->stubs = new TddStubManager($converter, $force);
-
-        $this->routes = new TddRoutesManager($converter, $routes);
-        $this->prefix = $prefix;
+        $this->routes = TddRoutesManager::init(
+            TddStubConverter::init( $this->params )
+        );
     }
 
     /**
@@ -50,9 +40,9 @@ class TddGenerator {
      *
      * @return   void
      */
-    public static function handle($model, $force = false, $routes = "api.php", $prefix = '', $admin = false)
+    public static function handle( TddParams $params )
     {
-        $generator = new static($model, $force, $routes, $prefix, $admin);
+        $generator = new static( $params );
 
         $generator
             ->init()
@@ -68,13 +58,28 @@ class TddGenerator {
      *
      * @return   void
      */
-    public static function admin($force = false, $prefix = '')
+    public static function admin( TddParams $params )
     {
-        $generator = new static(null. $force, "api.php", $prefix);
+        $generator = new static( $params );
 
-        $generator->stubs = TddStubManager::admin($force, $prefix);
+        $generator->stubs = TddStubManager::admin( $params );
 
-        //dd($generator->stubs);
+        $generator->process();
+
+        return $generator;
+    }
+
+    /**
+     * Setup the parent files
+     * @method parent
+     *
+     * @return   void
+     */
+    public static function parent( TddParams $params )
+    {
+        $generator = new static( $params );
+
+        $generator->stubs = TddStubManager::parent( $params );
 
         $generator->process();
 
@@ -89,10 +94,10 @@ class TddGenerator {
      */
     public function init()
     {
-        if ( ! $this->force && $this->stubs->migrationExists() )
+        if ( ! $this->params->force && $this->stubs->migrationExists() )
             throw new \Exception("Migration found for {$this->model} table. If you wish to overwrite it, try the command again with the --force option.");
 
-        if ( $this->force )
+        if ( $this->params->force )
             $this->output[] = $this->stubs->cleanUp();
 
         return $this;

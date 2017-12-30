@@ -10,14 +10,19 @@ class TddRoutesManager {
     protected $converter;
 
     /**
-     * The routes file
+     * Initialize a new RoutesManager
+     * @method init
+     *
+     * @return   static
      */
-    protected $routes;
+    public static function init(TddStubConverter $converter)
+    {
+        return new static($converter);
+    }
 
-    public function __construct(TddStubConverter $converter, $routes)
+    public function __construct(TddStubConverter $converter)
     {
         $this->converter = $converter;
-        $this->routes = $routes;
     }
 
     /**
@@ -28,10 +33,10 @@ class TddRoutesManager {
      */
     public function process()
     {
-        $routes = base_path("routes" . DIRECTORY_SEPARATOR . $this->routes);
+        $routes = base_path("routes" . DIRECTORY_SEPARATOR . $this->converter->params->routes);
         $contents = file_get_contents($routes);
 
-        $new_route = "Route::apiResource(\"{$this->converter->model_lower_plural}\",\"{$this->converter->model_capped}Controller\");";
+        $new_route = "Route::apiResource(\"{$this->converter->model->lower_plural}\",\"{$this->converter->model->capped}Controller\");";
 
         if  ( strpos($contents, $new_route) !== false )
         {

@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\[Thing];
+use App\[Parent];
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\New[Parent][Thing]Request;
+use App\Http\Requests\Update[Parent][Thing]Request;
+
+class [Parent][Thing]Controller extends Controller
+{
+
+    /**
+     * Get a listing the [Parent]'s [Thing]s
+     *
+     * @param [Parent] $[parent]
+     * @return JsonResponse
+     */
+    public function index([Parent] $[parent])
+    {
+        return response()->json( $[parent]->[things], 200);
+    }
+
+    /**
+     * Display the specified [Parent]'s [Thing].
+     *
+     * @param  [Parent]  $[parent]
+     * @param  [Thing]  $[thing]
+     * @return \Illuminate\Http\Response
+     */
+    public function show([Parent] $[parent], [Thing] $[thing])
+    {
+        return response()->json($[parent]->[things]()->findOrFail($[thing])->first(),200);
+    }
+
+    /**
+     * Store the new [Parent][Thing]
+     * @method store
+     *
+     * @param New[Parent][Thing]Request $request
+     * @param [Parent] $[parent]
+     * @return JsonResponse
+     */
+    public function store(New[Parent][Thing]Request $request, [Parent] $[parent] )
+    {
+        $[parent]->[things]()->save( [Thing]::make( $request->validated() ) );
+
+        return response([], 201);
+    }
+
+    /**
+     * Update the specified [Parent][Thing]
+     *
+     * @param Update[Parent][Thing]Request $request
+     * @param [Parent] $[parent]
+     * @param [Thing] $[thing]
+     * @return JsonResponse
+     */
+    public function update(Update[Parent][Thing]Request $request, [Parent] $[parent], [Thing] $[thing])
+    {
+        $[parent]
+            ->[things]()
+            ->findOrFail( $[thing] )
+            ->first()
+            ->update( $request->validated() );
+
+        return response([],202);
+    }
+
+    /**
+     * Destroy the specified [Parent][Thing]
+     *
+     * @param [Parent] $[parent]
+     * @param [Thing] $[thing]
+     * @return JsonResponse
+     */
+    public function destroy([Parent] $[parent], [Thing] $[thing])
+    {
+        $[parent]
+            ->[things]()
+            ->findOrFail( $[thing] )
+            ->first()
+            ->delete();
+
+        return response([], 202);
+    }
+}
