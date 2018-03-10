@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use File;
 use Ingenious\TddGenerator\Commands\TddGenerate;
 
 class TddStubConverter {
@@ -12,7 +13,7 @@ class TddStubConverter {
 
     public $params;
 
-    protected $command;
+    public $output;
 
     /**
      * Initialize a new StubConverter
@@ -33,7 +34,7 @@ class TddStubConverter {
 
         $this->parent = optional( new TddCaseManager($this->params->parent) );
 
-        $this->command = new TddGenerate;
+        $this->output = [];
     }
 
     /**
@@ -50,7 +51,7 @@ class TddStubConverter {
             mkdir( dirname($output) );
 
         if ( ! $this->params->force && file_exists($output) ) {
-            $this->command->alert("Skipping file {$output}. It already exists.");
+            $this->output[] = "[warn]*** Skipping file {$output}. It already exists. ***";
             return;
         }
 
@@ -115,7 +116,20 @@ class TddStubConverter {
         );
     }
 
+    /**
+     * Does the model have a migration already?
+     * @method migrationExists
+     *
+     * @return   bool
+     */
+    public function migrationExists()
+    {
+        $migration = "*_create_{$this->model->lower_plural}_table*";
 
+        $files = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . $migration );
+
+        return !! count($files);
+    }
 
 
 }

@@ -95,7 +95,8 @@ class TddGenerator {
     public function init()
     {
         if ( ! $this->params->force && $this->stubs->migrationExists() )
-            throw new \Exception("Migration found for {$this->model} table. If you wish to overwrite it, try the command again with the --force option.");
+            $this->output[] = "[warn]***Skipping Migration file. It already exists.***";
+
 
         if ( $this->params->force )
             $this->output[] = $this->stubs->cleanUp();

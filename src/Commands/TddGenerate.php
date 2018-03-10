@@ -60,7 +60,13 @@ class TddGenerate extends Command
         $generator = TddGenerator::handle( $params );
 
         foreach( $generator->output as $comment ) {
-            $this->comment($comment);
+
+            if ( strpos($comment,"[warn]") !== false ) {
+                $this->comment( str_replace("[warn]","",$comment) );
+            }
+            else {
+                $this->info($comment);
+            }
         }
 
         $this->info("\nProcessing complete.");

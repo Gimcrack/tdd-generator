@@ -38,7 +38,10 @@ class TddStubManager {
      */
     public static function base(TddParams $params)
     {
-        return new static( new TddStubConverter($params), TddBaseStubs::get() );
+        $converter = new TddStubConverter($params);
+        $skip_migration = $converter->migrationExists();
+
+        return new static( $converter, TddBaseStubs::get($skip_migration) );
     }
 
     /**
@@ -85,6 +88,8 @@ class TddStubManager {
 
             $this->count++;
         }
+
+        $output = array_merge($output, $this->converter->output);
 
         return implode("\n",$output);
     }
@@ -174,7 +179,7 @@ class TddStubManager {
      * Get the conversion message
      * @method getConversionMessage
      *
-     * @return   void
+     * @return   string
      */
     private function getConversionMessage($path, $stub)
     {
@@ -188,15 +193,11 @@ class TddStubManager {
      * Does the model have a migration already?
      * @method migrationExists
      *
-     * @return   void
+     * @return   bool
      */
     public function migrationExists()
     {
-        $migration = "*_create_{$this->converter->model->lower_plural}_table*";
-
-        $files = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . $migration );
-
-        return !! count($files);
+        return $this->converter->migrationExists();
     }
 
 
