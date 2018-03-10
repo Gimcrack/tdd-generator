@@ -2,6 +2,8 @@
 
 namespace Ingenious\TddGenerator;
 
+use Ingenious\TddGenerator\Commands\TddGenerate;
+
 class TddStubConverter {
 
     public $model;
@@ -9,6 +11,8 @@ class TddStubConverter {
     public $parent;
 
     public $params;
+
+    protected $command;
 
     /**
      * Initialize a new StubConverter
@@ -28,6 +32,8 @@ class TddStubConverter {
         $this->model = optional( new TddCaseManager($this->params->model) );
 
         $this->parent = optional( new TddCaseManager($this->params->parent) );
+
+        $this->command = new TddGenerate;
     }
 
     /**
@@ -43,8 +49,10 @@ class TddStubConverter {
         if ( ! file_exists( dirname( $output ) ) )
             mkdir( dirname($output) );
 
-        if ( ! $this->params->force && file_exists($output) )
-            throw new \Exception($output . " already exists. Try using the force option --f");
+        if ( ! $this->params->force && file_exists($output) ) {
+            $this->command->alert("Skipping file {$output}. It already exists.");
+            return;
+        }
 
         if ( ! file_put_contents($output, $new_content) ) {
             throw new \Exception("Could not write to $output");
