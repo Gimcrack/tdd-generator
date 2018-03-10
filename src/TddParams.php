@@ -14,6 +14,8 @@ class TddParams {
 
     public $admin;
 
+    public $backup;
+
     public $routes;
 
     /**
@@ -51,6 +53,19 @@ class TddParams {
     public function setForce($force)
     {
         $this->force = $force;
+
+        return $this;
+    }
+
+    /**
+     * Backup and Replace existing files
+     * @method setBackup
+     *
+     * @return   $this
+     */
+    public function setBackup($backup)
+    {
+        $this->backup = $backup;
 
         return $this;
     }

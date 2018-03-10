@@ -19,7 +19,7 @@ $factory->define(App\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
+        'password' => $password ?: $password = '$2y$10$cTqGLrmv0OYiWl2Lf591v.B2JXyXDdY9x7HAaMckBkRkk5Ts6YTiG', // secret
         'remember_token' => str_random(10),
         'admin_flag' => 0,
     ];
@@ -31,7 +31,7 @@ $factory->state(App\User::class, 'admin', function( Faker $faker ) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
+        'password' => $password ?: $password = '$2y$10$cTqGLrmv0OYiWl2Lf591v.B2JXyXDdY9x7HAaMckBkRkk5Ts6YTiG', // secret
         'remember_token' => str_random(10),
         'admin_flag' => 1,
     ];
@@ -43,7 +43,7 @@ $factory->state(App\User::class, 'approver', function( Faker $faker ) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
+        'password' => $password ?: $password = '$2y$10$cTqGLrmv0OYiWl2Lf591v.B2JXyXDdY9x7HAaMckBkRkk5Ts6YTiG', // secret
         'remember_token' => str_random(10),
         'admin_flag' => 0,
     ];

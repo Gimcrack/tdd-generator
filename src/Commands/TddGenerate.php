@@ -21,6 +21,7 @@ class TddGenerate extends Command
         { routes? : The routes file to use }
         { prefix? : The route name prefix to use e.g. admin }
         { --force : Overwrite existing files without confirmation }
+        { --backup : Backup and Replace existing fies }
         { --admin : Only allow admin access to the generated routes }
         { --defaults : Supress prompts, use defaults }
     ';
@@ -55,7 +56,8 @@ class TddGenerate extends Command
             ->setPrefix( $this->getPrefix() )
             ->setRoutes( $this->getRoutesFile() )
             ->setAdmin( $this->getAdmin() )
-            ->setForce( $this->getForce() );
+            ->setForce( $this->getForce() )
+            ->setBackup( $this->getBackup() );
 
         $generator = TddGenerator::handle( $params );
 
@@ -128,7 +130,7 @@ class TddGenerate extends Command
 
         $this->comment("\n\nWhat prefix should the new routes have? Optional");
 
-        return $this->ask("> Enter a prefix", false);
+        return $this->ask("> Enter a prefix. [None]", false);
     }
 
     /**
@@ -147,7 +149,7 @@ class TddGenerate extends Command
 
         $this->comment("\n\nDoes the model have a parent model? Optional");
 
-        return $this->ask("> Enter a parent", false);
+        return $this->ask("> Enter a parent. [None]", false);
     }
 
     /**
@@ -164,7 +166,27 @@ class TddGenerate extends Command
         if ( $this->option('defaults') )
             return false;
 
-        return (bool) $this->ask("> Force overwriting of existing files?", false);
+        return (bool) $this->ask("> Force overwriting of existing files? [No]", false);
+    }
+
+    /**
+     * Backup existing files?
+     * @method getBackup
+     *
+     * @return   bool
+     */
+    private function getBackup()
+    {
+        if ( !! $this->option('backup') )
+            return true;
+
+        if ( !! $this->option('force') )
+            return false;
+
+        if ( $this->option('defaults') )
+            return false;
+
+        return (bool) $this->ask("> Skip or Backup/Replace existing files? [Skip]", false);
     }
 
     /**
@@ -181,6 +203,6 @@ class TddGenerate extends Command
         if ( $this->option('defaults') )
             return false;
 
-        return (bool) $this->ask("> Admin only routes?", false);
+        return (bool) $this->ask("> Admin only routes? [No]", false);
     }
 }

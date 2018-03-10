@@ -51,8 +51,16 @@ class TddStubConverter {
             mkdir( dirname($output) );
 
         if ( ! $this->params->force && file_exists($output) ) {
-            $this->output[] = "[warn]*** Skipping file {$output}. It already exists. ***";
-            return;
+            if ( $this->params->backup )
+            {
+                $this->output[] = "[warn] *** Backing up {$output}. It already exists. ***";
+                File::move($output, $output . ".bak");
+            }
+            else
+            {
+                $this->output[] = "[warn] *** Skipping file {$output}. It already exists. ***";
+                return;
+            }
         }
 
         if ( ! file_put_contents($output, $new_content) ) {
