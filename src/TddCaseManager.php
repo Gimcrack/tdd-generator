@@ -22,6 +22,7 @@ class TddCaseManager {
      */
     public function __construct($model)
     {
+        $model = $model ?? '';
         $this->capped = Str::studly($model);
         $this->capped_plural = Str::studly( Str::plural($model) );
 
