@@ -38,7 +38,7 @@ class TddGenerator {
      * Description
      * @method handle
      *
-     * @return   void
+     * @return   static
      */
     public static function handle( TddParams $params )
     {
@@ -56,7 +56,7 @@ class TddGenerator {
      * Setup the admin files
      * @method admin
      *
-     * @return   void
+     * @return   static
      */
     public static function admin( TddParams $params )
     {
@@ -73,13 +73,30 @@ class TddGenerator {
      * Setup the parent files
      * @method parent
      *
-     * @return   void
+     * @return   static
      */
     public static function parent( TddParams $params )
     {
         $generator = new static( $params );
 
         $generator->stubs = TddStubManager::parent( $params );
+
+        $generator->process();
+
+        return $generator;
+    }
+
+    /**
+     * Setup the frontend files
+     * @method frontend
+     *
+     * @return   static
+     */
+    public static function frontend( TddParams $params )
+    {
+        $generator = new static( $params );
+
+        $generator->stubs = TddStubManager::frontend($params);
 
         $generator->process();
 
@@ -120,12 +137,13 @@ class TddGenerator {
     /**
      * Convert the stubs
      * @method convert
+     * @param  $type  string
      *
      * @return   void
      */
-    public function process()
+    public function process($type = '.php')
     {
-        $this->output[] = $this->stubs->process();
+        $this->output[] = $this->stubs->process($type);
 
         return $this;
     }

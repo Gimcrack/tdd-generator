@@ -1,0 +1,63 @@
+
+// Body
+$body-bg: #f5f8fa;
+
+// Borders
+$laravel-border-color: darken($body-bg, 10%);
+$list-group-border: $laravel-border-color;
+$navbar-default-border: $laravel-border-color;
+$panel-default-border: $laravel-border-color;
+$panel-inner-border: $laravel-border-color;
+
+// Brands
+$brand-primary: #3097D1;
+$brand-info: #8eb4cb;
+$brand-success: #2ab27b;
+$brand-warning: #cbb956;
+$brand-danger: #bf5329;
+
+// Typography
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$font-family-sans-serif: "Raleway", sans-serif;
+$font-size-base: 14px;
+$line-height-base: 1.6;
+$text-color: #636b6f;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: lighten($text-color, 40%);
+$input-border-focus: lighten($brand-primary, 25%);
+$input-color-placeholder: lighten($text-color, 30%);
+
+// Panels
+$panel-default-heading-bg: #fff;
+
+// SWAL
+$swal2-white:       #fff !default;
+$swal2-black:       #000 !default;
+$swal2-transparent: rgba($swal2-black, 0) !default;
+
+$swal2-success:        $brand-success !default;
+$swal2-success-border: rgba($swal2-success, .2) !default;
+$swal2-error:          $brand-danger !default;
+$swal2-warning:        $brand-warning !default;
+$swal2-info:           $brand-info !default;
+$swal2-question:       $brand-primary !default;
+
+$swal2-overlay:        rgba($swal2-black, .4) !default;
+
+$swal2-close-button:               lighten($swal2-black, 80) !default;
+$swal2-close-button-hover:         #d55 !default;
+
+$swal2-input-border:               lighten($swal2-black, 85) !default;
+$swal2-input-border-focus:         #b4dbed !default;
+$swal2-input-box-shadow:           rgba($swal2-black, .06) !default;
+$swal2-input-box-shadow-focus:     #c4e6f5 !default;
+
+$swal2-validationerror-background: #ea7d7d !default;
+$swal2-validationerror-color:      $swal2-white !default;

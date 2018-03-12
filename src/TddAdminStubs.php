@@ -2,6 +2,8 @@
 
 namespace Ingenious\TddGenerator;
 
+use Ingenious\TddGenerator\TddStub;
+
 class TddAdminStubs {
 
     /**
@@ -13,23 +15,23 @@ class TddAdminStubs {
     public static function get()
     {
         return collect([
-            "Routes/api-admin" => base_path("routes"),
-            "Routes/api-user" => base_path("routes"),
-            "Models/User" => app_path(),
-            "Controllers/UserController" => app_path("Http/Controllers"),
-            "Controllers/UserPromotionController" => app_path("Http/Controllers"),
-            "Middleware/AuthenticateAsAdmin" => app_path("Http/Middleware"),
-            "Middleware/Kernel" => app_path("Http"),
-            "Migrations/2014_10_12_000000_create_users_table" => database_path("Migrations"),
-            "Tests/Unit/UserTest" => base_path("tests/Unit"),
-            "Tests/Feature/UserTest" => base_path("tests/Feature"),
-            "Factories/UserFactory" => database_path("Factories"),
-            "Providers/RouteServiceProvider" => app_path("Providers"),
-            "Requests/NewUserRequest" => app_path("Http\Requests"),
-            "Requests/UpdateUserRequest" => app_path("Http\Requests"),
-            "Events/UserWasCreated" => app_path("Events"),
-            "Events/UserWasDestroyed" => app_path("Events"),
-            "Events/UserWasUpdated" => app_path("Events"),
+            TddStub::make("Routes/api-admin", base_path("routes") ),
+            TddStub::make("Routes/api-user", base_path("routes") ),
+            TddStub::make("Models/User", app_path() ),
+            TddStub::make("Controllers/UserController", app_path("Http/Controllers") ),
+            TddStub::make("Controllers/UserPromotionController", app_path("Http/Controllers") ),
+            TddStub::make("Middleware/AuthenticateAsAdmin", app_path("Http/Middleware") ),
+            TddStub::make("Middleware/Kernel", app_path("Http") ),
+            TddStub::make("Migrations/2014_10_12_000000_create_users_table", database_path("Migrations") ),
+            TddStub::make("Tests/Unit/UserTest", base_path("tests/Unit") ),
+            TddStub::make("Tests/Feature/UserTest", base_path("tests/Feature") ),
+            TddStub::make("Factories/UserFactory", database_path("Factories") ),
+            TddStub::make("Providers/RouteServiceProvider", app_path("Providers") ),
+            TddStub::make("Requests/NewUserRequest", app_path("Http\Requests") ),
+            TddStub::make("Requests/UpdateUserRequest", app_path("Http\Requests") ),
+            TddStub::make("Events/UserWasCreated", app_path("Events") ),
+            TddStub::make("Events/UserWasDestroyed", app_path("Events") ),
+            TddStub::make("Events/UserWasUpdated", app_path("Events") ),
         ]);
     }
 }

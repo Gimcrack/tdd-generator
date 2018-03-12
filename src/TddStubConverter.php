@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator;
 
 use File;
+use Ingenious\TddGenerator\TddStub;
 use Ingenious\TddGenerator\Commands\TddGenerate;
 
 class TddStubConverter {
@@ -40,32 +41,27 @@ class TddStubConverter {
     /**
      * Description
      * @method process
+     * @param  TddStub  $stub
      *
      * @return   void
      */
-    public function process($stub_content, $output)
+    public function process( TddStub $stub )
     {
-        $new_content = $this->interpolate($stub_content);
+        // get the output filename
+        $destination = $this->destination($stub);
 
-        if ( ! file_exists( dirname( $output ) ) )
-            mkdir( dirname($output) );
+        // create the output folder if it doesn't exist
+        $this->verifyDestination($destination);
 
-        if ( ! $this->params->force && file_exists($output) ) {
-            if ( $this->params->backup )
-            {
-                $this->output[] = "[warn] *** Backing up {$output}. It already exists. ***";
-                File::move($output, $output . ".bak");
-            }
-            else
-            {
-                $this->output[] = "[warn] *** Skipping file {$output}. It already exists. ***";
-                return;
-            }
-        }
+        // determine if the existing file should be backed up or skipped
+        if ( $this->backupOrSkip($destination) )
+            return;
 
-        if ( ! file_put_contents($output, $new_content) ) {
-            throw new \Exception("Could not write to $output");
-        }
+        // write the output
+        $this->write($stub);
+
+        // return the conversion message
+        return $this->message($stub);
     }
 
     /**
@@ -93,8 +89,8 @@ class TddStubConverter {
             ,  'parents'
             ,  'Parent'
             ,  'XXXX_XX_XX_XXXXXX'
-            , '[prefix]'
-            , 'actingAsUser()'
+            ,  '[prefix]'
+            ,  'actingAsUser()'
         ];
 
         $replace = [
@@ -139,5 +135,81 @@ class TddStubConverter {
         return !! count($files);
     }
 
+    /**
+     * Get the path to the new file
+     * @method destination
+     * @param  TddStub  $stub
+     *
+     * @return   string
+     */
+    public function destination(TddStub $stub)
+    {
+        return str_replace(["\\","/"],DIRECTORY_SEPARATOR,$stub->path)
+            . DIRECTORY_SEPARATOR
+            . $this->interpolate( $stub->filename() )
+            . $stub->type;
+    }
+
+    /**
+     * Get the conversion message
+     * @method message
+     * @param  TddStub  $stub
+     *
+     * @return   string
+     */
+    public function message(TddStub $stub)
+    {
+        return str_pad("Creating [" . $this->interpolate( $stub->name ) . "] ", 75, "-") . "  Done.";
+    }
+
+    /**
+     * Verify the destination exists
+     * @method verifyDestination
+     * @param  string  $destination
+     *
+     * @return   void
+     */
+    private function verifyDestination($destination)
+    {
+        if ( ! file_exists( dirname( $destination ) ) )
+            mkdir( dirname($destination) );
+    }
+
+    /**
+     * Backup existing or skip existing
+     * @method backupOrSkip
+     * @param  string  $destination
+     *
+     * @return   bool
+     */
+    private function backupOrSkip($destination)
+    {
+        if ( $this->params->force || ! file_exists($destination) )
+            return false; // don't skip
+
+        if ( $this->params->backup ) {
+            $this->output[] = "[warn] *** Backing up {$destination}. It already exists. ***";
+            File::move($destination, $destination . ".bak");
+            return false; // don't skip
+        }
+
+        $this->output[] = "[warn] *** Skipping file {$destination}. It already exists. ***";
+        return true; // skip
+    }
+
+    /**
+     * Write the output to the destination
+     * @method write
+     * @param  TddStub  $stub
+     *
+     * @return   void
+     */
+    private function write(TddStub $stub)
+    {
+        $destination = $this->destination($stub);
+
+        if ( ! file_put_contents($destination, $stub->content() ) )
+            throw new \Exception("Could not write to $destination");
+    }
 
 }

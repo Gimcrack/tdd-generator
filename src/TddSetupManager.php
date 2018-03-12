@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator;
 
 use File;
+use Ingenious\TddGenerator\TddNpmDependencies;
 
 class TddSetupManager {
 
@@ -52,6 +53,24 @@ class TddSetupManager {
         $this->output[] = $this->setupHttpKernel();
 
         $this->output[] = $this->setupUserModel();
+
+        return $this;
+    }
+
+    /**
+     * Setup the frontend files
+     * @method frontend
+     *
+     * @return   $this
+     */
+    public function frontend($command = null)
+    {
+        if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
+        $this->output[] = $this->setupNpmDependencies();
+
+        $this->output[] = $this->moveExampleComponent();
+
+        return $this;
     }
 
     /**
@@ -119,6 +138,25 @@ class TddSetupManager {
 
         foreach( $files as $file ) {
             $output[] = "Renaming Example Test {$file}... Done.";
+            File::move($file,"{$file}.bak");
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Move the example component
+     * @method moveExampleComponent
+     *
+     * @return   void
+     */
+    private function moveExampleComponent()
+    {
+        $output = [];
+        $files = File::glob( base_path("resources/assets/js/components") . DIRECTORY_SEPARATOR . "*Example*");
+
+        foreach( $files as $file ) {
+            $output[] = "Renaming Example Component {$file}... Done.";
             File::move($file,"{$file}.bak");
         }
 
@@ -218,5 +256,16 @@ class TddSetupManager {
         }
 
         return implode("\n",$output);
+    }
+
+    /**
+     * Setup the NPM dependencies
+     * @method setupNpmDependencies
+     *
+     * @return   string
+     */
+    private function setupNpmDependencies()
+    {
+        return TddNpmDependencies::install();
     }
 }
