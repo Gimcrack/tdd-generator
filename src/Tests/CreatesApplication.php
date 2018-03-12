@@ -20,7 +20,10 @@ namespace Ingenious\TddGenerator\Tests {
          */
         public function createApplication()
         {
-            if ( file_exists( __DIR__.'../bootstrap/app.php' )  )
+            if ( env('APP_BOOTSTRAP_PATH') )
+                $app = require(env('APP_BOOTSTRAP_PATH'));
+
+            elseif ( file_exists( __DIR__.'../bootstrap/app.php' )  )
                 $app = require __DIR__.'/../bootstrap/app.php';
 
             elseif ( file_exists(__DIR__.'/../../../../../bootstrap/app.php') )

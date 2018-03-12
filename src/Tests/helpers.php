@@ -1,5 +1,7 @@
 <?php
 
+use App\ImportedProductDetail;
+use App\ImportedProductHeader;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -7,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @param $what
  * @param array $overrides
  * @param int $qty
- * @return Model|Collection
+ * @return Model|Collection|ImportedProductHeader|ImportedProductDetail
  */
 function create($what, $overrides = [], $qty = 1)
 {
@@ -25,7 +27,7 @@ function create($what, $overrides = [], $qty = 1)
  * @param $state
  * @param array $overrides
  * @param int $qty
- * @return Model
+ * @return Model|ImportedProductHeader|ImportedProductDetail
  */
 function create_state($what, $state, $overrides = [], $qty = 1)
 {
