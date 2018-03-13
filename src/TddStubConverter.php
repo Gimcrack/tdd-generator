@@ -53,8 +53,12 @@ class TddStubConverter {
         // create the output folder if it doesn't exist
         $this->verifyDestination($destination);
 
+        // determine if the existing file matches the new file
+        if ( $this->alreadyInPlace($stub) )
+            return;
+
         // determine if the existing file should be backed up or skipped
-        if ( $this->backupOrSkip($destination) )
+        elseif ( $this->backupOrSkip($destination) )
             return;
 
         // write the output
@@ -198,6 +202,29 @@ class TddStubConverter {
     }
 
     /**
+     * Backup existing or skip existing
+     * @method alreadyInPlace
+     * @param  TddStub  $stub
+     *
+     * @return   bool
+     */
+    private function alreadyInPlace(TddStub $stub)
+    {
+        if ( ! file_exists( $destination = $this->destination($stub)) )
+            return false; // not in place
+
+        $original = file_get_contents($destination);
+        $new = $stub->content();
+
+        if ( $original == $new ) {
+            $this->output[] = "*** {$destination} already in place. ***";
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Write the output to the destination
      * @method write
      * @param  TddStub  $stub
@@ -208,7 +235,7 @@ class TddStubConverter {
     {
         $destination = $this->destination($stub);
 
-        if ( ! file_put_contents($destination, $stub->content() ) )
+        if ( ! file_put_contents($destination, $this->interpolate( $stub->content() ) ) )
             throw new \Exception("Could not write to $destination");
     }
 

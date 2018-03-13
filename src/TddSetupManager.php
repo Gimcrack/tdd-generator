@@ -3,7 +3,6 @@
 namespace Ingenious\TddGenerator;
 
 use File;
-use Ingenious\TddGenerator\TddNpmDependencies;
 
 class TddSetupManager {
 
@@ -14,258 +13,77 @@ class TddSetupManager {
 
     public $output = [];
 
+    public $paths;
+
     public function __construct($stubs = null)
     {
         $this->stubs = $stubs ?? new TddStubManager;
+
+        $this->paths = (object) [
+            'example_tests' => base_path("tests") . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*Example*",
+            'example_component' => base_path("resources/assets/js/components") . DIRECTORY_SEPARATOR . "*Example*",
+            'user_factory' => database_path("Factories") . DIRECTORY_SEPARATOR . "UserFactory*",
+            'user_migration' => database_path("Migrations") . DIRECTORY_SEPARATOR . "2014_10_12_000000_create_users_table*",
+            'route_service_provider' => app_path("Providers") . DIRECTORY_SEPARATOR . "RouteServiceProvider*",
+            'http_kernel' => app_path("Http") . DIRECTORY_SEPARATOR . "Kernel*",
+            'user_model' => app_path() . DIRECTORY_SEPARATOR . "User*",
+        ];
     }
 
     /**
      * Setup the TDD Generator
-     * @method process
+     * @method base
      *
-     * @return   $this
+     * @return   static
      */
-    public function process()
+    public static function base()
     {
-        $this->output[] = $this->setupPhpunit();
+        $setup = new static();
 
-        $this->output[] = $this->setupTestCase();
+        $setup->output[] = TddFileBackup::backup( $setup->paths->example_tests );
 
-        $this->output[] = $this->moveExampleTests();
-
-        return $this;
+        return $setup;
     }
 
     /**
      * Setup the admin files
      * @method admin
      *
-     * @return   $this
+     * @return   static
      */
-    public function admin()
+    public static function admin()
     {
-        $this->output[] = $this->setupUserFactory();
+        $setup = new static();
 
-        $this->output[] = $this->setupUsersMigration();
+        $setup->output[] = collect([
+            'user_factory',
+            'user_migration',
+            'route_service_provider',
+            'http_kernel',
+            'user_model'
+        ])->map( function($key) use ($setup) {
+            return TddFileBackup::backup( $setup->paths->$key );
+        })->implode("\n");
 
-        $this->output[] = $this->setupRouteServiceProvider();
-
-        $this->output[] = $this->setupHttpKernel();
-
-        $this->output[] = $this->setupUserModel();
-
-        return $this;
+        return $setup;
     }
 
     /**
      * Setup the frontend files
      * @method frontend
      *
-     * @return   $this
+     * @return   static
      */
-    public function frontend($command = null)
+    public static function frontend($command = null)
     {
+        $setup = new static();
+
         if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
-        $this->output[] = $this->setupNpmDependencies();
 
-        $this->output[] = $this->moveExampleComponent();
+        $setup->output[] = TddNpmDependencies::install();
 
-        return $this;
-    }
+        $setup->output[] = TddFileBackup::backup( $setup->paths->example_component );
 
-    /**
-     * Handle the phpunit.xml
-     * @method setupPhpunit
-     *
-     * @return   mixed
-     */
-    private function setupPhpunit()
-    {
-        $new_contents = $this->stubs->getStubContent("phpunit");
-
-        $original = base_path("phpunit.xml");
-
-        if ( file_exists( $original ) ) {
-            $original_contents = file_get_contents($original);
-
-            if ($new_contents == $original_contents) {
-                return "phpunit.xml already in place.";
-            }
-
-            File::move($original, $original . ".bak");
-        }
-
-        file_put_contents($original, $new_contents);
-        return "Copying phpunit.xml ... Done.";
-    }
-
-    /**
-     * Handle the Base TestCase
-     * @method setupTestCase
-     *
-     * @return   mixed
-     */
-    private function setupTestCase()
-    {
-        $new_contents = $this->stubs->getStubContent("Tests/TestCase");
-
-        $original = base_path("tests/TestCase.php");
-
-        if ( file_exists( $original ) ) {
-            $original_contents = file_get_contents($original);
-
-            if ($new_contents == $original_contents) {
-                return "Base TestCase already in place.";
-            }
-
-            File::move($original, $original . ".bak");
-        }
-
-        file_put_contents($original, $new_contents);
-        return "Copying Base TestCase... Done.";
-    }
-
-    /**
-     * Move the example tests
-     * @method moveExampleTests
-     *
-     * @return   void
-     */
-    private function moveExampleTests()
-    {
-        $output = [];
-        $files = File::glob( base_path("tests") . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*Example*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming Example Test {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Move the example component
-     * @method moveExampleComponent
-     *
-     * @return   void
-     */
-    private function moveExampleComponent()
-    {
-        $output = [];
-        $files = File::glob( base_path("resources/assets/js/components") . DIRECTORY_SEPARATOR . "*Example*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming Example Component {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the UserFactory
-     * @method setupUserFactory
-     *
-     * @return   void
-     */
-    private function setupUserFactory()
-    {
-        $output = [];
-        $files = File::glob( database_path("Factories") . DIRECTORY_SEPARATOR . "UserFactory*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the UsersMigration
-     * @method setupUsersMigration
-     *
-     * @return   void
-     */
-    private function setupUsersMigration()
-    {
-        $output = [];
-        $files = File::glob( database_path("Migrations") . DIRECTORY_SEPARATOR . "2014_10_12_000000_create_users_table*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the Route Service Provider
-     * @method setupRouteServiceProvider
-     *
-     * @return   void
-     */
-    private function setupRouteServiceProvider()
-    {
-        $output = [];
-        $files = File::glob( app_path("Providers") . DIRECTORY_SEPARATOR . "RouteServiceProvider*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the Http Kernel
-     * @method setupHttpKernel
-     *
-     * @return   void
-     */
-    private function setupHttpKernel()
-    {
-        $output = [];
-        $files = File::glob( app_path("Http") . DIRECTORY_SEPARATOR . "Kernel*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the User model
-     * @method setupUserModel
-     *
-     * @return   void
-     */
-    private function setupUserModel()
-    {
-        $output = [];
-        $files = File::glob( app_path() . DIRECTORY_SEPARATOR . "User*");
-
-        foreach( $files as $file ) {
-            $output[] = "Renaming {$file}... Done.";
-            File::move($file,"{$file}.bak");
-        }
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Setup the NPM dependencies
-     * @method setupNpmDependencies
-     *
-     * @return   string
-     */
-    private function setupNpmDependencies()
-    {
-        return TddNpmDependencies::install();
+        return $setup;
     }
 }

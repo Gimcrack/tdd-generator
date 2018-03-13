@@ -49,6 +49,32 @@ class TddGenerator {
             ->routes()
             ->process();
 
+        if ( !! $params->parent )
+        {
+            $generator->output[] = "Setting up the parent files";
+
+            $generator->stubs = TddStubManager::parent( $params );
+
+            $generator->process();
+        }
+
+        return $generator;
+    }
+
+    /**
+     * Setup the base files
+     * @method setup
+     *
+     * @return   static
+     */
+    public static function setup( TddParams $params )
+    {
+        $generator = new static( $params );
+
+        $generator->stubs = TddStubManager::setup( $params );
+
+        $generator->process();
+
         return $generator;
     }
 
@@ -141,9 +167,9 @@ class TddGenerator {
      *
      * @return   void
      */
-    public function process($type = '.php')
+    public function process()
     {
-        $this->output[] = $this->stubs->process($type);
+        $this->output[] = $this->stubs->process();
 
         return $this;
     }

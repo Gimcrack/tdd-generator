@@ -3,8 +3,6 @@
 namespace Ingenious\TddGenerator;
 
 use File;
-use Ingenious\TddGenerator\TddStub;
-use Ingenious\TddGenerator\TddFrontendStubs;
 
 class TddStubManager {
 
@@ -25,6 +23,17 @@ class TddStubManager {
         $this->converter = $converter;
 
         $this->stubs = $stubs;
+    }
+
+    /**
+     * Setup Stubs manager
+     * @method setup
+     *
+     * @return   static
+     */
+    public static function setup(TddParams $params)
+    {
+        return new static( new TddStubConverter($params), TddSetupStubs::get() );
     }
 
     /**

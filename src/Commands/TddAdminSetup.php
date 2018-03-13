@@ -7,9 +7,13 @@ use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddParams;
 use Ingenious\TddGenerator\TddGenerator;
 use Ingenious\TddGenerator\TddSetupManager;
+use Ingenious\TddGenerator\Concerns\GetsUserInput;
+use Ingenious\TddGenerator\Concerns\DisplaysOutput;
 
 class TddAdminSetup extends Command
 {
+    use GetsUserInput, DisplaysOutput;
+
     /**
      * The name and signature of the console command.
      *
@@ -30,106 +34,21 @@ class TddAdminSetup extends Command
     protected $description = 'Setup api-admin routes file and admin middleware.';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        $setup = new TddSetupManager();
-
-        $setup->admin();
-
-        foreach( $setup->output as $comment ) {
-            $this->comment($comment);
-        }
-
         $params = ( new TddParams )
             ->setRoutes( $this->getRoutesFile() )
             ->setPrefix( $this->getPrefix() )
             ->setForce( $this->getForce() );
 
-        $generator = TddGenerator::admin( $params );
+        $this->output( TddSetupManager::admin() );
 
-        foreach( $generator->output as $comment ) {
-            $this->comment($comment);
-        }
-    }
+        $this->output( TddGenerator::admin( $params ) );
 
-    /**
-     * Get the routes file
-     * @method getRoutesFile
-     *
-     * @return   string
-     */
-    private function getRoutesFile()
-    {
-        if ( !! $this->argument('routes') )
-            return $this->argument('routes');
-
-        $files = File::glob( base_path("routes" . DIRECTORY_SEPARATOR . "*api*.php" ) );
-
-        if ( count($files) == 1 )
-            return File::name($files[0]) . ".php";
-
-        if ( $this->option('defaults') ) {
-            return File::name( $files[0] ) . ".php";
-        }
-
-        $this->comment("\n\nWhat routes files should the new routes be added to?");
-
-        foreach( $files as $key => $file ) {
-            $this->comment( " [{$key}] ". File::name($file) . ".php");
-        }
-
-        $chosen = $this->ask("> Select one. [0]") ?? 0;
-
-        return File::name( $files[$chosen] ) . ".php";
-    }
-
-    /**
-     * Get the route prefix
-     * @method getPrefix
-     *
-     * @return   string
-     */
-    private function getPrefix()
-    {
-        if ( !! $this->argument('prefix') )
-            return $this->argument('prefix');
-
-        if ( $this->option('defaults') )
-            return null;
-
-        $this->comment("\n\nWhat prefix should the new routes have? Optional");
-
-        return $this->ask("> Enter a prefix", false);
-    }
-
-    /**
-     * Force overwriting of existing files?
-     * @method getForce
-     *
-     * @return   bool
-     */
-    private function getForce()
-    {
-        if ( !! $this->option('force') )
-            return true;
-
-        if ( $this->option('defaults') )
-            return false;
-
-        return (bool) $this->ask("> Force overwriting of existing files?", false);
+        $this->info("\nProcessing complete.");
     }
 }

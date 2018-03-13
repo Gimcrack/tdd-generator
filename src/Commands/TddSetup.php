@@ -4,17 +4,26 @@ namespace Ingenious\TddGenerator\Commands;
 
 use File;
 use Illuminate\Console\Command;
+use Ingenious\TddGenerator\TddParams;
 use Ingenious\TddGenerator\TddGenerator;
 use Ingenious\TddGenerator\TddSetupManager;
+use Ingenious\TddGenerator\Concerns\GetsUserInput;
+use Ingenious\TddGenerator\Concerns\DisplaysOutput;
 
 class TddSetup extends Command
 {
+    use GetsUserInput, DisplaysOutput;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'tdd:setup';
+    protected $signature = 'tdd:setup
+        { --force : Force overwriting of existing files }
+        { --backup : Backup and Replace existing fies }
+        { --defaults : Supress prompts, use defaults }
+    ';
 
     /**
      * The console command description.
@@ -24,28 +33,18 @@ class TddSetup extends Command
     protected $description = 'Initial Setup for Tdd Generator';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        $setup = new TddSetupManager();
+        $params = ( new TddParams )
+            ->setForce( $this->getForce() )
+            ->setBackup( $this->getBackup() );
 
-        $setup->process();
+        $this->output( TddSetupManager::base() );
 
-        foreach( $setup->output as $comment ) {
-            $this->comment($comment);
-        }
+        $this->output( TddGenerator::setup( $params ) );
     }
 }
