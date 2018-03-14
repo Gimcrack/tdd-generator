@@ -64,7 +64,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
     #home-container {
         background: white;
         width: 1400px;

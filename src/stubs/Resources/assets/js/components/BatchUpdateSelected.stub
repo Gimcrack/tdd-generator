@@ -140,7 +140,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
     .batch-update-selected {
         width: 600px;
         min-height: 400px;

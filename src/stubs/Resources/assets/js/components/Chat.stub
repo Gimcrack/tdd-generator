@@ -27,7 +27,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="scss">
     .chat-container {
         display: flex;
         width: 100%;

@@ -2,15 +2,19 @@
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
+// Fontawesome
+@import "~font-awesome/scss/font-awesome";
+
 // Variables
 @import "variables";
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
 @import "buttons";
 
+
 // SWAL
-@import "node_modules/sweetalert2/src/sweetalert2.scss";
+@import "~sweetalert2/src/sweetalert2.scss";
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -143,7 +147,7 @@ body {
     left: 30px;
     overflow: visible;
 
-    button:last-child() {
+    button:last-child {
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
     }

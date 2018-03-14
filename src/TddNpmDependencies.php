@@ -2,6 +2,8 @@
 
 namespace Ingenious\TddGenerator;
 
+use function base_path;
+
 class TddNpmDependencies {
 
     /**
@@ -12,7 +14,14 @@ class TddNpmDependencies {
      */
     public static function install()
     {
-        return exec('npm i -D ' . implode(" ", static::get() ) );
+        $return = [];
+        if ( ! file_exists( base_path("node_modules") ) )
+            $return[] = exec('npm install');
+
+        if( ! file_exists( base_path("node_modules/bootstrap-sass") ) )
+            $return[] = exec('npm i -D ' . implode(" ", static::get() ) );
+
+        return implode("\n", $return);
     }
 
     /**
@@ -24,6 +33,7 @@ class TddNpmDependencies {
     public static function get()
     {
         return [
+            'bootstrap-sass',
             'bootstrap-vertical-tabs',
             'laravel-echo',
             'sweetalert2',

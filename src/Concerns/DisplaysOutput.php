@@ -16,11 +16,14 @@ trait DisplaysOutput {
     {
         foreach( $processor->output as $comment ) {
 
+            if ( ! trim($comment) )
+                continue;
+
             if ( strpos($comment,"[warn]") !== false ) {
-                $this->comment( str_replace("[warn]","",$comment) );
+                $this->comment( trim(str_replace("[warn]","",$comment)) );
             }
             else {
-                $this->info($comment);
+                $this->info( trim($comment) );
             }
         }
     }
