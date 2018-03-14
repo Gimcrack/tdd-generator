@@ -2,7 +2,6 @@
 
 namespace Ingenious\TddGenerator\Commands;
 
-use File;
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddParams;
 use Ingenious\TddGenerator\TddGenerator;
@@ -23,7 +22,7 @@ class TddAdminSetup extends Command
         { prefix? : The route name prefix to use e.g. admin }
         { routes? : The routes file to use }
         { --force : Force overwriting of existing files }
-        { --defaults : Supress prompts, use defaults }
+        { --defaults : Suppress prompts, use defaults }
     ';
 
     /**

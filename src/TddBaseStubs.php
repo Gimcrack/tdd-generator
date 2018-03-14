@@ -2,15 +2,15 @@
 
 namespace Ingenious\TddGenerator;
 
-use Ingenious\TddGenerator\TddStub;
+use Illuminate\Support\Collection;
 
 class TddBaseStubs {
-
     /**
      * Get the stubs
      * @method get
      *
-     * @return   void
+     * @param bool $skip_migration
+     * @return Collection
      */
     public static function get($skip_migration = false)
     {

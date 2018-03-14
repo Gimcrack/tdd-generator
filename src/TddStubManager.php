@@ -2,34 +2,43 @@
 
 namespace Ingenious\TddGenerator;
 
-use File;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 
 class TddStubManager {
 
     /**
      * The StubConverter
+     *
+     * @var TddStubConverter
      */
     public $converter;
 
     /**
      * The stubs collection
+     *
+     * @var Collection
      */
     public $stubs;
 
+    /**
+     * @var int
+     */
     public $count = 0;
 
     public function __construct($converter = null, $stubs = null)
     {
-        $this->converter = $converter;
+        $this->converter = $converter ?? new TddStubConverter( new TddParams );
 
-        $this->stubs = $stubs;
+        $this->stubs = $stubs ?? collect();
     }
 
     /**
      * Setup Stubs manager
      * @method setup
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function setup(TddParams $params)
     {
@@ -40,7 +49,8 @@ class TddStubManager {
      * Base Stubs manager
      * @method base
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function base(TddParams $params)
     {
@@ -54,7 +64,8 @@ class TddStubManager {
      * Admin Stub manager
      * @method admin
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function admin(TddParams $params)
     {
@@ -65,7 +76,8 @@ class TddStubManager {
      * Parent Stub manager
      * @method parent
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function parent(TddParams $params)
     {
@@ -76,7 +88,8 @@ class TddStubManager {
      * Frontend Stub manager
      * @method parent
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function frontend(TddParams $params)
     {
@@ -87,7 +100,7 @@ class TddStubManager {
      * Process the stubs
      * @method process
      *
-     * @return   void
+     * @return   string
      */
     public function process()
     {
@@ -106,7 +119,7 @@ class TddStubManager {
      * Clean up generated files from previous runs
      * @method cleanUp
      *
-     * @return   void
+     * @return   string
      */
     public function cleanUp()
     {

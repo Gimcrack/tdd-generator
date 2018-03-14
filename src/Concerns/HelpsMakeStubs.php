@@ -17,7 +17,10 @@ trait HelpsMakeStubs {
      * Make a new stub
      * @method make
      *
-     * @return   static
+     * @param $name
+     * @param $path
+     * @param string $type
+     * @return static
      */
     public static function make($name, $path, $type = '.php')
     {
@@ -28,7 +31,8 @@ trait HelpsMakeStubs {
      * Make a new js stub
      * @method js
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function js($name)
     {
@@ -43,7 +47,8 @@ trait HelpsMakeStubs {
      * Make a new mixin stub
      * @method mixin
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function mixin($name)
     {
@@ -58,7 +63,8 @@ trait HelpsMakeStubs {
      * Make a new component stub
      * @method component
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function component($name)
     {
@@ -73,7 +79,8 @@ trait HelpsMakeStubs {
      * Make a new sass stub
      * @method sass
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function sass($name)
     {
@@ -88,7 +95,8 @@ trait HelpsMakeStubs {
      * Make a new view stub
      * @method view
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function view($name)
     {
@@ -104,7 +112,8 @@ trait HelpsMakeStubs {
      * Make a new route stub
      * @method route
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function route($name)
     {
@@ -118,7 +127,8 @@ trait HelpsMakeStubs {
      * Make a new model stub
      * @method model
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function model($name)
     {
@@ -132,7 +142,8 @@ trait HelpsMakeStubs {
      * Make a new controller stub
      * @method controller
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function controller($name)
     {
@@ -146,7 +157,8 @@ trait HelpsMakeStubs {
      * Make a new middleware stub
      * @method middleware
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function middleware($name)
     {
@@ -160,7 +172,8 @@ trait HelpsMakeStubs {
      * Make a new migration stub
      * @method migration
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function migration($name)
     {
@@ -174,7 +187,8 @@ trait HelpsMakeStubs {
      * Make a new test stub
      * @method test
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function test($name)
     {
@@ -190,7 +204,8 @@ trait HelpsMakeStubs {
      * Make a new factory stub
      * @method factory
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function factory($name)
     {
@@ -204,7 +219,8 @@ trait HelpsMakeStubs {
      * Make a new provider stub
      * @method provider
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function provider($name)
     {
@@ -218,13 +234,14 @@ trait HelpsMakeStubs {
      * Make a new request stub
      * @method request
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function request($name)
     {
         return static::make(
             "Requests" . DIRECTORY_SEPARATOR . $name,
-            app_path("Http\Requests")
+            app_path("Http/Requests")
         );
     }
 
@@ -232,7 +249,8 @@ trait HelpsMakeStubs {
      * Make a new event stub
      * @method event
      *
-     * @return   static
+     * @param $name
+     * @return static
      */
     public static function event($name)
     {

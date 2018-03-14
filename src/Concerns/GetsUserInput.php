@@ -2,7 +2,7 @@
 
 namespace Ingenious\TddGenerator\Concerns;
 
-use File;
+use Illuminate\Support\Facades\File;
 
 trait GetsUserInput {
 
@@ -32,7 +32,7 @@ trait GetsUserInput {
             $this->comment( " [{$key}] ". File::name($file) . ".php");
         }
 
-        $chosen = $this->ask("> Select one. [0]") ?? 0;
+        $chosen = $this->ask("> Select one. [0]") ?: 0;
 
         return File::name( $files[$chosen] ) . ".php";
     }

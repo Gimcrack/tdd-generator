@@ -2,7 +2,6 @@
 
 namespace Ingenious\TddGenerator\Concerns;
 
-use File;
 
 trait DisplaysOutput {
 
@@ -10,7 +9,8 @@ trait DisplaysOutput {
      * Display the output
      * @method output
      *
-     * @return   void
+     * @param $processor
+     * @return void
      */
     public function output($processor)
     {

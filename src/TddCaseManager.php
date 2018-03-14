@@ -18,7 +18,7 @@ class TddCaseManager {
      * Create a new Case Manager from the model
      * @method __construct
      *
-     * @return   void
+     * @param $model
      */
     public function __construct($model)
     {

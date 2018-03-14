@@ -2,13 +2,15 @@
 
 namespace Ingenious\TddGenerator;
 
+use Illuminate\Support\Collection;
+
 class TddParentStubs {
 
     /**
      * Get the stubs
      * @method get
      *
-     * @return   void
+     * @return   Collection
      */
     public static function get()
     {

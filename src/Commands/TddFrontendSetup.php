@@ -2,7 +2,6 @@
 
 namespace Ingenious\TddGenerator\Commands;
 
-use File;
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddParams;
 use Ingenious\TddGenerator\TddGenerator;
@@ -22,7 +21,7 @@ class TddFrontendSetup extends Command
     protected $signature = 'tdd:frontend-setup
         { --force : Force overwriting of existing files }
         { --backup : Backup existing files }
-        { --defaults : Supress prompts, use defaults }
+        { --defaults : Suppress prompts, use defaults }
     ';
 
     /**

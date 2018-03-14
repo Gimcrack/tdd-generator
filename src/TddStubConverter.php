@@ -2,9 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
-use File;
-use Ingenious\TddGenerator\TddStub;
-use Ingenious\TddGenerator\Commands\TddGenerate;
+use Illuminate\Support\Facades\File;
 
 class TddStubConverter {
 
@@ -17,10 +15,21 @@ class TddStubConverter {
     public $output;
 
     /**
+     * @var  array
+     */
+    private $search;
+
+    /**
+     * @var array
+     */
+    private $replace;
+
+    /**
      * Initialize a new StubConverter
      * @method init
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function init(TddParams $params)
     {
@@ -36,6 +45,31 @@ class TddStubConverter {
         $this->parent = optional( new TddCaseManager($this->params->parent) );
 
         $this->output = [];
+
+        $replacements = collect([
+            '[Things]' => $this->model->capped_plural,
+            '[things]' => $this->model->lower_plural,
+            '[Thing]' => $this->model->capped,
+            '[thing]' => $this->model->lower,
+            'Things' => $this->model->capped_plural,
+            'things' => $this->model->lower_plural,
+            'Thing' => $this->model->capped,
+            'thing' => $this->model->lower,
+            '[Parents]' => $this->parent->capped_plural,
+            '[parents]' => $this->parent->lower_plural,
+            '[Parent]' => $this->parent->capped,
+            '[parent]' => $this->parent->lower,
+            'Parents' => $this->parent->capped_plural,
+            'parents' => $this->parent->lower_plural,
+            'Parent' => $this->parent->capped,
+            'XXXX_XX_XX_XXXXXX' => date('Y_m_d_His'),
+            '[prefix]' => $this->params->prefix,
+            'actingAsUser()' => ( $this->params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()',
+        ]);
+
+        $this->search = $replacements->keys()->all();
+
+        $this->replace = $replacements->values()->all();
     }
 
     /**
@@ -43,7 +77,7 @@ class TddStubConverter {
      * @method process
      * @param  TddStub  $stub
      *
-     * @return   void
+     * @return   mixed
      */
     public function process( TddStub $stub )
     {
@@ -55,11 +89,11 @@ class TddStubConverter {
 
         // determine if the existing file matches the new file
         if ( $this->alreadyInPlace($stub) )
-            return;
+            return false;
 
         // determine if the existing file should be backed up or skipped
         elseif ( $this->backupOrSkip($destination) )
-            return;
+            return false;
 
         // write the output
         $this->write($stub);
@@ -72,54 +106,13 @@ class TddStubConverter {
      * Replace the placeholders in the text
      * @method parse
      *
-     * @return   void
+     * @param  string  $text
+     * @return string
      */
     public function interpolate($text)
     {
-        $search = [
-               '[Things]'
-            ,  '[things]'
-            ,  '[Thing]'
-            ,  '[thing]'
-            ,  'Things'
-            ,  'things'
-            ,  'Thing'
-            ,  'thing'
-            ,  '[Parents]'
-            ,  '[parents]'
-            ,  '[Parent]'
-            ,  '[parent]'
-            ,  'Parents'
-            ,  'parents'
-            ,  'Parent'
-            ,  'XXXX_XX_XX_XXXXXX'
-            ,  '[prefix]'
-            ,  'actingAsUser()'
-        ];
-
-        $replace = [
-              $this->model->capped_plural
-            , $this->model->lower_plural
-            , $this->model->capped
-            , $this->model->lower
-            , $this->model->capped_plural
-            , $this->model->lower_plural
-            , $this->model->capped
-            , $this->model->lower
-            , $this->parent->capped_plural
-            , $this->parent->lower_plural
-            , $this->parent->capped
-            , $this->parent->lower
-            , $this->parent->capped_plural
-            , $this->parent->lower_plural
-            , $this->parent->capped
-            , date('Y_m_d_His')
-            , $this->params->prefix
-            , ( $this->params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()'
-        ];
-
-        return str_replace($search
-            , $replace
+        return str_replace($this->search
+            , $this->replace
             , $text
         );
     }
@@ -227,9 +220,10 @@ class TddStubConverter {
     /**
      * Write the output to the destination
      * @method write
-     * @param  TddStub  $stub
      *
-     * @return   void
+     * @param  TddStub $stub
+     * @return void
+     * @throws \Exception
      */
     private function write(TddStub $stub)
     {

@@ -2,10 +2,8 @@
 
 namespace Ingenious\TddGenerator\Commands;
 
-use File;
 use Illuminate\Console\Command;
-use Ingenious\TddGenerator\TddGenerator;
-use Ingenious\TddGenerator\TddSetupManager;
+use Illuminate\Support\Facades\File;
 
 class TddCleanupBackups extends Command
 {
@@ -26,7 +24,7 @@ class TddCleanupBackups extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -58,21 +56,19 @@ class TddCleanupBackups extends Command
         }
 
         elseif ( $which == 2 ) {
-            foreach($files as $file) {
+            foreach ($files as $file) {
                 File::delete($file);
                 $this->comment("Deleting $file... Done.");
             }
-            return;
         }
-
-        return $this->handle();
     }
 
     /**
      * Recursive glob
      * @method rglob
      *
-     * @return   array
+     * @param  string  $pattern
+     * @return array
      */
     public function rglob($pattern)
     {

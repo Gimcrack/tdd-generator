@@ -2,22 +2,26 @@
 
 namespace Ingenious\TddGenerator;
 
-use File;
-
 class TddGenerator {
 
     /**
      * The Stub Manager
+     *
+     * @var TddStubManager
      */
     protected $stubs;
 
     /**
      * The Routes Manager
+     *
+     * @var TddRoutesManager
      */
     protected $routes;
 
     /**
      * The Params object
+     *
+     * @var TddParams
      */
     protected $params;
 
@@ -38,7 +42,8 @@ class TddGenerator {
      * Description
      * @method handle
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function handle( TddParams $params )
     {
@@ -65,7 +70,8 @@ class TddGenerator {
      * Setup the base files
      * @method setup
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function setup( TddParams $params )
     {
@@ -82,7 +88,8 @@ class TddGenerator {
      * Setup the admin files
      * @method admin
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function admin( TddParams $params )
     {
@@ -99,7 +106,8 @@ class TddGenerator {
      * Setup the parent files
      * @method parent
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function parent( TddParams $params )
     {
@@ -116,7 +124,8 @@ class TddGenerator {
      * Setup the frontend files
      * @method frontend
      *
-     * @return   static
+     * @param TddParams $params
+     * @return static
      */
     public static function frontend( TddParams $params )
     {
@@ -151,7 +160,7 @@ class TddGenerator {
      * Process the routes
      * @method routes
      *
-     * @return   void
+     * @return   $this
      */
     private function routes()
     {
@@ -163,9 +172,8 @@ class TddGenerator {
     /**
      * Convert the stubs
      * @method convert
-     * @param  $type  string
      *
-     * @return   void
+     * @return   $this
      */
     public function process()
     {

@@ -2,10 +2,8 @@
 
 namespace Ingenious\TddGenerator\Commands;
 
-use File;
 use Illuminate\Console\Command;
 use Ingenious\TddGenerator\TddParams;
-use Symfony\Component\Process\Process;
 use Ingenious\TddGenerator\TddGenerator;
 use Ingenious\TddGenerator\Concerns\GetsUserInput;
 use Ingenious\TddGenerator\Concerns\DisplaysOutput;
@@ -27,7 +25,7 @@ class TddGenerate extends Command
         { --force : Overwrite existing files without confirmation }
         { --backup : Backup and Replace existing fies }
         { --admin : Only allow admin access to the generated routes }
-        { --defaults : Supress prompts, use defaults }
+        { --defaults : Suppress prompts, use defaults }
     ';
 
     /**

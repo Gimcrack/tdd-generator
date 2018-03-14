@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use const DIRECTORY_SEPARATOR;
 use Ingenious\TddGenerator\TddStubConverter;
 use Ingenious\TddGenerator\Concerns\HelpsMakeStubs;
 
@@ -11,21 +12,38 @@ class TddStub {
 
     const STUB_PATH = __DIR__ . DIRECTORY_SEPARATOR . "stubs";
 
+    /**
+     * The stub name
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     * The path within laravel
+     *
+     * @var string
+     */
     public $path;
+
+    /**
+     * The type (extension)
+     *
+     * @var string
+     */
     public $type;
-    public $converter;
 
     /**
      * Create a new stub
      * @method __construct
      *
-     * @return   static
+     * @param  string  $name
+     * @param  string  $path
+     * @param  string  $type
      */
     public function __construct($name, $path, $type = '.php')
     {
-        // Body
-        $this->name = $name;
+        $this->name = str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name);
         $this->path = $path;
         $this->type = $type;
     }
@@ -45,7 +63,8 @@ class TddStub {
      * Get the full path to the stub
      * @method fullpath
      *
-     * @return   string
+     * @return string
+     * @throws \Exception
      */
     public function fullpath()
     {
@@ -68,20 +87,8 @@ class TddStub {
      */
     public function filename()
     {
-        $parts = explode("/",$this->name);
+        $parts = explode(DIRECTORY_SEPARATOR,$this->name);
 
         return array_pop($parts);
-    }
-
-    /**
-     * Set the converter
-     * @method setConverter
-     * @param  TddStubConverter  $converter
-     *
-     * @return   $this
-     */
-    public function setConverter(TddStubConverter $converter)
-    {
-        $this->converter = $converter;
     }
 }

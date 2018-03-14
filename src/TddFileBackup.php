@@ -2,7 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
-use File;
+use Illuminate\Support\Facades\File;
 
 class TddFileBackup {
 

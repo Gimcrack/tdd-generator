@@ -2,7 +2,9 @@
 
 namespace Ingenious\TddGenerator;
 
-use File;
+use Illuminate\Console\Command;
+
+;
 
 class TddSetupManager {
 
@@ -72,7 +74,8 @@ class TddSetupManager {
      * Setup the frontend files
      * @method frontend
      *
-     * @return   static
+     * @param Command|null $command
+     * @return static
      */
     public static function frontend($command = null)
     {

@@ -6,6 +6,8 @@ class TddRoutesManager {
 
     /**
      * The Stub Converter
+     *
+     * @var TddStubConverter
      */
     protected $converter;
 
@@ -13,7 +15,8 @@ class TddRoutesManager {
      * Initialize a new RoutesManager
      * @method init
      *
-     * @return   static
+     * @param TddStubConverter $converter
+     * @return static
      */
     public static function init(TddStubConverter $converter)
     {
@@ -29,7 +32,7 @@ class TddRoutesManager {
      * Description
      * @method process
      *
-     * @return   void
+     * @return   string
      */
     public function process()
     {

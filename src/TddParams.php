@@ -4,25 +4,61 @@ namespace Ingenious\TddGenerator;
 
 class TddParams {
 
+    /**
+     * The model name e.g. Post
+     *
+     * @var  string
+     */
     public $model;
 
+    /**
+     * The model name of the
+     *
+     * @var  string
+     */
     public $parent;
 
+    /**
+     * Force overwriting of existing files
+     *
+     * @var  bool
+     */
     public $force;
 
+    /**
+     * The route prefix
+     *
+     * @var  string
+     */
     public $prefix;
 
+    /**
+     * Admin only routes
+     *
+     * @var  bool
+     */
     public $admin;
 
+    /**
+     * Backup existing files?
+     *
+     * @var  bool
+     */
     public $backup;
 
+    /**
+     * The routes file to use
+     *
+     * @var  string
+     */
     public $routes;
 
     /**
      * Set the model
      * @method setModel
      *
-     * @return   $this
+     * @param  string  $model
+     * @return $this
      */
     public function setModel($model)
     {
@@ -35,7 +71,8 @@ class TddParams {
      * Set the parent model
      * @method setParent
      *
-     * @return   $this
+     * @param  string  $parent
+     * @return $this
      */
     public function setParent($parent)
     {
@@ -48,7 +85,8 @@ class TddParams {
      * Force overwriting of existing files
      * @method setForce
      *
-     * @return   $this
+     * @param  bool  $force
+     * @return $this
      */
     public function setForce($force)
     {
@@ -61,7 +99,8 @@ class TddParams {
      * Backup and Replace existing files
      * @method setBackup
      *
-     * @return   $this
+     * @param  bool  $backup
+     * @return $this
      */
     public function setBackup($backup)
     {
@@ -74,7 +113,8 @@ class TddParams {
      * Set the prefix
      * @method setPrefix
      *
-     * @return   $this
+     * @param  string  $prefix
+     * @return $this
      */
     public function setPrefix($prefix)
     {
@@ -87,7 +127,8 @@ class TddParams {
      * Set admin
      * @method setAdmin
      *
-     * @return   $this
+     * @param  bool  $admin
+     * @return $this
      */
     public function setAdmin($admin)
     {
@@ -100,7 +141,8 @@ class TddParams {
      * Set routes
      * @method setRoutes
      *
-     * @return   $this
+     * @param  string  $routes
+     * @return $this
      */
     public function setRoutes($routes)
     {

@@ -2,7 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
-use Ingenious\TddGenerator\TddStub;
+use Illuminate\Support\Collection;
 
 class TddFrontendStubs {
 
@@ -10,7 +10,7 @@ class TddFrontendStubs {
      * Get the stubs
      * @method get
      *
-     * @return   void
+     * @return   Collection
      */
     public static function get()
     {
