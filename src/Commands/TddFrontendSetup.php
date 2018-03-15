@@ -3,9 +3,9 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
-use Ingenious\TddGenerator\TddParams;
-use Ingenious\TddGenerator\TddGenerator;
-use Ingenious\TddGenerator\TddSetupManager;
+use Ingenious\TddGenerator\Params;
+use Ingenious\TddGenerator\Generator;
+use Ingenious\TddGenerator\Managers\SetupManager;
 use Ingenious\TddGenerator\Concerns\GetsUserInput;
 use Ingenious\TddGenerator\Concerns\DisplaysOutput;
 
@@ -38,13 +38,13 @@ class TddFrontendSetup extends Command
      */
     public function handle()
     {
-        $params = ( new TddParams )
+        $params = ( new Params )
             ->setForce( $this->getForce() )
             ->setBackup( $this->getBackup() );
 
-        $this->output( TddSetupManager::frontend() );
+        $this->output( SetupManager::frontend() );
 
-        $this->output( TddGenerator::frontend( $params ) );
+        $this->output( Generator::frontend( $params ) );
 
         $this->info("\nProcessing complete.");
     }

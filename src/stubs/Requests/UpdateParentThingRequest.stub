@@ -24,7 +24,7 @@ class Update[Parent][Thing]Request extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'sometimes|required|unique:[thjngs],name,[parent]_id,' . $this['[parent]_id'],
+            'name' => 'sometimes|required|unique:[things],name,[parent]_id,' . $this['[parent]_id'],
         ];
     }
 }

@@ -2,15 +2,13 @@
 
 namespace Ingenious\TddGenerator;
 
-use const DIRECTORY_SEPARATOR;
-use Ingenious\TddGenerator\TddStubConverter;
 use Ingenious\TddGenerator\Concerns\HelpsMakeStubs;
 
-class TddStub {
+class Stub {
 
     use HelpsMakeStubs;
 
-    const STUB_PATH = __DIR__ . DIRECTORY_SEPARATOR . "stubs";
+    const STUB_PATH = __DIR__.DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR;
 
     /**
      * The stub name

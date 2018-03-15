@@ -3,9 +3,9 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
-use Ingenious\TddGenerator\TddParams;
-use Ingenious\TddGenerator\TddGenerator;
-use Ingenious\TddGenerator\TddSetupManager;
+use Ingenious\TddGenerator\Params;
+use Ingenious\TddGenerator\Generator;
+use Ingenious\TddGenerator\Managers\SetupManager;
 use Ingenious\TddGenerator\Concerns\GetsUserInput;
 use Ingenious\TddGenerator\Concerns\DisplaysOutput;
 
@@ -39,14 +39,14 @@ class TddAdminSetup extends Command
      */
     public function handle()
     {
-        $params = ( new TddParams )
+        $params = ( new Params )
             ->setRoutes( $this->getRoutesFile() )
             ->setPrefix( $this->getPrefix() )
             ->setForce( $this->getForce() );
 
-        $this->output( TddSetupManager::admin() );
+        $this->output( SetupManager::admin() );
 
-        $this->output( TddGenerator::admin( $params ) );
+        $this->output( Generator::admin( $params ) );
 
         $this->info("\nProcessing complete.");
     }

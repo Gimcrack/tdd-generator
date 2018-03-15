@@ -1,12 +1,13 @@
 <?php
 
-namespace Ingenious\TddGenerator;
+namespace Ingenious\TddGenerator\Managers;
 
 use Illuminate\Console\Command;
+use Ingenious\TddGenerator\Helpers\Npm;
+use Ingenious\TddGenerator\Managers\StubManager;
+use Ingenious\TddGenerator\Managers\FileManager;
 
-;
-
-class TddSetupManager {
+class SetupManager {
 
     /**
      * The StubManager
@@ -19,7 +20,7 @@ class TddSetupManager {
 
     public function __construct($stubs = null)
     {
-        $this->stubs = $stubs ?? new TddStubManager;
+        $this->stubs = $stubs ?? new StubManager;
 
         $this->paths = (object) [
             'example_tests' => base_path("tests") . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*Example*",
@@ -42,7 +43,7 @@ class TddSetupManager {
     {
         $setup = new static();
 
-        $setup->output[] = TddFileBackup::backup( $setup->paths->example_tests );
+        $setup->output[] = FileManager::backup( $setup->paths->example_tests );
 
         return $setup;
     }
@@ -64,7 +65,7 @@ class TddSetupManager {
             'http_kernel',
             'user_model'
         ])->map( function($key) use ($setup) {
-            return TddFileBackup::backup( $setup->paths->$key );
+            return FileManager::backup( $setup->paths->$key );
         })->implode("\n");
 
         return $setup;
@@ -83,9 +84,9 @@ class TddSetupManager {
 
         if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
 
-        $setup->output[] = TddNpmDependencies::install();
+        $setup->output[] = Npm::install();
 
-        $setup->output[] = TddFileBackup::backup( $setup->paths->example_component );
+        $setup->output[] = FileManager::backup( $setup->paths->example_component );
 
         return $setup;
     }

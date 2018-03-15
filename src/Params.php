@@ -2,21 +2,30 @@
 
 namespace Ingenious\TddGenerator;
 
-class TddParams {
+use Ingenious\TddGenerator\Utility\ModelCase;
+
+class Params {
 
     /**
      * The model name e.g. Post
      *
-     * @var  string
+     * @var  ModelCase
      */
     public $model;
 
     /**
-     * The model name of the
+     * The model name of the parent
      *
-     * @var  string
+     * @var  ModelCase
      */
     public $parent;
+
+    /**
+     * The model name of the children
+     *
+     * @var  ModelCase
+     */
+    public $children;
 
     /**
      * Force overwriting of existing files
@@ -53,6 +62,13 @@ class TddParams {
      */
     public $routes;
 
+    public function __construct()
+    {
+        $this->setModel("")
+            ->setParent("")
+            ->setChildren("");
+    }
+
     /**
      * Set the model
      * @method setModel
@@ -62,7 +78,7 @@ class TddParams {
      */
     public function setModel($model)
     {
-        $this->model = $model;
+        $this->model = new ModelCase($model);
 
         return $this;
     }
@@ -76,7 +92,21 @@ class TddParams {
      */
     public function setParent($parent)
     {
-        $this->parent = $parent;
+        $this->parent = new ModelCase($parent);
+
+        return $this;
+    }
+
+    /**
+     * Set the children model
+     * @method setChildren
+     *
+     * @param  string  $children
+     * @return $this
+     */
+    public function setChildren($children)
+    {
+        $this->children = new ModelCase($children);
 
         return $this;
     }

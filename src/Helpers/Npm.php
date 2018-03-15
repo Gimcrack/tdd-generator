@@ -1,10 +1,8 @@
 <?php
 
-namespace Ingenious\TddGenerator;
+namespace Ingenious\TddGenerator\Helpers;
 
-use function base_path;
-
-class TddNpmDependencies {
+class Npm {
 
     /**
      * Install the npm dependencies

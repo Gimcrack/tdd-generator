@@ -1,10 +1,11 @@
 <?php
 
-namespace Ingenious\TddGenerator;
+namespace Ingenious\TddGenerator\StubCollections;
 
 use Illuminate\Support\Collection;
+use Ingenious\TddGenerator\Stub;
 
-class TddSetupStubs {
+class SetupStubs {
 
     /**
      * Get the stubs
@@ -15,8 +16,8 @@ class TddSetupStubs {
     public static function get()
     {
         return collect([
-            TddStub::make("phpunit",base_path(),".xml"),
-            TddStub::make("Tests/TestCase",base_path("tests")),
+            Stub::make("phpunit",base_path(),".xml"),
+            Stub::make("Tests/TestCase",base_path("tests")),
         ]);
     }
 }

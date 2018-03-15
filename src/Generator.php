@@ -2,39 +2,44 @@
 
 namespace Ingenious\TddGenerator;
 
-class TddGenerator {
+use Ingenious\TddGenerator\Managers\RelationshipManager;
+use Ingenious\TddGenerator\Utility\Converter;
+use Ingenious\TddGenerator\Managers\StubManager;
+use Ingenious\TddGenerator\Managers\RoutesManager;
+
+class Generator {
 
     /**
      * The Stub Manager
      *
-     * @var TddStubManager
+     * @var StubManager
      */
     protected $stubs;
 
     /**
      * The Routes Manager
      *
-     * @var TddRoutesManager
+     * @var RoutesManager
      */
     protected $routes;
 
     /**
      * The Params object
      *
-     * @var TddParams
+     * @var Params
      */
     protected $params;
 
     public $output = [];
 
-    public function __construct( TddParams $params )
+    public function __construct( Params $params )
     {
         $this->params = $params;
 
-        $this->stubs = TddStubManager::base( $this->params );
+        $this->stubs = StubManager::base( $this->params );
 
-        $this->routes = TddRoutesManager::init(
-            TddStubConverter::init( $this->params )
+        $this->routes = RoutesManager::init(
+            Converter::init( $this->params )
         );
     }
 
@@ -42,10 +47,10 @@ class TddGenerator {
      * Description
      * @method handle
      *
-     * @param TddParams $params
+     * @param Params $params
      * @return static
      */
-    public static function handle( TddParams $params )
+    public static function handle( Params $params )
     {
         $generator = new static( $params );
 
@@ -58,10 +63,25 @@ class TddGenerator {
         {
             $generator->output[] = "Setting up the parent files";
 
-            $generator->stubs = TddStubManager::parent( $params );
-
+            $generator->stubs = StubManager::parent( $params );
             $generator->process();
+
+            $parent_params = clone($params);
+            $parent_params->setChildren( $params->model->model );
+            $parent_params->setModel( $params->parent->model );
+            $parent_params->setParent(null);
+
+            $generator->stubs = StubManager::base( $parent_params );
+            $generator->process();
+
+            $generator->routes = RoutesManager::init(
+                Converter::init( $parent_params )
+            );
+            $generator->routes();
         }
+
+        // handle the relationships
+        RelationshipManager::init($params)->handle();
 
         return $generator;
     }
@@ -70,14 +90,14 @@ class TddGenerator {
      * Setup the base files
      * @method setup
      *
-     * @param TddParams $params
+     * @param Params $params
      * @return static
      */
-    public static function setup( TddParams $params )
+    public static function setup( Params $params )
     {
         $generator = new static( $params );
 
-        $generator->stubs = TddStubManager::setup( $params );
+        $generator->stubs = StubManager::setup( $params );
 
         $generator->process();
 
@@ -88,14 +108,14 @@ class TddGenerator {
      * Setup the admin files
      * @method admin
      *
-     * @param TddParams $params
+     * @param Params $params
      * @return static
      */
-    public static function admin( TddParams $params )
+    public static function admin( Params $params )
     {
         $generator = new static( $params );
 
-        $generator->stubs = TddStubManager::admin( $params );
+        $generator->stubs = StubManager::admin( $params );
 
         $generator->process();
 
@@ -106,14 +126,14 @@ class TddGenerator {
      * Setup the parent files
      * @method parent
      *
-     * @param TddParams $params
+     * @param Params $params
      * @return static
      */
-    public static function parent( TddParams $params )
+    public static function parent( Params $params )
     {
         $generator = new static( $params );
 
-        $generator->stubs = TddStubManager::parent( $params );
+        $generator->stubs = StubManager::parent( $params );
 
         $generator->process();
 
@@ -124,14 +144,14 @@ class TddGenerator {
      * Setup the frontend files
      * @method frontend
      *
-     * @param TddParams $params
+     * @param Params $params
      * @return static
      */
-    public static function frontend( TddParams $params )
+    public static function frontend( Params $params )
     {
         $generator = new static( $params );
 
-        $generator->stubs = TddStubManager::frontend($params);
+        $generator->stubs = StubManager::frontend($params);
 
         $generator->process();
 
