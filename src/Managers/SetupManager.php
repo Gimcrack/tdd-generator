@@ -11,13 +11,24 @@ class SetupManager {
 
     /**
      * The StubManager
+     * @var StubManager
      */
     protected $stubs;
 
+    /**
+     * @var array
+     */
     public $output = [];
 
+    /**
+     * @var object
+     */
     public $paths;
 
+    /**
+     * SetupManager constructor.
+     * @param null $stubs
+     */
     public function __construct($stubs = null)
     {
         $this->stubs = $stubs ?? new StubManager;

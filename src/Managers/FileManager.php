@@ -77,6 +77,17 @@ class FileManager {
     }
 
     /**
+     * Get the route file
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public static function route($name)
+    {
+        return base_path("routes" . DIRECTORY_SEPARATOR . $name);
+    }
+
+    /**
      * Get the contents of the file
      *
      * @param $file
@@ -113,9 +124,10 @@ class FileManager {
      * Get the migration file
      *
      * @param  string|ModelCase $name
-     * @return string
+     * @param bool $all
+     * @return string|array
      */
-    public static function migration($name)
+    public static function migration($name, $all = false)
     {
         $name = is_string($name) ? $name : optional($name)->lower_plural;
 
@@ -124,7 +136,7 @@ class FileManager {
         if ( ! count($migration) )
             return "";
 
-        return $migration[0];
+        return ($all) ? $migration : $migration[0];
     }
 
     /**
@@ -149,6 +161,66 @@ class FileManager {
     }
 
     /**
+     * Delete the specified file
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public static function delete($path)
+    {
+        $output = [];
+        foreach( File::glob($path) as $file)
+        {
+            File::delete($file);
+            $output[] = "[warn] Deleted {$path}";
+        }
+
+        return implode("\n",$output);
+    }
+
+    /**
+     * Insert the specified content into the specified file at the specified line
+     *
+     * @param  string  $path
+     * @param  string  $content
+     * @param null|int  $line
+     * @return string
+     */
+    public static function insert($path, $content, $line = null)
+    {
+        if ( ! $line )
+            return static::append($path, $content);
+
+        if ( static::contains($path, $content) )
+            return "[warn] File {$path} already contains {$content}";
+
+        $original = static::get($path);
+        $lines = explode("\n",$original);
+        array_splice($lines, $line-1, 0, $content);
+
+        return static::write($path, implode("\n",$lines));
+    }
+
+    /**
+     * Append the specified content into the specified file at the end of the file
+     *
+     * @param  string  $path
+     * @param  string  $content
+     * @return string
+     */
+    public static function append($path, $content)
+    {
+        if ( static::contains($path, $content) )
+            return "[warn] File {$path} already contains {$content}";
+
+        $original = static::get($path);
+        $lines = explode("\n",$original);
+        array_push($lines, $content);
+
+        return static::write($path, implode("\n",$lines));
+    }
+
+    /**
      * Does a migration exist?
      * @param $migration
      * @return bool
@@ -167,6 +239,19 @@ class FileManager {
     public static function exists($path)
     {
         return !! count(File::glob( $path ));
+    }
+
+    /**
+     * Does the file contain the specified string?
+     *
+     * @param  string  $path
+     * @param  string  $string
+     * @return bool
+     */
+    public static function contains($path, $string)
+    {
+        $contents = static::get($path);
+        return strpos($contents, $string) !== false;
     }
 
 }

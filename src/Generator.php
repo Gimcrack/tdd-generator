@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use Ingenious\TddGenerator\Managers\MigrationManager;
 use Ingenious\TddGenerator\Managers\RelationshipManager;
 use Ingenious\TddGenerator\Utility\Converter;
 use Ingenious\TddGenerator\Managers\StubManager;
@@ -32,6 +33,13 @@ class Generator {
 
     public $output = [];
 
+    /**
+     * Handles migrations
+     *
+     * @var MigrationManager
+     */
+    protected $migrations;
+
     public function __construct( Params $params )
     {
         $this->params = $params;
@@ -41,6 +49,29 @@ class Generator {
         $this->routes = RoutesManager::init(
             Converter::init( $this->params )
         );
+
+        $this->migrations = MigrationManager::init( Converter::init( $this->params ) );
+    }
+
+    public function setStubs(StubManager $stubs)
+    {
+        $this->stubs = $stubs;
+
+        return $this;
+    }
+
+    public function setRoutes(RoutesManager $routes)
+    {
+        $this->routes = $routes;
+
+        return $this;
+    }
+
+    public function setMigrations(MigrationManager $migrations)
+    {
+        $this->migrations = $migrations;
+
+        return $this;
     }
 
     /**
@@ -54,36 +85,75 @@ class Generator {
     {
         $generator = new static( $params );
 
-        $generator
-            ->init()
+        return $generator
+            ->reinit()
             ->routes()
+            ->process()
+            ->processParent()
+            ->relationships();
+
+    }
+
+    /**
+     * Process the nested relationship stubs
+     *
+     * @return $this
+     */
+    public function processNested()
+    {
+        $this->output[] = "Setting up the parent files";
+
+        return $this->setStubs(StubManager::parent( $this->params ))
             ->process();
+    }
 
-        if ( !! $params->parent )
-        {
-            $generator->output[] = "Setting up the parent files";
+    /**
+     * Process the child stubs
+     *
+     * @return $this
+     */
+    public function processChild()
+    {
+        $params = clone($this->params);
 
-            $generator->stubs = StubManager::parent( $params );
-            $generator->process();
+        $params->setChildren( $this->params->model->model )
+            ->setModel( $this->params->parent->model )
+            ->setParent(null);
 
-            $parent_params = clone($params);
-            $parent_params->setChildren( $params->model->model );
-            $parent_params->setModel( $params->parent->model );
-            $parent_params->setParent(null);
+        return $this->setStubs(
+                StubManager::base( $params )
+            )
+            ->process()
+            ->setRoutes(RoutesManager::init(
+                Converter::init( $params )
+            ))
+            ->routes();
+    }
 
-            $generator->stubs = StubManager::base( $parent_params );
-            $generator->process();
+    /**
+     * Process the parent stubs, if applicable
+     *
+     * @return $this
+     */
+    public function processParent()
+    {
+        if ( ! $this->params->parent )
+            return $this;
 
-            $generator->routes = RoutesManager::init(
-                Converter::init( $parent_params )
-            );
-            $generator->routes();
-        }
+        return $this->processNested()
+                ->processChild();
+    }
 
-        // handle the relationships
-        RelationshipManager::init($params)->handle();
+    /**
+     * Handle the relationships
+     *
+     * @return $this
+     */
+    public function relationships()
+    {
+        RelationshipManager::init($this->params)->handle();
 
-        return $generator;
+        return $this;
     }
 
     /**
@@ -159,19 +229,14 @@ class Generator {
     }
 
     /**
-     * Initialize the environment
+     * Cleanup previous runs
      * @method init
      *
      * @return   $this
      */
-    public function init()
+    public function reinit()
     {
-        if ( ! $this->params->force && $this->stubs->migrationExists() )
-            $this->output[] = "[warn]***Skipping Migration file. It already exists.***";
-
-
-        if ( $this->params->force )
-            $this->output[] = $this->stubs->cleanUp();
+        $this->output[] = $this->migrations->reinit();
 
         return $this;
     }

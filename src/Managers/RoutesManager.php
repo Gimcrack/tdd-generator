@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator\Managers;
 
+use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Utility\Converter;
 
 class RoutesManager {
@@ -38,35 +39,55 @@ class RoutesManager {
      */
     public function process()
     {
-        $routes = base_path("routes" . DIRECTORY_SEPARATOR . $this->converter->params->routes);
-        $contents = file_get_contents($routes);
+        $params = $this->converter->params;
 
-        $new_route = $this->nested() . "Route::apiResource(\"{$this->converter->params->model->lower_plural}\",\"{$this->converter->params->model->capped}Controller\");";
+        $routes = FileManager::route($params->routes);
 
-        if  ( strpos($contents, $new_route) !== false )
-        {
-            return "Routes already exist";
-        }
-
-        file_put_contents($routes, $contents . "\n". $new_route);
+        FileManager::append($routes, $this->newRoutes($params));
 
         return "New routes added";
+    }
+
+    /**
+     * Get the new routes
+     *
+     * @param Params $params
+     * @return string
+     */
+    private function newRoutes(Params $params)
+    {
+        return vsprintf("%s%s%s%s%s%s",[
+            $this->nested($params),
+            'Route::apiResource("',
+            $params->model->lower_plural,
+            '","',
+            $params->model->capped,
+            'Controller");'
+        ]);
     }
 
     /**
      * Handle the nested route, if applicable
      * @method process
      *
-     * @return   string
+     * @param Params $params
+     * @return string
      */
-    public function nested()
+    public function nested(Params $params)
     {
-        $params = $this->converter->params;
-
         if ( ! $params->parent )
             return "";
 
-        return "Route::apiResource(\"{$params->parent->lower_plural}.{$params->model->lower_plural}\",\"{$params->parent->capped}{$params->model->capped}Controller\");\n";
-
+        return vsprintf("%s%s%s%s%s%s%s%s%s",[
+            'Route::apiResource("',
+            $params->parent->lower_plural,
+            '.',
+            $params->model->lower_plural,
+            '","',
+            $params->parent->capped,
+            $params->model->capped,
+            'Controller");',
+            "\n"
+        ]);
     }
 }

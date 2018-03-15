@@ -113,50 +113,13 @@ class StubManager {
      */
     public function process()
     {
-        $output = $this->stubs->map( function(Stub $stub) {
+        return $this->stubs->map( function(Stub $stub) {
             $this->count++;
 
             return $this->converter->process( $stub );
-        })->all();
+        })->combine($this->converter->output)
 
-        $output = array_merge($output, $this->converter->output);
-
-        return implode("\n",$output);
-    }
-
-    /**
-     * Clean up generated files from previous runs
-     * @method cleanUp
-     *
-     * @return   string
-     */
-    public function cleanUp()
-    {
-        $output = [];
-
-        // cleanup migration, if it exists
-        $migration = "*_create_{$this->converter->params->model->lower_plural}_table*";
-
-        $files = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . $migration );
-
-        foreach( $files as $file ) {
-            $output[] = "Removing old file {$file}... Done.";
-            File::delete($file);
-        }
-
-        return implode("\n",$output);
-        // everything else will be overwritten
-    }
-
-    /**
-     * Does the model have a migration already?
-     * @method migrationExists
-     *
-     * @return   bool
-     */
-    public function migrationExists()
-    {
-        return $this->converter->migrationExists();
+        ->implode("\n");
     }
 
 
