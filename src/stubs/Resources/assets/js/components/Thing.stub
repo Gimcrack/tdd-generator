@@ -1,0 +1,65 @@
+<template>
+    <item 
+        :id="model.id"
+        :deleting="deleting"
+        :updating="updating"
+        :toggles="toggles"
+        @view="view"
+        @update="update"
+        @destroy="destroy"
+    >
+        <td>{{ model.name }}</td>
+
+        <template slot="menu">
+
+        </template>
+    </item>
+</template>
+
+<script>
+    export default {
+        mixins : [
+            mixins.item
+        ],
+
+        computed : {
+            updated() {
+                return fromNow(this.model.updated_at);
+            }
+        },
+
+        data() {
+            return {
+                item : {
+                    key : 'id',
+                    type : '[thing]',
+                    endpoint : '[things]',
+                    channel : `[things].${this.initial.id}`,
+                    updated : '[Thing]WasUpdated',
+                },
+
+                toggles : {
+                    update : true,
+                    delete : true,
+                }
+            }
+        },
+
+        methods : {
+            postUpdated(event) {
+                this.updating = false;
+            },
+
+            update() {
+
+            },
+
+            toggleAdmin() {
+                if ( this.model.admin_flag ) 
+                    return this.unpromote();
+
+                return this.promote(); 
+            },
+        }
+    }
+</script>

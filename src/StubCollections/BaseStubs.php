@@ -38,6 +38,10 @@ class BaseStubs {
             Stub::event("ThingWasCreated"),
             Stub::event("ThingWasDestroyed"),
             Stub::event("ThingWasUpdated"),
+
+            // vue components
+            Stub::component("Thing"),
+            Stub::component("Things"),
         ]);
 
         if ( ! $skip_migration )

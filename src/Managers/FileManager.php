@@ -77,6 +77,22 @@ class FileManager {
     }
 
     /**
+     * Get the js file
+     *
+     * @param  string $name
+     * @return string
+     */
+    public static function js($name)
+    {
+        $js = File::glob( base_path("resources/assets/js") . DIRECTORY_SEPARATOR . str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name) . ".js" );
+
+        if ( ! count($js) )
+            return "";
+
+        return $js[0];
+    }
+
+    /**
      * Get the route file
      *
      * @param  string  $name

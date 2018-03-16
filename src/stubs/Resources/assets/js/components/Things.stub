@@ -1,0 +1,67 @@
+<template>
+    <page
+        :params="details"
+        :toggles="toggles"
+        @new="create"
+        @created="created"
+        @deleted="deleted"
+    ></page>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                toggles : {
+                    new : true
+                },
+
+                details : {
+                    columns : [
+                        'id',
+                        'name',
+                    ],
+                    type : '[thing]',
+                    heading : '[Things]',
+                    endpoint : '[things]',
+                    help : 'Manage [Things]',
+                    events : {
+                        channel : '[things]',
+                        created : '[Thing]WasCreated',
+                        destroyed : '[Thing]WasDestroyed',
+                    }
+                },
+
+                form : {
+                    name : null,
+                }
+            }
+        },
+
+        methods : {
+
+            create() {
+                console.error("Implement the create method for [Things])";
+            },
+
+            store() {
+                this.page.busy = true;
+
+                Api.post('[things]', this.form)
+                    .then(this.created, this.page.error);
+            },
+
+            created(event) {
+                this.form = {
+                    name : null,
+                }
+
+                this.page.busy = false;
+            },
+
+            deleted(event) {
+
+            },
+        },
+    }
+</script>

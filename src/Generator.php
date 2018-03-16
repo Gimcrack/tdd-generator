@@ -4,6 +4,7 @@ namespace Ingenious\TddGenerator;
 
 use Ingenious\TddGenerator\Managers\MigrationManager;
 use Ingenious\TddGenerator\Managers\RelationshipManager;
+use Ingenious\TddGenerator\Managers\VueManager;
 use Ingenious\TddGenerator\Utility\Converter;
 use Ingenious\TddGenerator\Managers\StubManager;
 use Ingenious\TddGenerator\Managers\RoutesManager;
@@ -40,6 +41,13 @@ class Generator {
      */
     protected $migrations;
 
+    /**
+     * Handles vue components
+     *
+     * @var VueManager
+     */
+    protected $components;
+
     public function __construct( Params $params )
     {
         $this->params = $params;
@@ -51,6 +59,13 @@ class Generator {
         );
 
         $this->migrations = MigrationManager::init( Converter::init( $this->params ) );
+
+        $this->components = VueManager::init( Converter::init($this->params) );
+    }
+
+    public static function init(Params $params)
+    {
+        return new static($params);
     }
 
     public function setStubs(StubManager $stubs)
@@ -74,6 +89,13 @@ class Generator {
         return $this;
     }
 
+    public function setComponents(VueManager $components)
+    {
+        $this->components = $components;
+
+        return $this;
+    }
+
     /**
      * Description
      * @method handle
@@ -87,11 +109,26 @@ class Generator {
 
         return $generator
             ->reinit()
-            ->routes()
-            ->process()
+            ->processRoutes()
+            ->processStubs()
+            ->components()
             ->processParent()
             ->relationships();
 
+    }
+
+    /**
+     * Process the vue components
+     *
+     * @return $this
+     */
+    public function components()
+    {
+        $this->output[] = "Setting up the vue components";
+
+        $this->output[] = $this->components->run();
+
+        return $this;
     }
 
     /**
@@ -104,7 +141,7 @@ class Generator {
         $this->output[] = "Setting up the parent files";
 
         return $this->setStubs(StubManager::parent( $this->params ))
-            ->process();
+            ->processStubs();
     }
 
     /**
@@ -123,11 +160,15 @@ class Generator {
         return $this->setStubs(
                 StubManager::base( $params )
             )
-            ->process()
+            ->processStubs()
             ->setRoutes(RoutesManager::init(
                 Converter::init( $params )
             ))
-            ->routes();
+            ->processRoutes()
+            ->setComponents(VueManager::init(
+                Converter::init($params)
+            ))
+            ->components();
     }
 
     /**
@@ -165,13 +206,9 @@ class Generator {
      */
     public static function setup( Params $params )
     {
-        $generator = new static( $params );
-
-        $generator->stubs = StubManager::setup( $params );
-
-        $generator->process();
-
-        return $generator;
+        return static::init( $params )
+            ->setStubs(StubManager::setup( $params ))
+            ->processStubs();
     }
 
     /**
@@ -183,13 +220,9 @@ class Generator {
      */
     public static function admin( Params $params )
     {
-        $generator = new static( $params );
-
-        $generator->stubs = StubManager::admin( $params );
-
-        $generator->process();
-
-        return $generator;
+        return static::init( $params )
+            ->setStubs(StubManager::admin( $params ))
+            ->processStubs();
     }
 
     /**
@@ -201,13 +234,9 @@ class Generator {
      */
     public static function parent( Params $params )
     {
-        $generator = new static( $params );
-
-        $generator->stubs = StubManager::parent( $params );
-
-        $generator->process();
-
-        return $generator;
+        return static::init( $params )
+            ->setStubs(StubManager::parent( $params ))
+            ->processStubs();
     }
 
     /**
@@ -219,13 +248,9 @@ class Generator {
      */
     public static function frontend( Params $params )
     {
-        $generator = new static( $params );
-
-        $generator->stubs = StubManager::frontend($params);
-
-        $generator->process();
-
-        return $generator;
+        return static::init( $params )
+            ->setStubs(StubManager::frontend( $params ))
+            ->processStubs();
     }
 
     /**
@@ -243,11 +268,11 @@ class Generator {
 
     /**
      * Process the routes
-     * @method routes
+     * @method processRoutes
      *
      * @return   $this
      */
-    private function routes()
+    private function processRoutes()
     {
         $this->output[] = $this->routes->process();
 
@@ -256,11 +281,11 @@ class Generator {
 
     /**
      * Convert the stubs
-     * @method convert
+     * @method processStubs
      *
      * @return   $this
      */
-    public function process()
+    public function processStubs()
     {
         $this->output[] = $this->stubs->process();
 
