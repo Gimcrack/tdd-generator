@@ -57,6 +57,7 @@ window.Echo = new Echo({
     host: window.location.hostname + ':6001'
 });
 
+
 require('bootstrap-vertical-tabs');
 
 window.sleep = require('sleep-promise');

@@ -115,6 +115,17 @@ class FileManager {
     }
 
     /**
+     * Get the config file
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public static function config($name)
+    {
+        return base_path("config/{$name}.php");
+    }
+
+    /**
      * Get the contents of the file
      *
      * @param $file

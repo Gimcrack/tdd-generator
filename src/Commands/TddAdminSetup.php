@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Generator;
 use Ingenious\TddGenerator\Managers\SetupManager;
@@ -47,6 +48,8 @@ class TddAdminSetup extends Command
         $this->output( SetupManager::admin() );
 
         $this->output( Generator::admin( $params ) );
+
+        $this->info( Artisan::call("make:auth") );
 
         $this->info("\nProcessing complete.");
     }

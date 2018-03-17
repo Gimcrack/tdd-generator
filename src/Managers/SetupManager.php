@@ -56,6 +56,12 @@ class SetupManager {
 
         $setup->output[] = FileManager::backup( $setup->paths->example_tests );
 
+        $setup->output[] = FileManager::insert(
+            FileManager::config("app"),
+            "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",
+            18
+        );
+
         return $setup;
     }
 
