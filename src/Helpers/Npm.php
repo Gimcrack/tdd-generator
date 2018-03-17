@@ -17,7 +17,7 @@ class Npm {
             $return[] = exec('npm install');
 
         if( ! file_exists( base_path("node_modules/bootstrap-sass") ) )
-            $return[] = exec('npm i -D ' . implode(" ", static::get() ) );
+            $return[] = exec('npm i -D ' . static::get() );
 
         return implode("\n", $return);
     }
@@ -26,11 +26,11 @@ class Npm {
      * Get the npm dependencies
      * @method get
      *
-     * @return   array
+     * @return   string
      */
     public static function get()
     {
-        return [
+        return collect([
             'bootstrap-sass',
             'bootstrap-vertical-tabs',
             'laravel-echo',
@@ -41,6 +41,6 @@ class Npm {
             'moment-timezone',
             'sleep-promise',
             'vue-localstorage'
-        ];
+        ])->implode(" ");
     }
 }

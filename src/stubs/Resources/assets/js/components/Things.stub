@@ -41,7 +41,7 @@
         methods : {
 
             create() {
-                console.error("Implement the create method for [Things])";
+                console.error("Implement the create method for [Things]");
             },
 
             store() {

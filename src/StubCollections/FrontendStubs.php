@@ -46,6 +46,9 @@ class FrontendStubs {
             Stub::view("layouts/app.blade"),
             Stub::view("partials/nav.blade"),
             Stub::view("home.blade"),
+
+            // mix config
+            Stub::make("webpack.mix",base_path(),".js"),
         ]);
     }
 }

@@ -45,9 +45,9 @@ class Interpolator
             '[Child]' => $params->children->capped,
             '[child]' => $params->children->lower,
             'Children' => $params->children->capped_plural,
-            'children' => $params->children->lower_plural,
+            // 'children' => $params->children->lower_plural, // don't use. it breaks js files
             'Child' => $params->children->capped,
-            'child' => $params->children->lower,
+            // 'child' => $params->children->lower, // don't use. it breaks js files
             'XXXX_XX_XX_XXXXXX' => date('Y_m_d_His'),
             '[prefix]' => $params->prefix,
             'actingAsUser()' => ( $params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()',

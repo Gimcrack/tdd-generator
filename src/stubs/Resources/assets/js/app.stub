@@ -14,7 +14,7 @@ window.Bus = new Vue();
 import VueLocalStorage from 'vue-localstorage'
 Vue.use( VueLocalStorage, { name : 'ls'} );
 
-var Store = new Vue();
+const Store = new Vue();
 Store.$ls.addProperty('viewChat',Boolean,true);
 
 window.Store = Store;
@@ -62,15 +62,15 @@ window.flash = {
     notify(message) {
         Bus.$emit('flash', {message, type : 'notify'});
     }
-}
+};
 
 window.mouseDown = false;
 
 document.body.onmousedown = function(evt) {
-    if (evt.button == 0);
-        mouseDown = true;
-}
+    if (evt.button === 0)
+        window.mouseDown = true;
+};
 document.body.onmouseup = function(evt) {
-    if (evt.button == 0);
-        mouseDown = false;
-}
+    if (evt.button === 0)
+        window.mouseDown = false;
+};

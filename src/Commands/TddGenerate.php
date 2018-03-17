@@ -20,8 +20,8 @@ class TddGenerate extends Command
     protected $signature = 'tdd:generate
         { model : The new model name }
         { parent? : The parent model }
-        { routes? : The routes file to use }
         { prefix? : The route name prefix to use e.g. admin }
+        { routes? : The routes file to use }
         { --force : Overwrite existing files without confirmation }
         { --backup : Backup and Replace existing fies }
         { --admin : Only allow admin access to the generated routes }

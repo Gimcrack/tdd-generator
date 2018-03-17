@@ -104,6 +104,17 @@ class FileManager {
     }
 
     /**
+     * Get the component file
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public static function component($name)
+    {
+        return base_path("resources/assets/js/components/{$name}.vue");
+    }
+
+    /**
      * Get the contents of the file
      *
      * @param $file
@@ -192,6 +203,26 @@ class FileManager {
         }
 
         return implode("\n",$output);
+    }
+
+    /**
+     * Get the line number of the specified content
+     *
+     * @param  string  $path
+     * @param  string  $content
+     * @param int $after_line
+     * @return int
+     */
+    public static function lineNum($path, $content, $after_line = 0)
+    {
+        $original = static::get($path);
+        $index = collect( explode("\n",$original) )
+            ->flip()
+            ->first( function($num, $line) use ($content,$after_line) {
+                return $num > $after_line && strpos($line, $content);
+            } );
+
+        return ( $index != null ) ? $index+1 : -1;
     }
 
     /**

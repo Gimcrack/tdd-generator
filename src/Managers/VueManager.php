@@ -35,6 +35,21 @@ class VueManager {
      */
     private $components;
 
+    /**
+     * The tab for the Home page
+     *
+     * @var string
+     */
+    private $tab;
+
+    /**
+     * The pane for the Home page
+     *
+     * @var string
+     */
+    private $pane;
+
+
     public function __construct(Converter $converter)
     {
         $this->converter = $converter;
@@ -45,6 +60,15 @@ class VueManager {
         ])->map( function($component) {
             return $this->converter->interpolator->run($component);
         });
+
+        $this->tab = $this->converter->interpolator->run(
+            "\t\t\t\t\t<li>\n\t\t\t\t\t\t<a @click=\"nav('[things]',\$event)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-fw fa-2x fa-cogs\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</li>"
+        );
+
+        $this->pane = $this->converter->interpolator->run(
+            "\t\t\t\t\t<div class=\"tab-pane\" id=\"[things]\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<[things]></[things]>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>"
+        );
+
     }
 
     public static function init(Converter $converter)
@@ -59,11 +83,26 @@ class VueManager {
      */
     public function run()
     {
+        $output = [];
+        // register the components
         $app = FileManager::js("app");
 
-        return $this->components->map( function($component) use ($app) {
+        $output[] = $this->components->map( function($component) use ($app) {
             return FileManager::insert($app,$component,static::LINE_NUMBER);
         })->implode("\n");
+
+        // embed them on the home page
+        $home = FileManager::component("Home");
+
+        // embed the tab
+        $tab_line = FileManager::lineNum( $home, "<!-- End Tabs -->" ) - 1;
+        $output[] = FileManager::insert($home, $this->tab, $tab_line);
+
+        // embed the pane
+        $pane_line = FileManager::lineNum( $home, "<!-- End Panes -->" ) - 1;
+        $output[] = FileManager::insert($home, $this->pane, $pane_line);
+
+        return implode("\n",$output);
     }
 
 }

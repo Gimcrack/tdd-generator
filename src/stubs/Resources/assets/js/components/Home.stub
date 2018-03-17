@@ -4,12 +4,13 @@
             <div class="col-xs-1"> <!-- required for floating -->
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs tabs-left">
-                  <li>
-                    <a id="users" @click="nav('users',$event)">
-                        <i class="fa fa-fw fa-2x fa-users"></i>
-                    </a>
-                  </li>
+                    <li>
+                        <a @click="nav('users',$event)">
+                            <i class="fa fa-fw fa-2x fa-users"></i>
+                        </a>
+                    </li>
                 </ul>
+                <!-- End Tabs -->
             </div>
 
             <div class="col-xs-11">
@@ -21,6 +22,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- End Panes -->
             </div>
         </div>
     </div>
