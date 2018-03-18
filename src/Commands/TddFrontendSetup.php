@@ -19,6 +19,7 @@ class TddFrontendSetup extends Command
      * @var string
      */
     protected $signature = 'tdd:frontend-setup
+        { prefix? : The route name prefix to use e.g. admin }
         { --force : Force overwriting of existing files }
         { --backup : Backup existing files }
         { --defaults : Suppress prompts, use defaults }
@@ -39,6 +40,7 @@ class TddFrontendSetup extends Command
     public function handle()
     {
         $params = ( new Params )
+            ->setPrefix( $this->getPrefix() )
             ->setForce( $this->getForce() )
             ->setBackup( $this->getBackup() );
 

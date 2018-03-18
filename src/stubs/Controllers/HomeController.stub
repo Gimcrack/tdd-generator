@@ -28,9 +28,10 @@ class HomeController extends Controller
         // initial state
 
         //$chats = Chat::with('user')->latest()->limit(25)->get();
-        $users = User::all();
 
-        $initial_state = collect(compact('users'));
+        $initial_state = collect([
+            "admin/users" => User::all()
+        ]);
 
         return view('home', compact('initial_state') );
     }

@@ -23,7 +23,7 @@
                     ],
                     type : '[thing]',
                     heading : '[Things]',
-                    endpoint : '[things]',
+                    endpoint : '[prefix][things]',
                     help : 'Manage [Things]',
                     events : {
                         channel : '[things]',

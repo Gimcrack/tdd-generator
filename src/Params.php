@@ -42,6 +42,13 @@ class Params {
     public $prefix;
 
     /**
+     * The url prefix
+     *
+     * @var  string
+     */
+    public $urlPrefix;
+
+    /**
      * Admin only routes
      *
      * @var  bool
@@ -149,6 +156,8 @@ class Params {
     public function setPrefix($prefix)
     {
         $this->prefix = ( $prefix ) ? "{$prefix}." : "";
+
+        $this->urlPrefix = ( $prefix ) ? "{$prefix}/" : "";
 
         return $this;
     }

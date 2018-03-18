@@ -45,11 +45,11 @@ class TddAdminSetup extends Command
             ->setPrefix( $this->getPrefix() )
             ->setForce( $this->getForce() );
 
+        $this->info( Artisan::call("make:auth") );
+
         $this->output( SetupManager::admin() );
 
         $this->output( Generator::admin( $params ) );
-
-        $this->info( Artisan::call("make:auth") );
 
         $this->info("\nProcessing complete.");
     }

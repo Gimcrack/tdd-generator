@@ -28,7 +28,7 @@
                     ],
                     type : 'user',
                     heading : 'Users',
-                    endpoint : 'users',
+                    endpoint : '[url_prefix]users',
                     help : 'System Users',
                     events : {
                         channel : 'users',
