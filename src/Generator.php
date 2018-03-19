@@ -254,6 +254,20 @@ class Generator {
     }
 
     /**
+     * Setup the chat files
+     * @method chat
+     *
+     * @param Params $params
+     * @return static
+     */
+    public static function chat( Params $params )
+    {
+        return static::init( $params )
+            ->setStubs(StubManager::chat( $params ))
+            ->processStubs();
+    }
+
+    /**
      * Cleanup previous runs
      * @method init
      *

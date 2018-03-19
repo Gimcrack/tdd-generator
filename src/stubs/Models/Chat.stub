@@ -1,0 +1,32 @@
+<?php
+
+namespace App;
+
+use App\Events\ChatMessageReceived;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property int $id
+ * @property mixed $user
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ */
+class Chat extends Model
+{
+    protected $guarded = [];
+
+    protected $dispatchesEvents = [
+        'created' => ChatMessageReceived::class,
+    ];
+
+    /**
+     * A chat belongs to one user
+     * @method user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}

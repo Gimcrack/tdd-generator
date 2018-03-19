@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Stub;
+use Ingenious\TddGenerator\StubCollections\ChatStubs;
 use Ingenious\TddGenerator\Utility\Converter;
 use Ingenious\TddGenerator\Utility\ModelCase;
 use Ingenious\TddGenerator\StubCollections\AdminStubs;
@@ -82,6 +83,18 @@ class StubManager {
     }
 
     /**
+     * Chat Stub manager
+     * @method chat
+     *
+     * @param Params $params
+     * @return static
+     */
+    public static function chat(Params $params)
+    {
+        return new static( new Converter($params), ChatStubs::get() );
+    }
+
+    /**
      * Parent Stub manager
      * @method parent
      *
@@ -117,9 +130,9 @@ class StubManager {
             $this->count++;
 
             return $this->converter->process( $stub );
-        })->combine($this->converter->output)
-
-        ->implode("\n");
+        })
+            ->union($this->converter->output)
+            ->implode("\n");
     }
 
 

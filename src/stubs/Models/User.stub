@@ -50,9 +50,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'admin_flag' => 'bool',
-        'approver_flag' => 'bool'
+        'approver_flag' => 'bool',
     ];
-
 
     protected $dispatchesEvents = [
         'created' => UserWasCreated::class,

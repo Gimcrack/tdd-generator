@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Providers;
 use Illuminate\Support\ServiceProvider;
 use Ingenious\TddGenerator\Commands\TddSetup;
 use Ingenious\TddGenerator\Commands\TddGenerate;
+use Ingenious\TddGenerator\Commands\TddChatSetup;
 use Ingenious\TddGenerator\Commands\TddAdminSetup;
 use Ingenious\TddGenerator\Commands\TddFrontendSetup;
 use Ingenious\TddGenerator\Commands\TddCleanupBackups;
@@ -24,6 +25,7 @@ class TddGeneratorServiceProvider extends ServiceProvider
             TddAdminSetup::class,
             TddGenerate::class,
             TddFrontendSetup::class,
+            TddChatSetup::class,
         ]);
     }
 

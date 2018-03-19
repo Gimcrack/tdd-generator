@@ -5,7 +5,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs tabs-left">
                     <li>
-                        <a @click="nav('users',$event)">
+                        <a id="users-tab" @click="nav('users',$event)">
                             <i class="fa fa-fw fa-2x fa-users"></i>
                         </a>
                     </li>
@@ -16,7 +16,7 @@
             <div class="col-xs-11">
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane active" id="users">
+                    <div class="tab-pane active" id="users-pane">
                         <div>
                             <users></users>
                         </div>
@@ -51,8 +51,8 @@
 
             nav(tab, event) {
                 history.pushState( {tab : tab}, `${tab.$ucfirst()}`, `/#${tab}`);
-                $('.nav-tabs').find('.active').removeClass('active').end().find(`#${tab}`).closest('li').addClass('active');
-                $('.tab-content').find('.active').removeClass('active').end().find(`#${tab}`).addClass('active');
+                $('.nav-tabs').find('.active').removeClass('active').end().find(`#${tab}-tab`).closest('li').addClass('active');
+                $('.tab-content').find('.active').removeClass('active').end().find(`#${tab}-pane`).addClass('active');
             },
 
             setInitialTab() {

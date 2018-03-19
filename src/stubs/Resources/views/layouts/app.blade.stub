@@ -30,7 +30,6 @@
         <reset-password></reset-password>
 
         <batch-update-selected></batch-update-selected>
-        <!-- <chats :user="{{ Auth::user()->toJson() }}"></chats> -->
         <flash message="{{ session('flash') }}"></flash>
         @endif
     </div>

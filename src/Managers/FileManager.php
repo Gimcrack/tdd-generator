@@ -77,6 +77,22 @@ class FileManager {
     }
 
     /**
+     * Get the blade layout file
+     *
+     * @param  string
+     * @return string
+     */
+    public static function layout($name)
+    {
+        $layout = File::glob( base_path("resources/views/layouts/{$name}.blade.php") );
+
+        if ( ! count($layout) )
+            return "";
+
+        return $layout[0];
+    }
+
+    /**
      * Get the js file
      *
      * @param  string $name
@@ -93,6 +109,22 @@ class FileManager {
     }
 
     /**
+     * Get the controller file
+     *
+     * @param  string $name
+     * @return string
+     */
+    public static function controller($name)
+    {
+        $controller = File::glob( app_path("Http/Controllers/{$name}.php") );
+
+        if ( ! count($controller) )
+            return "";
+
+        return $controller[0];
+    }
+
+    /**
      * Get the route file
      *
      * @param  string  $name
@@ -100,7 +132,13 @@ class FileManager {
      */
     public static function route($name)
     {
-        return base_path("routes" . DIRECTORY_SEPARATOR . $name);
+        $name = trim($name, ".php");
+        $routes = File::glob( base_path("routes/{$name}.php") );
+
+        if ( ! count($routes) )
+            return "";
+
+        return $routes[0];
     }
 
     /**
@@ -169,7 +207,7 @@ class FileManager {
     {
         $name = is_string($name) ? $name : optional($name)->lower_plural;
 
-        $migration = File::glob( database_path("migrations") . DIRECTORY_SEPARATOR . "*create_{$name}*table*.php" );
+        $migration = File::glob( database_path("migrations/*create_{$name}*table*.php" ) );
 
         if ( ! count($migration) )
             return "";
@@ -264,15 +302,21 @@ class FileManager {
      *
      * @param  string  $path
      * @param  string  $content
+     * @param  int  $offset
      * @return string
      */
-    public static function append($path, $content)
+    public static function append($path, $content, $offset = 0)
     {
         if ( static::contains($path, $content) )
             return "[warn] File {$path} already contains {$content}";
 
         $original = static::get($path);
         $lines = explode("\n",$original);
+
+        if ( $offset ) {
+            return static::insert($path, $content, count($lines)-$offset);
+        }
+
         array_push($lines, $content);
 
         return static::write($path, implode("\n",$lines));

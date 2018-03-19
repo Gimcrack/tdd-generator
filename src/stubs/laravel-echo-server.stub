@@ -1,12 +1,16 @@
 {
-	"authHost": "http://tdd-generator-test.test/",
+	"authHost": "http://tdd-generator-test.test",
 	"authEndpoint": "/broadcasting/auth",
-	"clients": [
-		{
-			"appId": "3be749bf968599c5",
-			"key": "4d4032c07ddf8680aa5e98e059976bb9"
-		}
-	],
+	 "clients": [
+            {
+                    "appId": "c54feb147e18f700",
+                    "key": "426e8f51e3b3d23665cfeada77d2a151"
+            },
+            {
+                    "appId": "agent",
+                    "key": "fcf4769c3ddfa58c222ed516c4c46712"
+            }
+    ],
 	"database": "redis",
 	"databaseConfig": {
 		"redis": {},
@@ -20,13 +24,5 @@
 	"protocol": "http",
 	"socketio": {},
 	"sslCertPath": "",
-	"sslKeyPath": "",
-	"sslCertChainPath": "",
-	"sslPassphrase": "",
-	"apiOriginAllow": {
-		"allowCors": true,
-		"allowOrigin": "http://tdd-generator-test.test/",
-		"allowMethods": "GET, POST, PATCH, PUT, DELETE, HEAD, OPTIONS",
-		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
-	}
+	"sslKeyPath": ""
 }
