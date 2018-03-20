@@ -8,7 +8,7 @@ class Npm {
      * Install the npm dependencies
      * @method install
      *
-     * @return   string
+     * @return   array
      */
     public static function install()
     {
@@ -19,7 +19,7 @@ class Npm {
         if( ! file_exists( base_path("node_modules/bootstrap-sass") ) )
             $return[] = exec('npm i -D ' . static::get() );
 
-        return implode("\n", $return);
+        return $return;
     }
 
     /**

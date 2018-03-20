@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Concerns\HelpsMakeStubs;
 
 class Stub {
@@ -32,18 +33,27 @@ class Stub {
     public $type;
 
     /**
+     * The tags
+     *
+     * @var  Collection
+     */
+    public $tags;
+
+    /**
      * Create a new stub
      * @method __construct
      *
-     * @param  string  $name
-     * @param  string  $path
-     * @param  string  $type
+     * @param  string $name
+     * @param  string $path
+     * @param  string $type
+     * @param  array  $tags
      */
-    public function __construct($name, $path, $type = '.php')
+    public function __construct($name, $path, $type = '.php', $tags = [])
     {
         $this->name = str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name);
         $this->path = $path;
         $this->type = $type;
+        $this->tags = collect($tags);
     }
 
     /**
@@ -88,5 +98,24 @@ class Stub {
         $parts = explode(DIRECTORY_SEPARATOR,$this->name);
 
         return array_pop($parts);
+    }
+
+    /**
+     * Add the specified tag(s)
+     *
+     * @param  array|string $tags
+     * @return $this
+     */
+    public function tag($tags)
+    {
+        foreach( array_wrap($tags) as $tag )
+        {
+            if ( ! $this->tags->contains($tag) )
+            {
+                $this->tags[] = $tag;
+            }
+        }
+
+        return $this;
     }
 }

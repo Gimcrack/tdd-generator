@@ -3,9 +3,8 @@
 namespace Ingenious\TddGenerator\Managers;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Helpers\Npm;
-use Ingenious\TddGenerator\Managers\StubManager;
-use Ingenious\TddGenerator\Managers\FileManager;
 
 class SetupManager {
 
@@ -16,9 +15,9 @@ class SetupManager {
     protected $stubs;
 
     /**
-     * @var array
+     * @var Collection
      */
-    public $output = [];
+    public $output;
 
     /**
      * @var object
@@ -42,6 +41,8 @@ class SetupManager {
             'http_kernel' => app_path("Http") . DIRECTORY_SEPARATOR . "Kernel*",
             'user_model' => app_path() . DIRECTORY_SEPARATOR . "User*",
         ];
+
+        $this->output = collect([]);
     }
 
     /**
@@ -54,13 +55,15 @@ class SetupManager {
     {
         $setup = new static();
 
-        $setup->output[] = FileManager::backup( $setup->paths->example_tests );
-
-        $setup->output[] = FileManager::insert(
-            FileManager::config("app"),
-            "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",
-            18
-        );
+        $setup
+            ->mergeOutput(
+                FileManager::backup( $setup->paths->example_tests ),
+                FileManager::insert(
+                    FileManager::config("app"),
+                    "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",
+                    18
+                )
+            );
 
         return $setup;
     }
@@ -75,15 +78,16 @@ class SetupManager {
     {
         $setup = new static();
 
-        $setup->output[] = collect([
-            'user_factory',
-            'user_migration',
-            'route_service_provider',
-            'http_kernel',
-            'user_model'
-        ])->map( function($key) use ($setup) {
-            return FileManager::backup( $setup->paths->$key );
-        })->implode("\n");
+        $setup->mergeOutput( collect([
+                'user_factory',
+                'user_migration',
+                'route_service_provider',
+                'http_kernel',
+                'user_model'
+            ])->map( function($key) use ($setup) {
+                return FileManager::backup( $setup->paths->$key );
+            })->all()
+        );
 
         return $setup;
     }
@@ -101,10 +105,25 @@ class SetupManager {
 
         if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
 
-        $setup->output[] = Npm::install();
-
-        $setup->output[] = FileManager::backup( $setup->paths->example_component );
+        $setup->mergeOutput(
+            Npm::install(),
+            FileManager::backup( $setup->paths->example_component )
+        );
 
         return $setup;
+    }
+
+    /**
+     * Merge the new output with the existing output
+     *
+     * @return $this
+     */
+    public function mergeOutput()
+    {
+        foreach( func_get_args() as $output) {
+            $this->output = $this->output->merge($output);
+        }
+
+        return $this;
     }
 }

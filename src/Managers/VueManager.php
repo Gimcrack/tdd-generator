@@ -80,17 +80,16 @@ class VueManager {
      * Put the vue components in place
      *
      * @param bool $embed
-     * @return string
+     * @return array
      */
     public function run($embed = true)
     {
-        $output = [];
         // register the components
         $app = FileManager::js("app");
 
-        $output[] = $this->components->map( function($component) use ($app) {
+        $output = $this->components->map( function($component) use ($app) {
             return FileManager::insert($app,$component,static::LINE_NUMBER);
-        })->implode("\n");
+        })->all();
 
 
         if ( $embed )
@@ -107,7 +106,7 @@ class VueManager {
             $output[] = FileManager::insert($home, $this->pane, $pane_line);
         }
 
-        return implode("\n",$output);
+        return $output;
     }
 
 }

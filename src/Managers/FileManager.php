@@ -14,7 +14,7 @@ class FileManager {
      * @method backup
      *
      * @param  string  $path
-     * @return string
+     * @return array
      */
     public static function backup($path)
     {
@@ -22,11 +22,12 @@ class FileManager {
         $files = File::glob( $path );
 
         foreach( $files as $file ) {
-            $output[] = "[warn] *** Backing up {$file}. It already exists. ***";
+            $short = str_replace(base_path(),"",$file);
+            $output[] = "[warn]Backing up {$short}";
             File::move($file,"{$file}.bak");
         }
 
-        return implode("\n",$output);
+        return $output;
     }
 
     /**
@@ -179,7 +180,7 @@ class FileManager {
      *
      * @param  string|array $patterns
      * @param  string $file
-     * @return string
+     * @return array
      */
     public static function clean($patterns, $file)
     {
@@ -220,35 +221,41 @@ class FileManager {
      *
      * @param  string $path
      * @param  string $content
-     * @return string
+     * @return array
      * @throws \Exception
      */
     public static function write($path, $content)
     {
         if ( static::unchanged($path, $content) )
-            return "[warn] Skipping {$path}. Already in place";
+            return ["[warn] Skipping {$path}. Already in place"];
 
         static::mkdir($path);
 
         if ( ! file_put_contents($path, $content) )
             throw new \Exception("Could not write to {$path}");
 
-        return "Writing to {$path}. . . Done.";
+        $short = str_replace(base_path(),"",$path);
+
+        return ["Writing to {$short}"];
     }
 
     /**
      * Delete the specified file
      *
-     * @param  string  $path
+     * @param  string|array  $path
      * @return string
      */
     public static function delete($path)
     {
         $output = [];
-        foreach( File::glob($path) as $file)
+
+        $files = is_array($path) ? $path : File::glob($path);
+
+        foreach( $files as $file)
         {
             File::delete($file);
-            $output[] = "[warn] Deleted {$path}";
+            $short = str_replace(base_path(),"",$file);
+            $output[] = "[warn] Deleted {$short}";
         }
 
         return implode("\n",$output);
@@ -287,8 +294,10 @@ class FileManager {
         if ( ! $line )
             return static::append($path, $content);
 
-        if ( static::contains($path, $content) )
-            return "[warn] File {$path} already contains {$content}";
+        if ( static::contains($path, $content) ) {
+            $short = str_replace(base_path(),"",$path);
+            return "[warn] File {$short} already contains content";
+        }
 
         $original = static::get($path);
         $lines = explode("\n",$original);
@@ -307,8 +316,10 @@ class FileManager {
      */
     public static function append($path, $content, $offset = 0)
     {
-        if ( static::contains($path, $content) )
-            return "[warn] File {$path} already contains {$content}";
+        if ( static::contains($path, $content) ) {
+            $short = str_replace(base_path(),"",$path);
+            return "[warn] File {$short} already contains content";
+        }
 
         $original = static::get($path);
         $lines = explode("\n",$original);

@@ -4,6 +4,7 @@
 namespace Ingenious\TddGenerator\StubCollections;
 
 
+use Ingenious\TddGenerator\Helpers\StubCollection;
 use Ingenious\TddGenerator\Stub;
 use Illuminate\Support\Collection;
 
@@ -18,7 +19,7 @@ class ChatStubs
      */
     public static function get()
     {
-        return collect([
+        return StubCollection::tag('chat',[
             // tests
             Stub::test("Feature/ChatTest"),
             Stub::test("Unit/ChatTest"),
@@ -41,6 +42,9 @@ class ChatStubs
 
             // migration
             Stub::migration("9999_12_31_00000000_create_chats_table"),
+
+            // factory
+            Stub::factory("ChatFactory")
         ]);
     }
 }

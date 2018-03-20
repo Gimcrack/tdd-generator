@@ -20,11 +20,12 @@ trait HelpsMakeStubs {
      * @param $name
      * @param $path
      * @param string $type
+     * @param array $tags
      * @return static
      */
-    public static function make($name, $path, $type = '.php')
+    public static function make($name, $path, $type = '.php', $tags = [])
     {
-        return new static($name, $path, $type);
+        return new static($name, $path, $type, $tags);
     }
 
     /**
@@ -40,7 +41,7 @@ trait HelpsMakeStubs {
             static::$paths['js'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['js']),
             ".js"
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -56,7 +57,7 @@ trait HelpsMakeStubs {
             static::$paths['mixins'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['mixins']),
             ".js"
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -72,7 +73,7 @@ trait HelpsMakeStubs {
             static::$paths['components'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['components']),
             ".vue"
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -88,7 +89,7 @@ trait HelpsMakeStubs {
             static::$paths['sass'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['sass']),
             ".scss"
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -105,7 +106,7 @@ trait HelpsMakeStubs {
         return static::make(
             static::$paths['views'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['views'] . DIRECTORY_SEPARATOR . $subdir)
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -120,7 +121,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Routes" . DIRECTORY_SEPARATOR . $name,
             base_path("routes")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -135,7 +136,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Models" . DIRECTORY_SEPARATOR . $name,
             app_path()
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -150,7 +151,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Controllers" . DIRECTORY_SEPARATOR . $name,
             app_path("Http/Controllers")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -165,7 +166,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Middleware" . DIRECTORY_SEPARATOR . $name,
             app_path("Http/Middleware")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -180,7 +181,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Migrations" . DIRECTORY_SEPARATOR . $name,
             database_path("Migrations")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -197,7 +198,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Tests" . DIRECTORY_SEPARATOR . $name,
             base_path("tests" . DIRECTORY_SEPARATOR . $subdir)
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -212,7 +213,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Factories" . DIRECTORY_SEPARATOR . $name,
             database_path("Factories")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -227,7 +228,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Providers" . DIRECTORY_SEPARATOR . $name,
             app_path("Providers")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -242,7 +243,7 @@ trait HelpsMakeStubs {
         return static::make(
             "Requests" . DIRECTORY_SEPARATOR . $name,
             app_path("Http/Requests")
-        );
+        )->tag(__FUNCTION__);
     }
 
     /**
@@ -257,6 +258,6 @@ trait HelpsMakeStubs {
         return static::make(
             "Events" . DIRECTORY_SEPARATOR . $name,
             app_path("Events")
-        );
+        )->tag(__FUNCTION__);
     }
 }

@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator\StubCollections;
 
 use Illuminate\Support\Collection;
+use Ingenious\TddGenerator\Helpers\StubCollection;
 use Ingenious\TddGenerator\Stub;
 
 class FrontendStubs {
@@ -15,7 +16,7 @@ class FrontendStubs {
      */
     public static function get()
     {
-        return collect([
+        return StubCollection::tag('frontend',[
             // js
             Stub::js("Api"),
             Stub::js("app"),

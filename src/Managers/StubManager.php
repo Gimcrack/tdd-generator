@@ -2,13 +2,11 @@
 
 namespace Ingenious\TddGenerator\Managers;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
-use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Stub;
-use Ingenious\TddGenerator\StubCollections\ChatStubs;
+use Ingenious\TddGenerator\Params;
+use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Utility\Converter;
-use Ingenious\TddGenerator\Utility\ModelCase;
+use Ingenious\TddGenerator\StubCollections\ChatStubs;
 use Ingenious\TddGenerator\StubCollections\AdminStubs;
 use Ingenious\TddGenerator\StubCollections\BaseStubs;
 use Ingenious\TddGenerator\StubCollections\ParentStubs;
@@ -122,18 +120,22 @@ class StubManager {
      * Process the stubs
      * @method process
      *
-     * @return   string
+     * @return   Collection
      */
     public function process()
     {
-        return $this->stubs->map( function(Stub $stub) {
-            $this->count++;
+        return $this->stubs
+            ->filter( function(Stub $stub)  {
+                $params = $this->converter->params;
 
-            return $this->converter->process( $stub );
-        })
-            ->union($this->converter->output)
-            ->implode("\n");
+                return $params->hasTag($stub->tags);
+            })
+            ->map( function(Stub $stub) {
+
+                $this->count++;
+
+                return $this->converter->process( $stub );
+            })
+            ->union($this->converter->output);
     }
-
-
 }

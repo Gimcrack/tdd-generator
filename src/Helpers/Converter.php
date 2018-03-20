@@ -135,7 +135,7 @@ class Converter {
      */
     public function message(Stub $stub)
     {
-        return str_pad("Creating [" . $this->interpolator->run( $stub->name ) . "] ", 75, "-") . "  Done.";
+        return "Creating [" . $this->interpolator->run( $stub->name ) . "]";
     }
 
     /**

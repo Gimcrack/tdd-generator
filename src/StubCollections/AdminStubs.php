@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator\StubCollections;
 
 use Illuminate\Support\Collection;
+use Ingenious\TddGenerator\Helpers\StubCollection;
 use Ingenious\TddGenerator\Stub;
 
 class AdminStubs {
@@ -15,11 +16,7 @@ class AdminStubs {
      */
     public static function get()
     {
-        return collect([
-            // routes
-            Stub::route("api-admin"),
-            Stub::route("api-user"),
-
+        return StubCollection::tag('admin', [
             // models
             Stub::model("User"),
 

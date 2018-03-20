@@ -61,6 +61,8 @@ class Generator {
         $this->migrations = MigrationManager::init( Converter::init( $this->params ) );
 
         $this->components = VueManager::init( Converter::init($this->params) );
+
+        $this->output = collect();
     }
 
     public static function init(Params $params)
@@ -97,6 +99,23 @@ class Generator {
     }
 
     /**
+     * Append the output
+     *
+     * @return $this
+     */
+    public function appendOutput()
+    {
+        foreach( func_get_args() as $output ) {
+            if ( is_string($output) && strpos($output, "\n") !== false )
+                $output = explode("\n",$output);
+
+            $this->output = $this->output->merge( collect($output) );
+        }
+
+        return $this;
+    }
+
+    /**
      * Description
      * @method handle
      *
@@ -124,9 +143,10 @@ class Generator {
      */
     public function components()
     {
-        $this->output[] = "Setting up the vue components";
-
-        $this->output[] = $this->components->run();
+        $this->appendOutput(
+            "Setting up the vue components",
+            $this->components->run()
+        );
 
         return $this;
     }
@@ -138,7 +158,7 @@ class Generator {
      */
     public function processNested()
     {
-        $this->output[] = "Setting up the parent files";
+        $this->appendOutput("Setting up the parent files");
 
         return $this->setStubs(StubManager::parent( $this->params ))
             ->processStubs();
@@ -275,7 +295,7 @@ class Generator {
      */
     public function reinit()
     {
-        $this->output[] = $this->migrations->reinit();
+        $this->appendOutput( $this->migrations->reinit() );
 
         return $this;
     }
@@ -288,7 +308,7 @@ class Generator {
      */
     private function processRoutes()
     {
-        $this->output[] = $this->routes->process();
+        $this->appendOutput( $this->routes->process() );
 
         return $this;
     }
@@ -301,7 +321,7 @@ class Generator {
      */
     public function processStubs()
     {
-        $this->output[] = $this->stubs->process();
+        $this->appendOutput( $this->stubs->process() );
 
         return $this;
     }

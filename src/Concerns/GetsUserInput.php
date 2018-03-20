@@ -14,8 +14,11 @@ trait GetsUserInput {
      */
     private function getRoutesFile()
     {
-        if ( !! $this->argument('routes') )
+        if ( !! $this->hasArgument('routes') )
             return $this->argument('routes');
+
+        if ( !! $this->option('routes') )
+            return $this->option('routes');
 
         $files = File::glob( base_path("routes" . DIRECTORY_SEPARATOR . "*api*.php" ) );
 
@@ -32,7 +35,7 @@ trait GetsUserInput {
             $this->comment( " [{$key}] ". File::name($file) . ".php");
         }
 
-        $chosen = $this->ask("> Select one. [0]") ?: 0;
+        $chosen = $this->ask("> Select one. [0]", false) ?: 0;
 
         return File::name( $files[$chosen] ) . ".php";
     }
@@ -45,15 +48,37 @@ trait GetsUserInput {
      */
     private function getPrefix()
     {
-        if ( !! $this->argument('prefix') )
+        if (  $this->hasArgument('prefix') )
             return $this->argument('prefix');
+
+        if ( !! $this->option('prefix') )
+            return $this->option('prefix');
 
         if ( $this->option('defaults') )
             return null;
 
-        $this->comment("\n\nWhat prefix should the new routes have? Optional");
+        return $this->ask("> What prefix should the new routes have? e.g. admin [none]", false);
+    }
 
-        return $this->ask("> Enter a prefix", false);
+    /**
+     * Get the tags to include
+     * @method getTags
+     *
+     * @return   string
+     */
+    private function getTags()
+    {
+
+        if ( $this->hasArgument('tags') )
+            return $this->argument('tags');
+
+        if ( !! $this->option('tags') )
+            return $this->option('tags');
+
+        if ( $this->option('defaults') )
+            return 'all';
+
+        return $this->ask("> What tags should be included? Enter tags, comma separated [all]", false);
     }
 
     /**
@@ -70,7 +95,7 @@ trait GetsUserInput {
         if ( $this->option('defaults') )
             return false;
 
-        return (bool) $this->ask("> Force overwriting of existing files?", false);
+        return (bool) $this->ask("> Force overwriting of existing files? [Don't overwrite]", false);
     }
 
     /**
@@ -101,15 +126,16 @@ trait GetsUserInput {
      */
     private function getParent()
     {
-        if ( !! $this->argument('parent') )
+        if ( $this->hasArgument('parent') )
             return $this->argument('parent');
+
+        if ( !! $this->option('parent') )
+            return $this->option('parent');
 
         if ( $this->option('defaults') )
             return null;
 
-        $this->comment("\n\nDoes the model have a parent model? Optional");
-
-        return $this->ask("> Enter a parent. [None]", false);
+        return $this->ask("> Does the model have a parent model? [None]", false);
     }
 
     /**
@@ -127,5 +153,17 @@ trait GetsUserInput {
             return false;
 
         return (bool) $this->ask("> Admin only routes? [No]", false);
+    }
+
+    /**
+     * Does the argument exist and have a value?
+     *
+     * @param $arg
+     * @return bool
+     */
+    public function hasArgument($arg)
+    {
+        return collect($this->arguments())->contains($arg)
+            && !! $this->argument($arg);
     }
 }

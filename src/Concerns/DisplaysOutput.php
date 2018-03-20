@@ -9,22 +9,57 @@ trait DisplaysOutput {
      * Display the output
      * @method output
      *
-     * @param $processor
      * @return void
      */
-    public function output($processor)
+    public function output()
     {
-        foreach( $processor->output as $comment ) {
+        foreach ( func_get_args() as $processor) {
 
-            if ( ! trim($comment) )
+            if ( ! is_object($processor) )
+            {
+                $this->printOutput($processor);
                 continue;
+            }
 
-            if ( strpos($comment,"[warn]") !== false ) {
-                $this->comment( trim(str_replace("[warn]","",$comment)) );
+            foreach( $processor->output as $comment ) {
+                if ( ! is_array($comment) && strpos($comment,"\n") !== false )
+                    $comment = explode("\n",$comment);
+
+                $this->printOutput($comment);
             }
-            else {
-                $this->info( trim($comment) );
+        }
+
+        $this->info("\n\n");
+    }
+
+    /**
+     * Print the output
+     *
+     * @param  array|string  $comment
+     */
+    private function printOutput($comment)
+    {
+        if ( is_array($comment) )
+        {
+            foreach($comment as $c)
+            {
+                $this->printOutput($c);
             }
+            return;
+        }
+
+        if ( ! trim($comment) )
+            return;
+
+        if ( strpos($comment,"[warn]") !== false ) {
+            $comment = str_replace("[warn]","",$comment);
+            $comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
+
+            $this->comment( $comment );
+        }
+        else {
+            $comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
+            $this->info( $comment );
         }
     }
 

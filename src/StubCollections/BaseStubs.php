@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator\StubCollections;
 
 use Illuminate\Support\Collection;
+use Ingenious\TddGenerator\Helpers\StubCollection;
 use Ingenious\TddGenerator\Stub;
 
 class BaseStubs {
@@ -15,7 +16,7 @@ class BaseStubs {
      */
     public static function get($skip_migration = false)
     {
-        $r = collect( [
+        return StubCollection::tag('base', [
 
             // controllers
             Stub::controller("ThingController"),
@@ -42,11 +43,9 @@ class BaseStubs {
             // vue components
             Stub::component("Thing"),
             Stub::component("Things"),
+
+            // migration
+            ( ! $skip_migration ) ? Stub::migration("XXXX_XX_XX_XXXXXX_create_things_table") : NULL
         ]);
-
-        if ( ! $skip_migration )
-            $r[] = Stub::migration("XXXX_XX_XX_XXXXXX_create_things_table");
-
-        return $r;
     }
 }

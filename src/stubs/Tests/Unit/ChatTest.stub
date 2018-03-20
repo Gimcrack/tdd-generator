@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Event;
 use App\Chat;
 use App\User;
 use Tests\TestCase;
@@ -63,6 +64,8 @@ class ChatTest extends TestCase
     /** @test */
     function an_event_is_sent_when_a_chat_is_received()
     {
+        Event::fake();
+
         $chat = factory(Chat::class)->create();
 
         $this->assertEvent(ChatMessageReceived::class, compact('chat'));

@@ -19,9 +19,10 @@ class TddGenerate extends Command
      */
     protected $signature = 'tdd:generate
         { model : The new model name }
-        { parent? : The parent model }
-        { prefix? : The route name prefix to use e.g. admin }
-        { routes? : The routes file to use }
+        { --parent= : The parent model }
+        { --tags= : The tags to include }
+        { --prefix= : The route name prefix to use e.g. admin }
+        { --routes= : The routes file to use }
         { --force : Overwrite existing files without confirmation }
         { --backup : Backup and Replace existing fies }
         { --admin : Only allow admin access to the generated routes }
@@ -44,6 +45,7 @@ class TddGenerate extends Command
     {
         $params = ( new Params )
             ->setModel( $this->argument('model') )
+            ->setTags( $this->getTags() )
             ->setParent( $this->getParent() )
             ->setPrefix( $this->getPrefix() )
             ->setRoutes( $this->getRoutesFile() )

@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Utility\ModelCase;
 
 class Params {
@@ -69,11 +70,33 @@ class Params {
      */
     public $routes;
 
+    /**
+     * The tags to include
+     *
+     * @var  Collection
+     */
+    public $tags;
+
     public function __construct()
     {
         $this->setModel("")
             ->setParent("")
-            ->setChildren("");
+            ->setChildren("")
+            ->setTags(collect("all"));
+    }
+
+    /**
+     * Set the tags
+     * @method setTags
+     *
+     * @param  string $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        $this->tags = collect(explode(",",$tags ?: "all"));
+
+        return $this;
     }
 
     /**
@@ -188,5 +211,17 @@ class Params {
         $this->routes = $routes;
 
         return $this;
+    }
+
+    /**
+     * Is the tag included
+     *
+     * @param $tag
+     * @return bool
+     */
+    public function hasTag($tag)
+    {
+        return $this->tags->contains('all')
+            || collect($tag)->intersect($this->tags)->isNotEmpty();
     }
 }
