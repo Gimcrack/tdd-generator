@@ -19,7 +19,7 @@ class FileManager {
     public static function backup($path)
     {
         $output = [];
-        $files = File::glob( $path );
+        $files = is_array($path) ? $path : File::glob($path);
 
         foreach( $files as $file ) {
             $short = str_replace(base_path(),"",$file);

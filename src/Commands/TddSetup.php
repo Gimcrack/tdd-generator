@@ -107,7 +107,7 @@ class TddSetup extends Command
             ->setRoutes($this->getRoutesFile())
             ->setPrefix($this->getPrefix());
 
-        Artisan::call("make:auth");
+        Artisan::call('make:auth',['--no-interaction' => true]);
 
         $this->output(
             "Setting up Auth Scaffolding",

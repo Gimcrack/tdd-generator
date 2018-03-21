@@ -53,8 +53,10 @@ class TddGenerate extends Command
             ->setForce( $this->getForce() )
             ->setBackup( $this->getBackup() );
 
+        $this->alert("Beginning Processing");
+
         $this->output( Generator::handle( $params ) );
 
-        $this->info("\nProcessing complete.");
+        $this->alert("Processing Complete");
     }
 }

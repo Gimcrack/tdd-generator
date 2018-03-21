@@ -130,6 +130,7 @@ class StubManager {
 
                 return $params->hasTag($stub->tags);
             })
+            ->values()
             ->map( function(Stub $stub) {
 
                 $this->count++;

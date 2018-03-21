@@ -29,7 +29,7 @@ trait DisplaysOutput {
             }
         }
 
-        $this->info("\n\n");
+        $this->info("\n");
     }
 
     /**

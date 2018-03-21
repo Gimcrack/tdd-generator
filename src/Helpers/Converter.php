@@ -68,7 +68,7 @@ class Converter {
         // determine if the existing file matches the
         // new file or should be backed up or skipped
         if ( $this->backupOrSkip($stub) )
-            return false;
+            return $this->skipped($stub);
 
         // write the output
         $this->write($stub);
@@ -136,6 +136,18 @@ class Converter {
     public function message(Stub $stub)
     {
         return "Creating [" . $this->interpolator->run( $stub->name ) . "]";
+    }
+
+    /**
+     * Get the skipped message
+     * @method message
+     * @param  Stub  $stub
+     *
+     * @return   string
+     */
+    public function skipped(Stub $stub)
+    {
+        return "[warn]Skipping [" . $this->interpolator->run( $stub->name ) . "]";
     }
 
     /**

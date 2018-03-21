@@ -143,6 +143,9 @@ class Generator {
      */
     public function components()
     {
+        if ( ! $this->params->hasTag('component') )
+            return $this;
+
         $this->appendOutput(
             "Setting up the vue components",
             $this->components->run()
@@ -158,6 +161,9 @@ class Generator {
      */
     public function processNested()
     {
+        if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
         $this->appendOutput("Setting up the parent files");
 
         return $this->setStubs(StubManager::parent( $this->params ))
@@ -171,6 +177,9 @@ class Generator {
      */
     public function processChild()
     {
+        if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
         $params = clone($this->params);
 
         $params->setChildren( $this->params->model->model )
@@ -198,6 +207,9 @@ class Generator {
      */
     public function processParent()
     {
+        if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
         if ( ! $this->params->parent )
             return $this;
 
@@ -212,6 +224,9 @@ class Generator {
      */
     public function relationships()
     {
+        if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
         RelationshipManager::init($this->params)->handle();
 
         return $this;
@@ -295,6 +310,9 @@ class Generator {
      */
     public function reinit()
     {
+        if ( ! $this->params->hasTag('migration') )
+            return $this;
+
         $this->appendOutput( $this->migrations->reinit() );
 
         return $this;
@@ -308,6 +326,9 @@ class Generator {
      */
     private function processRoutes()
     {
+        if ( ! $this->params->hasTag('route') )
+            return $this;
+
         $this->appendOutput( $this->routes->process() );
 
         return $this;
