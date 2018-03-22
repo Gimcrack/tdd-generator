@@ -282,26 +282,42 @@ class FileManager {
     }
 
     /**
+     * Replace the content in the specified file
+     *
+     * @param $path
+     * @param $content
+     * @param $line
+     * @return array
+     */
+    public static function replace($path, $content, $line)
+    {
+        return static::insert($path, $content, $line, $replace = true);
+    }
+
+    /**
      * Insert the specified content into the specified file at the specified line
      *
      * @param  string  $path
      * @param  string  $content
-     * @param null|int  $line
-     * @return string
+     * @param  null|int  $line
+     * @param  bool  $replace
+     * @return array
      */
-    public static function insert($path, $content, $line = null)
+    public static function insert($path, $content, $line = null, $replace = false)
     {
         if ( ! $line )
             return static::append($path, $content);
 
         if ( static::contains($path, $content) ) {
             $short = str_replace(base_path(),"",$path);
-            return "[warn] File {$short} already contains content";
+            return ["[warn] File {$short} already contains content"];
         }
 
         $original = static::get($path);
         $lines = explode("\n",$original);
-        array_splice($lines, $line-1, 0, $content);
+        $remove = $replace ? count($lines) : 0;
+
+        array_splice($lines, $line-1, $remove, $content);
 
         return static::write($path, implode("\n",$lines));
     }
@@ -312,13 +328,13 @@ class FileManager {
      * @param  string  $path
      * @param  string  $content
      * @param  int  $offset
-     * @return string
+     * @return array
      */
     public static function append($path, $content, $offset = 0)
     {
         if ( static::contains($path, $content) ) {
             $short = str_replace(base_path(),"",$path);
-            return "[warn] File {$short} already contains content";
+            return ["[warn] File {$short} already contains content"];
         }
 
         $original = static::get($path);
