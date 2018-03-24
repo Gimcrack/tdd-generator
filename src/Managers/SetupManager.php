@@ -58,6 +58,9 @@ class SetupManager {
         $setup
             ->mergeOutput(
                 FileManager::backup( $setup->paths->example_tests ),
+                FileManager::env("BROADCAST_DRIVER","redis"),
+                FileManager::env("CACHE_DRIVER","redis"),
+                FileManager::env("SESSION_DRIVER","redis"),
                 FileManager::insert(
                     FileManager::config("app"),
                     "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",

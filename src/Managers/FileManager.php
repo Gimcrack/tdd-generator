@@ -4,6 +4,7 @@ namespace Ingenious\TddGenerator\Managers;
 
 use function file_get_contents;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Ingenious\TddGenerator\Utility\ModelCase;
 use function preg_replace;
 
@@ -262,6 +263,27 @@ class FileManager {
     }
 
     /**
+     * Set the env variable
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return array
+     */
+    public static function env($key, $value)
+    {
+        $env = base_path(".env");
+        $line = static::lineNum($env, Str::upper($key) . "=");
+        $new = Str::upper($key) . "=\"" . trim($value,"\"") . "\"";
+
+        if ( $line > 0 )
+            static::replace($env, $new, $line);
+        else
+            static::append($env, $new);
+
+        return ["Setting env value {$key} to {$value}"];
+    }
+
+    /**
      * Get the line number of the specified content
      *
      * @param  string  $path
@@ -275,7 +297,7 @@ class FileManager {
         $index = collect( explode("\n",$original) )
             ->flip()
             ->first( function($num, $line) use ($content,$after_line) {
-                return $num > $after_line && strpos($line, $content);
+                return $num >= $after_line && strpos($line, $content) !== false;
             } );
 
         return ( $index != null ) ? $index+1 : -1;
@@ -315,7 +337,9 @@ class FileManager {
 
         $original = static::get($path);
         $lines = explode("\n",$original);
-        $remove = $replace ? count($lines) : 0;
+
+        $new_lines = explode("\n",$content);
+        $remove = $replace ? count($new_lines) : 0;
 
         array_splice($lines, $line-1, $remove, $content);
 
