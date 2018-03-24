@@ -77,6 +77,13 @@ class Params {
      */
     public $tags;
 
+    /**
+     * Match all or match any
+     *
+     * @var  string
+     */
+    public $tag_match_mode = "any";
+
     public function __construct()
     {
         $this->setModel("")
@@ -92,9 +99,18 @@ class Params {
      * @param  string $tags
      * @return $this
      */
-    public function setTags($tags)
+    public function setTags($tags = "all")
     {
-        $this->tags = collect(explode(",",$tags ?: "all"));
+        // match all of the specified tags
+        if ( strpos($tags,",") !== false ) {
+            $this->tags = collect(explode(",",$tags));
+            $this->tag_match_mode = "all";
+            return $this;
+        }
+
+        // match any of the specified tags
+        $this->tags = collect(explode("|",$tags));
+        $this->tag_match_mode = "any";
 
         return $this;
     }
@@ -217,11 +233,19 @@ class Params {
      * Is the tag included
      *
      * @param $tag
+     * @param null $mode
      * @return bool
      */
-    public function hasTag($tag)
+    public function hasTag($tag, $mode = null)
     {
+        $tags = collect($tag);
+        $mode = $mode ?? $this->tag_match_mode;
+
+        if ( $mode === 'all' ) {
+            return $tags->intersect($this->tags)->count() >= $this->tags->count();
+        }
+
         return $this->tags->contains('all')
-            || collect($tag)->intersect($this->tags)->isNotEmpty();
+            || $tags->intersect($this->tags)->isNotEmpty();
     }
 }

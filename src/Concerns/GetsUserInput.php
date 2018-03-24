@@ -14,8 +14,12 @@ trait GetsUserInput {
      */
     private function getRoutesFile()
     {
-        if ( !! $this->hasArgument('routes') )
+        if ( isset($this->params->routes) )
+            return $this->params->routes;
+
+        if ( !! $this->hasArgument('routes') ) {
             return $this->argument('routes');
+        }
 
         if ( !! $this->option('routes') )
             return $this->option('routes');
@@ -48,6 +52,9 @@ trait GetsUserInput {
      */
     private function getPrefix()
     {
+        if ( isset($this->params->prefix) )
+            return $this->params->prefix;
+
         if (  $this->hasArgument('prefix') )
             return $this->argument('prefix');
 
@@ -68,6 +75,8 @@ trait GetsUserInput {
      */
     private function getTags()
     {
+        if ( isset($this->params->tags) )
+            return $this->params->tags;
 
         if ( $this->hasArgument('tags') )
             return $this->argument('tags');
@@ -89,6 +98,9 @@ trait GetsUserInput {
      */
     private function getForce()
     {
+        if ( isset($this->params->force) )
+            return $this->params->force;
+
         if ( !! $this->option('force') )
             return true;
 
@@ -106,6 +118,9 @@ trait GetsUserInput {
      */
     private function getBackup()
     {
+        if ( isset($this->params->backup) )
+            return $this->params->backup;
+
         if ( !! $this->option('backup') )
             return true;
 
@@ -126,6 +141,9 @@ trait GetsUserInput {
      */
     private function getParent()
     {
+        if ( isset($this->params->parent) )
+            return $this->params->parent;
+
         if ( $this->hasArgument('parent') )
             return $this->argument('parent');
 
@@ -146,6 +164,9 @@ trait GetsUserInput {
      */
     private function getAdmin()
     {
+        if ( isset($this->params->admin) )
+            return $this->params->admin;
+
         if ( !! $this->option('admin') )
             return true;
 
