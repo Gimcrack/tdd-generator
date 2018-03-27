@@ -40,9 +40,9 @@ class [Thing]Controller extends Controller
      */
     public function store(New[Thing]Request $request)
     {
-        [Thing]::create( $request->validated() );
+        $model = [Thing]::create( $request->validated() );
 
-        return response([], 201);
+        return response(compact('model'), 201);
     }
 
     /**
@@ -56,7 +56,7 @@ class [Thing]Controller extends Controller
     {
         $[thing]->update( $request->validated() );
 
-        return response([],202);
+        return response(['model' => $[thing]],202);
     }
 
     /**

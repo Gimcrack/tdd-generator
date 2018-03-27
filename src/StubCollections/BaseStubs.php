@@ -44,6 +44,9 @@ class BaseStubs {
             Stub::component("Thing"),
             Stub::component("Things"),
 
+            // form
+            Stub::form("thing"),
+
             // migration
             ( ! $skip_migration ) ? Stub::migration("XXXX_XX_XX_XXXXXX_create_things_table") : NULL
         ]);

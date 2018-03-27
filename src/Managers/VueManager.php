@@ -19,7 +19,7 @@ class VueManager {
     /**
      * The line number in app.js to insert the new components
      */
-    const LINE_NUMBER = 39;
+    const LINE_NUMBER = 36;
 
     /**
      * The stub converter

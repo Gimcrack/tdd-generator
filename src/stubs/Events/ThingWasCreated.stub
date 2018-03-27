@@ -32,6 +32,6 @@ class [Thing]WasCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel("[things].{$this->[thing]->id}");
+        return new Channel("[things]");
     }
 }

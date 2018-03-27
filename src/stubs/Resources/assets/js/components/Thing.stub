@@ -7,6 +7,7 @@
         @view="view"
         @update="update"
         @destroy="destroy"
+        @ToggledHasChanged="$emit('ToggledHasChanged')"
     >
         <td>{{ model.name }}</td>
 
@@ -33,14 +34,15 @@
                 item : {
                     key : 'id',
                     type : '[thing]',
-                    endpoint : '[things]',
+                    endpoint : '[url_prefix][things]',
                     channel : `[things].${this.initial.id}`,
                     updated : '[Thing]WasUpdated',
                 },
 
                 toggles : {
+                    info : false,
                     update : true,
-                    delete : true,
+                    delete : false,
                 }
             }
         },
@@ -51,7 +53,7 @@
             },
 
             update() {
-
+                Bus.$emit('ShowForm', { type : '[thing]', model : this.initial })
             },
         }
     }

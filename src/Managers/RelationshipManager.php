@@ -71,7 +71,7 @@ class RelationshipManager
      */
     private function parentPatterns()
     {
-        return ( ! $this->params->parent ) ? [
+        return ( ! $this->params->parent->model ) ? [
             "/\/\/ -- PARENT --[\s\S]*\/\/ -- END PARENT --/",
             "/\/\/ -- CHILDREN --[\s\S]*\/\/ -- END CHILDREN --/",
         ] : [

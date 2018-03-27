@@ -22,21 +22,14 @@ class FrontendStubs {
             Stub::js("app"),
             Stub::js("bootstrap"),
 
-            // mixins
-            Stub::mixin("item"),
-            Stub::mixin("collection"),
-
             // components
-            Stub::component("Item"),
-            Stub::component("Page"),
             Stub::component("Home"),
-            Stub::component("Vinput"),
-            Stub::component("Flash"),
-            Stub::component("BatchUpdateSelected"),
-            Stub::component("HeaderSortButton"),
             Stub::component("ResetPassword"),
             Stub::component("Users"),
             Stub::component("User"),
+
+            // forms
+            Stub::form('user'),
 
             // sass
             Stub::sass("_variables"),

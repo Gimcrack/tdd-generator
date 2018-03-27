@@ -1,0 +1,40 @@
+module.exports = {
+    type : '[Thing]',
+    endpoint : '[url_prefix][things]',
+    toggles : {
+        del : true,
+        menus : {
+            top : false,
+            bottom : true
+        }
+    },
+    form : {
+        name : null,
+        //description : null
+    },
+    inputs : [
+        {
+            name : 'Basic Details',
+            help : 'Please fill out the form fields',
+            fields : [
+                {
+                    name : 'name',
+                    type : 'text',
+                    placeholder : 'e.g. John Doe',
+                    required : true,
+                    icon : 'fa-user',
+                    validate : [
+                        [ 'minLength', [3], 'Please enter a valid [thing] name' ]
+                    ]
+                },
+                /*
+                {
+                    name : 'description',
+                    type : 'textarea',
+                    placeholder : 'A brief description'
+                }
+                */
+            ]
+        },
+    ]
+};

@@ -125,6 +125,7 @@ class StubManager {
     public function process()
     {
         return $this->stubs
+            ->filter()
             ->filter( function(Stub $stub)  {
                 $params = $this->converter->params;
 

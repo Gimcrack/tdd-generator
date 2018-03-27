@@ -26,20 +26,23 @@ window.Store = Store;
  */
 
 // components
+import TddGeneratorUi from 'tdd-generator-ui';
+TddGeneratorUi(Vue);
+
 Vue.component('home', require('./components/Home.vue'));
-Vue.component('page', require('./components/Page.vue'));
-Vue.component('item', require('./components/Item.vue'));
-Vue.component('vinput', require('./components/Vinput.vue'));
-Vue.component('flash', require('./components/Flash.vue'));
-Vue.component('batchUpdateSelected', require('./components/BatchUpdateSelected.vue'));
-Vue.component('headerSortButton', require('./components/HeaderSortButton.vue'));
 Vue.component('resetPassword', require('./components/ResetPassword.vue'));
 Vue.component('users', require('./components/Users.vue'));
 Vue.component('user', require('./components/User.vue'));
 
 
+
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data : {
+        form_definitions : {
+            //category : require('./components/forms/category')
+        }
+    }
 });
 
 window.flash = {

@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator;
 
+use Ingenious\TddGenerator\Managers\FileManager;
 use Ingenious\TddGenerator\Managers\MigrationManager;
 use Ingenious\TddGenerator\Managers\RelationshipManager;
 use Ingenious\TddGenerator\Managers\VueManager;
@@ -146,9 +147,20 @@ class Generator {
         if ( ! $this->params->hasTag('component') )
             return $this;
 
+        $form_def = $this->stubs->converter->interpolator->run("\t\t\t[thing] : require('./components/forms/[thing]'),");
+
+
+
         $this->appendOutput(
             "Setting up the vue components",
-            $this->components->run()
+            $this->components->run(),
+
+            "Registering the form definitions",
+            FileManager::insert(
+                FileManager::js('app'),
+                $form_def,
+                FileManager::lineNum(FileManager::js('app'),"form_definitions") + 1
+            )
         );
 
         return $this;
@@ -162,6 +174,9 @@ class Generator {
     public function processNested()
     {
         if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
+        if ( ! $this->params->parent->model )
             return $this;
 
         $this->appendOutput("Setting up the parent files");
@@ -178,6 +193,9 @@ class Generator {
     public function processChild()
     {
         if ( ! $this->params->hasTag('relationships') )
+            return $this;
+
+        if ( ! $this->params->parent->model )
             return $this;
 
         $params = clone($this->params);
@@ -210,7 +228,7 @@ class Generator {
         if ( ! $this->params->hasTag('relationships') )
             return $this;
 
-        if ( ! $this->params->parent )
+        if ( ! $this->params->parent->model )
             return $this;
 
         return $this->processNested()
@@ -342,7 +360,18 @@ class Generator {
      */
     public function processStubs()
     {
-        $this->appendOutput( $this->stubs->process() );
+        $initial_state = $this->stubs->converter->interpolator->run("\t\t\t\"[url_prefix][things]\" => \\App\\[Thing]::all(),");
+
+        $this->appendOutput(
+            $this->stubs->process(),
+
+            "Setting up the initial state",
+            FileManager::insert(
+                FileManager::controller("HomeController"),
+                $initial_state,
+                31
+            )
+        );
 
         return $this;
     }

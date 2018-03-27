@@ -65,7 +65,7 @@ class ChatManager
 
         $this->output[] = FileManager::insert(
             FileManager::layout("app"),
-            "<chats :user=\"{{ Auth::user()->toJson() }}\"></chats>",
+            "\t\t<chats :user=\"{{ Auth::user()->toJson() }}\"></chats>",
             static::LAYOUT_LINE_NUMBER
         );
 
@@ -83,7 +83,7 @@ class ChatManager
 
         $this->output[] = FileManager::insert(
             FileManager::controller("HomeController"),
-            "\t\t\"chats\" => \\App\\Chat::with('user')->latest()->limit(25)->get(),",
+            "\t\t\t\"chats\" => \\App\\Chat::with('user')->latest()->limit(25)->get(),",
             static::CONTROLLER_LINE_NUMBER
         );
 

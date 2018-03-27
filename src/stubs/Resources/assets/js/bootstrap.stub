@@ -74,7 +74,7 @@ Array.prototype.$remove = function(key) {
 
     Vue.delete(this, key);
     return this;
-}
+};
 
 Array.prototype.$add = function(value) {
     if ( this.indexOf(value) === -1  )
@@ -82,18 +82,18 @@ Array.prototype.$add = function(value) {
         this.push(value);
     }
     return this;
-}
+};
 
 String.prototype.$ucfirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
-}
+};
 
 String.prototype.$title_case = function() {
     return this
         .split('_')
         .map( (piece) => piece.$ucfirst() )
         .join(' ');
-}
+};
 
 import Api from './api';
 window.Api = Api;
@@ -103,13 +103,4 @@ window.moment = moment;
 
 window.fromNow = (dateTime) => {
     return moment(dateTime).fromNow();
-}
-
-// mixins
-import Item from './components/mixins/item.js';
-import Collection from './components/mixins/collection.js'
-
-window.mixins = {
-    item : Item,
-    collection : Collection
-}
+};

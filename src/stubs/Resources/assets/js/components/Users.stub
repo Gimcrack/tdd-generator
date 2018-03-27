@@ -13,7 +13,7 @@
         data() {
             return {
                 toggles : {
-                    new : true
+                    new : true,
                 },
 
                 details : {
@@ -36,80 +36,21 @@
                         destroyed : 'UserWasDestroyed',
                     }
                 },
-
-                tempUser : {
-                    name : null,
-                    email : null,
-                    password : null
-                }
             }
         },
 
         methods : {
-
             create() {
-                return swal({
-                    title: "New User",
-                    text : "What is the user's name?",
-                    inputPlaceholder: "John Doe",
-                    input: "text",
-                    showLoaderOnConfirm: true,
-                    showCancelButton: true,
-                    animation: "slide-from-top",
-                })
-                .then( this.getEmail, this.page.ignore );
+                Bus.$emit("ShowForm", { type : 'user', model : null });
             },
 
-            getEmail(name) {
-                this.tempUser.name = name;
-
-                return swal({
-                    title: "New User",
-                    text : "What is the user's email?",
-                    inputPlaceholder: "john.doe@example.com",
-                    input: "text",
-                    showLoaderOnConfirm: true,
-                    showCancelButton: true,
-                    animation: "slide-from-top",
-                })
-                .then( this.getPassword, this.page.ignore );
+            created() {
+                console.warn("Created method not implemented on Users.vue");
             },
 
-            getPassword(email) {
-                this.tempUser.email = email;
-
-                return swal({
-                    title: "New User",
-                    text : "What is the user's password?",
-                    inputPlaceholder: "********",
-                    input: "password",
-                    showLoaderOnConfirm: true,
-                    showCancelButton: true,
-                    animation: "slide-from-top",
-                })
-                .then( this.store, this.page.ignore );
-            },
-
-            store(password) {
-                this.tempUser.password = password;
-
-                this.page.busy = true;
-                Api.post('users', this.tempUser)
-                    .then(this.created, this.page.error);
-            },
-
-            created(event) {
-                this.tempUser = {
-                    name : null,
-                    email : null,
-                    password : null
-                }
-
-                this.page.busy = false;
-            },
-
-            deleted(event) {
-            },
+            deleted() {
+                console.warn("Deleted method not implemented on Users.vue");
+            }
         },
     }
 </script>

@@ -101,6 +101,8 @@ class Params {
      */
     public function setTags($tags = "all")
     {
+        $tags = $tags ?: "all";
+
         // match all of the specified tags
         if ( strpos($tags,",") !== false ) {
             $this->tags = collect(explode(",",$tags));
@@ -194,6 +196,8 @@ class Params {
      */
     public function setPrefix($prefix)
     {
+        $prefix = str_replace(["/","\\","."],"",$prefix);
+
         $this->prefix = ( $prefix ) ? "{$prefix}." : "";
 
         $this->urlPrefix = ( $prefix ) ? "{$prefix}/" : "";

@@ -1,0 +1,67 @@
+module.exports = {
+    type : 'User',
+    endpoint : '[url_prefix]users',
+    toggles : {
+        del : true,
+        menus : {
+            top : false,
+            bottom : true
+        }
+    },
+    form : {
+        name : null,
+        email : null,
+        password : null,
+    },
+    inputs : [
+        {
+            name : 'User Details',
+            help : 'Please fill out the form fields',
+            fields : [
+                {
+                    name : 'name',
+                    type : 'text',
+                    placeholder : 'e.g. John Doe',
+                    required : true,
+                    icon : 'fa-user',
+                    validate : [
+                        [ 'fullName', [], 'Please enter the user\'s full name' ]
+                    ]
+                },
+                {
+                    name : 'email',
+                    type : 'email',
+                    placeholder : 'e.g. JohnDoe@example.com',
+                    required : true,
+                    icon : 'fa-envelope',
+                    validate : [
+                        [ 'email', [], 'Please enter a valid email' ]
+                    ]
+                },
+                {
+                    name : 'password',
+                    type : 'password',
+                    placeholder : 'Make it a good one',
+                    required : true,
+                    uneditable : true,
+                    icon : 'fa-key',
+                    validate : [
+                        [ 'minLength', [10], 'Please provide at least 10 characters' ]
+                    ]
+                },
+                {
+                    label : 'Confirm Password',
+                    name : 'password2',
+                    type : 'password',
+                    placeholder : 'Once more please',
+                    required : true,
+                    uneditable : true,
+                    icon : 'fa-key',
+                    validate : [
+                        [ 'match', ['password'], 'Passwords must match' ]
+                    ]
+                },
+            ]
+        },
+    ]
+};

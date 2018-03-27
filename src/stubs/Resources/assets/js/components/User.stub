@@ -7,6 +7,7 @@
         @view="view"
         @update="update"
         @destroy="destroy"
+        @ToggledHasChanged="$emit('ToggledHasChanged')"
     >
         <td>{{ model.name }}</td>
         <td>{{ model.email }}</td>
@@ -37,14 +38,15 @@
                 item : {
                     key : 'id',
                     type : 'user',
-                    endpoint : 'users',
+                    endpoint : '[url_prefix]users',
                     channel : `users.${this.initial.id}`,
                     updated : 'UserWasUpdated',
                 },
 
                 toggles : {
-                    update : false,
-                    delete : ! this.initial.admin_flag,
+                    info : false,
+                    delete : false,
+                    update : true,
                 }
             }
         },
@@ -55,7 +57,7 @@
             },
 
             update() {
-
+                Bus.$emit('ShowForm', { type : 'user', model : this.initial })
             },
 
             toggleAdmin() {
@@ -68,14 +70,14 @@
             unpromote() {
                 this.updating = true;
 
-                Api.post(`users/${this.initial.id}/unpromote`)
+                Api.delete(`[url_prefix]users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
 
             promote() {
                 this.updating = true;
 
-                Api.post(`users/${this.initial.id}/promote`)
+                Api.post(`[url_prefix]users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
         }

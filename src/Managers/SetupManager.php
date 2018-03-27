@@ -110,7 +110,17 @@ class SetupManager {
 
         $setup->mergeOutput(
             Npm::install(),
-            FileManager::backup( $setup->paths->example_component )
+            FileManager::backup( $setup->paths->example_component ),
+            FileManager::insert(
+                FileManager::layout('app'),
+                "\t\t<vform></vform>",
+                31
+            ),
+            FileManager::insert(
+                FileManager::js('app'),
+                "\t\t\tuser : require('./components/forms/user'),",
+                FileManager::lineNum(FileManager::js('app'),"form_definitions") + 1
+            )
         );
 
         return $setup;

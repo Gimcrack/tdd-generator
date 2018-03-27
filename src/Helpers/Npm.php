@@ -40,7 +40,9 @@ class Npm {
             'moment',
             'moment-timezone',
             'sleep-promise',
-            'vue-localstorage'
+            'vue-localstorage',
+            //'tdd-generator-ui',
+            'file:../tdd-generator-ui',
         ])->implode(" ");
     }
 }

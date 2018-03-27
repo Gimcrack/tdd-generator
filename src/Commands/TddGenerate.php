@@ -55,7 +55,9 @@ class TddGenerate extends Command
 
         $this->alert("Beginning Processing");
 
-        $this->output( Generator::handle( $params ) );
+        $this->output(
+            Generator::handle( $params )
+        );
 
         $this->alert("Processing Complete");
     }

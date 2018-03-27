@@ -130,8 +130,8 @@ class TddSetup extends Command
             ->setPrefix($this->getPrefix());
 
         $this->output(
-            SetupManager::frontend(),
-            Generator::frontend($this->params)
+            Generator::frontend($this->params),
+            SetupManager::frontend()
         );
     }
 

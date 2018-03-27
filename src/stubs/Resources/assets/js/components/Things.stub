@@ -23,7 +23,7 @@
                     ],
                     type : '[thing]',
                     heading : '[Things]',
-                    endpoint : '[prefix][things]',
+                    endpoint : '[url_prefix][things]',
                     help : 'Manage [Things]',
                     events : {
                         channel : '[things]',
@@ -31,37 +31,22 @@
                         destroyed : '[Thing]WasDestroyed',
                     }
                 },
-
-                form : {
-                    name : null,
-                }
             }
         },
 
         methods : {
 
             create() {
-                console.error("Implement the create method for [Things]");
+                Bus.$emit("ShowForm", { type : "[thing]", model : null });
             },
 
-            store() {
-                this.page.busy = true;
-
-                Api.post('[things]', this.form)
-                    .then(this.created, this.page.error);
+            created() {
+                console.warn("Created method not implemented on [Things].vue");
             },
 
-            created(event) {
-                this.form = {
-                    name : null,
-                }
-
-                this.page.busy = false;
-            },
-
-            deleted(event) {
-
-            },
+            deleted() {
+                console.warn("Deleted method not implemented on [Things].vue");
+            }
         },
     }
 </script>

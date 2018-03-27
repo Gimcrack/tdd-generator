@@ -34,7 +34,7 @@ class UserController extends Controller
         $user->password = bcrypt(request('password'));
         $user->save();
 
-        return response()->json([], 201);
+        return response()->json(['model' => $user], 201);
     }
 
     /**
@@ -48,7 +48,7 @@ class UserController extends Controller
     {
         $user->update( $request->validated() );
 
-        return response()->json([],202);
+        return response()->json(['model' => $user],202);
     }
 
     /**

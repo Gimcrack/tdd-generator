@@ -8,6 +8,7 @@ trait HelpsMakeStubs {
         "assets" => "Resources/assets",
         "js" => "Resources/assets/js",
         "components" => "Resources/assets/js/components",
+        "forms" => "Resources/assets/js/components/forms",
         "mixins" => "Resources/assets/js/components/mixins",
         "sass" => "Resources/assets/sass",
         "views" => "Resources/views"
@@ -40,6 +41,22 @@ trait HelpsMakeStubs {
         return static::make(
             static::$paths['js'] . DIRECTORY_SEPARATOR . $name,
             base_path(static::$paths['js']),
+            ".js"
+        )->tag(__FUNCTION__);
+    }
+
+    /**
+     * Make a new form stub
+     * @method form
+     *
+     * @param $name
+     * @return static
+     */
+    public static function form($name)
+    {
+        return static::make(
+            static::$paths['forms'] . DIRECTORY_SEPARATOR . $name,
+            base_path(static::$paths['forms']),
             ".js"
         )->tag(__FUNCTION__);
     }
