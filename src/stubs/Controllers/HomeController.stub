@@ -28,6 +28,7 @@ class HomeController extends Controller
         // initial state
 
         $initial_state = collect([
+            "is_admin" => auth()->user()->isAdmin(),
             "admin/users" => User::all(),
         ]);
 
