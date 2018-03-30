@@ -252,4 +252,15 @@ class Params {
         return $this->tags->contains('all')
             || $tags->intersect($this->tags)->isNotEmpty();
     }
+
+    /**
+     * Is the model set?
+     * @method hasModel
+     *
+     * @return   bool
+     */
+    public function hasModel()
+    {
+        return !! $this->model->model;
+    }
 }

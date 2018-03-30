@@ -3,9 +3,12 @@
 namespace Ingenious\TddGenerator\Managers;
 
 use Ingenious\TddGenerator\Params;
-use Ingenious\TddGenerator\Utility\Converter;
+use Ingenious\TddGenerator\Helpers\Converter;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class RoutesManager {
+
+    use CanBeInitializedStatically;
 
     /**
      * The Stub Converter
@@ -13,18 +16,6 @@ class RoutesManager {
      * @var Converter
      */
     protected $converter;
-
-    /**
-     * Initialize a new RoutesManager
-     * @method init
-     *
-     * @param Converter $converter
-     * @return static
-     */
-    public static function init(Converter $converter)
-    {
-        return new static($converter);
-    }
 
     public function __construct(Converter $converter)
     {
@@ -40,6 +31,9 @@ class RoutesManager {
     public function process()
     {
         $params = $this->converter->params;
+
+        if ( ! $params->hasTag('route') )
+            return "";
 
         $routes = FileManager::route($params->routes);
 

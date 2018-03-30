@@ -3,10 +3,13 @@
 namespace Ingenious\TddGenerator\Managers;
 
 
-use Ingenious\TddGenerator\Utility\Converter;
+use Ingenious\TddGenerator\Helpers\Converter;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class MigrationManager
 {
+    use CanBeInitializedStatically;
+
     /**
      * The stub converter
      *
@@ -19,19 +22,17 @@ class MigrationManager
         $this->converter = $converter;
     }
 
-    public static function init(Converter $converter)
-    {
-        return new static($converter);
-    }
-
     /**
      * Reinitialize
      *
      * @return string
      */
-    public function reinit()
+    public function process()
     {
         $params = $this->converter->params;
+
+        if ( ! $params->hasTag('migration') )
+            return "";
 
         if ( ! $this->migrationExists() )
             return "";

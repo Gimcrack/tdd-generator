@@ -3,8 +3,11 @@
 namespace Ingenious\TddGenerator\Utility;
 
 use Illuminate\Support\Str;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class ModelCase {
+
+    use CanBeInitializedStatically;
 
     /**
      * @var string

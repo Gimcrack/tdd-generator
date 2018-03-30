@@ -3,9 +3,12 @@
 namespace Ingenious\TddGenerator\Helpers;
 
 use Ingenious\TddGenerator\Params;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class Interpolator
 {
+    use CanBeInitializedStatically;
+
     /**
      * @var  array
      */

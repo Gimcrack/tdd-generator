@@ -1,13 +1,15 @@
 <?php
 
-namespace Ingenious\TddGenerator\Utility;
+namespace Ingenious\TddGenerator\Helpers;
 
 use Ingenious\TddGenerator\Stub;
 use Ingenious\TddGenerator\Params;
-use Ingenious\TddGenerator\Helpers\Interpolator;
 use Ingenious\TddGenerator\Managers\FileManager;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class Converter {
+
+    use CanBeInitializedStatically;
 
     /**
      * The params
@@ -26,21 +28,9 @@ class Converter {
     /**
      * The interpolator
      *
-     * @var \Ingenious\TddGenerator\Helpers\Interpolator
+     * @var Interpolator
      */
     public $interpolator;
-
-    /**
-     * Initialize a new StubConverter
-     * @method init
-     *
-     * @param Params $params
-     * @return static
-     */
-    public static function init(Params $params)
-    {
-        return new static($params);
-    }
 
     /**
      * Converter constructor.

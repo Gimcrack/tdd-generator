@@ -2,29 +2,20 @@
 
 namespace Ingenious\TddGenerator;
 
+use Ingenious\TddGenerator\Helpers\Converter;
+use Ingenious\TddGenerator\Helpers\ManagerCollection;
+use Ingenious\TddGenerator\Managers\VueManager;
+use Ingenious\TddGenerator\Managers\StubManager;
 use Ingenious\TddGenerator\Managers\FileManager;
+use Ingenious\TddGenerator\Managers\InitialStateManager;
+use Ingenious\TddGenerator\Managers\RoutesManager;
 use Ingenious\TddGenerator\Managers\MigrationManager;
 use Ingenious\TddGenerator\Managers\RelationshipManager;
-use Ingenious\TddGenerator\Managers\VueManager;
-use Ingenious\TddGenerator\Utility\Converter;
-use Ingenious\TddGenerator\Managers\StubManager;
-use Ingenious\TddGenerator\Managers\RoutesManager;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class Generator {
 
-    /**
-     * The Stub Manager
-     *
-     * @var StubManager
-     */
-    protected $stubs;
-
-    /**
-     * The Routes Manager
-     *
-     * @var RoutesManager
-     */
-    protected $routes;
+    use CanBeInitializedStatically;
 
     /**
      * The Params object
@@ -33,71 +24,34 @@ class Generator {
      */
     protected $params;
 
+    /**
+     * The collection of managers
+     *
+     * @var ManagerCollection
+     */
+    protected $managers;
+
     public $output = [];
-
-    /**
-     * Handles migrations
-     *
-     * @var MigrationManager
-     */
-    protected $migrations;
-
-    /**
-     * Handles vue components
-     *
-     * @var VueManager
-     */
-    protected $components;
 
     public function __construct( Params $params )
     {
+        $this->output = collect();
+
         $this->params = $params;
 
-        $this->stubs = StubManager::base( $this->params );
+        $this->managers = ManagerCollection::default($params);
 
-        $this->routes = RoutesManager::init(
-            Converter::init( $this->params )
-        );
-
-        $this->migrations = MigrationManager::init( Converter::init( $this->params ) );
-
-        $this->components = VueManager::init( Converter::init($this->params) );
-
-        $this->output = collect();
+        //$this->stubs = StubManager::base( $this->params );
+        //
+        //$this->routes = RoutesManager::init( Converter::init( $this->params ) );
+        //
+        //$this->migrations = MigrationManager::init( Converter::init( $this->params ) );
+        //
+        //$this->components = VueManager::init( Converter::init($this->params) );
+        //
+        //$this->initial_state = InitialStateManager::init( Converter::init($this->params) );
     }
 
-    public static function init(Params $params)
-    {
-        return new static($params);
-    }
-
-    public function setStubs(StubManager $stubs)
-    {
-        $this->stubs = $stubs;
-
-        return $this;
-    }
-
-    public function setRoutes(RoutesManager $routes)
-    {
-        $this->routes = $routes;
-
-        return $this;
-    }
-
-    public function setMigrations(MigrationManager $migrations)
-    {
-        $this->migrations = $migrations;
-
-        return $this;
-    }
-
-    public function setComponents(VueManager $components)
-    {
-        $this->components = $components;
-
-        return $this;
-    }
 
     /**
      * Append the output
@@ -125,64 +79,19 @@ class Generator {
      */
     public static function handle( Params $params )
     {
-        $generator = new static( $params );
+        $generator = static::init( $params );
 
         return $generator
-            ->reinit()
-            ->processRoutes()
-            ->processStubs()
-            ->components()
-            ->processParent()
-            ->relationships();
-
+            ->process();
     }
 
-    /**
-     * Process the vue components
-     *
-     * @return $this
-     */
-    public function components()
+    private function process()
     {
-        if ( ! $this->params->hasTag('component') )
-            return $this;
-
-        $form_def = $this->stubs->converter->interpolator->run("\t\t\t[thing] : require('./components/forms/[thing]'),");
-
-
-
-        $this->appendOutput(
-            "Setting up the vue components",
-            $this->components->run(),
-
-            "Registering the form definitions",
-            FileManager::insert(
-                FileManager::js('app'),
-                $form_def,
-                FileManager::lineNum(FileManager::js('app'),"form_definitions") + 1
-            )
+        return $this->appendOutput(
+            $this->managers->get()
+                ->map
+                ->process()
         );
-
-        return $this;
-    }
-
-    /**
-     * Process the nested relationship stubs
-     *
-     * @return $this
-     */
-    public function processNested()
-    {
-        if ( ! $this->params->hasTag('relationships') )
-            return $this;
-
-        if ( ! $this->params->parent->model )
-            return $this;
-
-        $this->appendOutput("Setting up the parent files");
-
-        return $this->setStubs(StubManager::parent( $this->params ))
-            ->processStubs();
     }
 
     /**
@@ -204,18 +113,7 @@ class Generator {
             ->setModel( $this->params->parent->model )
             ->setParent(null);
 
-        return $this->setStubs(
-                StubManager::base( $params )
-            )
-            ->processStubs()
-            ->setRoutes(RoutesManager::init(
-                Converter::init( $params )
-            ))
-            ->processRoutes()
-            ->setComponents(VueManager::init(
-                Converter::init($params)
-            ))
-            ->components();
+        return static::handle($params);
     }
 
     /**
@@ -236,21 +134,6 @@ class Generator {
     }
 
     /**
-     * Handle the relationships
-     *
-     * @return $this
-     */
-    public function relationships()
-    {
-        if ( ! $this->params->hasTag('relationships') )
-            return $this;
-
-        RelationshipManager::init($this->params)->handle();
-
-        return $this;
-    }
-
-    /**
      * Setup the base files
      * @method setup
      *
@@ -261,7 +144,7 @@ class Generator {
     {
         return static::init( $params )
             ->setStubs(StubManager::setup( $params ))
-            ->processStubs();
+            ->process();
     }
 
     /**
@@ -275,7 +158,7 @@ class Generator {
     {
         return static::init( $params )
             ->setStubs(StubManager::admin( $params ))
-            ->processStubs();
+            ->process();
     }
 
     /**
@@ -289,7 +172,7 @@ class Generator {
     {
         return static::init( $params )
             ->setStubs(StubManager::parent( $params ))
-            ->processStubs();
+            ->process();
     }
 
     /**
@@ -303,7 +186,7 @@ class Generator {
     {
         return static::init( $params )
             ->setStubs(StubManager::frontend( $params ))
-            ->processStubs();
+            ->process();
     }
 
     /**
@@ -317,61 +200,18 @@ class Generator {
     {
         return static::init( $params )
             ->setStubs(StubManager::chat( $params ))
-            ->processStubs();
+            ->process();
     }
 
     /**
-     * Cleanup previous runs
-     * @method init
+     * Set the stubs
      *
-     * @return   $this
+     * @param $stubs
+     * @return $this
      */
-    public function reinit()
+    private function setStubs($stubs)
     {
-        if ( ! $this->params->hasTag('migration') )
-            return $this;
-
-        $this->appendOutput( $this->migrations->reinit() );
-
-        return $this;
-    }
-
-    /**
-     * Process the routes
-     * @method processRoutes
-     *
-     * @return   $this
-     */
-    private function processRoutes()
-    {
-        if ( ! $this->params->hasTag('route') )
-            return $this;
-
-        $this->appendOutput( $this->routes->process() );
-
-        return $this;
-    }
-
-    /**
-     * Convert the stubs
-     * @method processStubs
-     *
-     * @return   $this
-     */
-    public function processStubs()
-    {
-        $initial_state = $this->stubs->converter->interpolator->run("\t\t\t\"[url_prefix][things]\" => \\App\\[Thing]::all(),");
-
-        $this->appendOutput(
-            $this->stubs->process(),
-
-            "Setting up the initial state",
-            FileManager::insert(
-                FileManager::controller("HomeController"),
-                $initial_state,
-                31
-            )
-        );
+        $this->managers->setStubs($stubs);
 
         return $this;
     }

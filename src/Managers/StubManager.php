@@ -5,7 +5,7 @@ namespace Ingenious\TddGenerator\Managers;
 use Ingenious\TddGenerator\Stub;
 use Ingenious\TddGenerator\Params;
 use Illuminate\Support\Collection;
-use Ingenious\TddGenerator\Utility\Converter;
+use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\StubCollections\ChatStubs;
 use Ingenious\TddGenerator\StubCollections\AdminStubs;
 use Ingenious\TddGenerator\StubCollections\BaseStubs;

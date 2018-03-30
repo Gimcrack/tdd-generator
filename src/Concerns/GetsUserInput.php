@@ -7,6 +7,31 @@ use Illuminate\Support\Facades\File;
 trait GetsUserInput {
 
     /**
+     * Sanitize the input
+     *
+     * @param      string  $answer  The answer
+     *
+     * @return     string|bool  The sanitized input
+     */
+    private function sanitizeAnswer($answer) {
+       return ( ! in_array($answer, ['N','n','No','no','NO']) ) ? $answer : false;
+    }
+
+    /**
+     * Ask for sanitized input
+     *
+     * @param      string  $question  The question
+     * @param      mixed  $default   The default
+     *
+     * @return     string  The sanitized input
+     */
+    private function sanitizedAsk($question, $default) {
+        return $this->sanitizeAnswer(
+            $this->ask($question, $default)
+        );
+    }
+
+    /**
      * Get the routes file
      * @method getRoutesFile
      *
@@ -120,6 +145,9 @@ trait GetsUserInput {
     {
         if ( isset($this->params->backup) )
             return $this->params->backup;
+
+        if ( !! $this->params->force )
+            return false;
 
         if ( !! $this->option('backup') )
             return true;

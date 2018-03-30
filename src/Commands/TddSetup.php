@@ -3,10 +3,12 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
-use Ingenious\TddGenerator\Managers\ChatManager;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Generator;
+use Illuminate\Support\Facades\Artisan;
+use Ingenious\TddGenerator\Helpers\Npm;
+use Ingenious\TddGenerator\Helpers\Composer;
+use Ingenious\TddGenerator\Managers\ChatManager;
 use Ingenious\TddGenerator\Managers\SetupManager;
 use Ingenious\TddGenerator\Concerns\GetsUserInput;
 use Ingenious\TddGenerator\Concerns\DisplaysOutput;
@@ -49,9 +51,7 @@ class TddSetup extends Command
     public function handle()
     {
         $this->params = ( new Params )
-            ->setTags( $this->getTags() )
-            ->setForce( $this->getForce() )
-            ->setBackup( $this->getBackup() );
+            ->setTags( $this->getTags() );
 
         if ( $this->params->hasTag('setup','any') )
         {
@@ -74,21 +74,29 @@ class TddSetup extends Command
         }
 
         if ( $this->params->hasTag('all','any') ) {
-            if ( !! $this->ask("> Run tests? [No]", false) ) {
+            if ( $this->sanitizedAsk("> Run tests? [No]", false) ) {
+
+                $phpunit = base_path('vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c phpunit.xml');
                 $this->alert("Running Test Suite");
-                $this->output( exec('./vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c phpunit.xml') );
+                $this->info("$phpunit");
+                $this->output( shell_exec($phpunit) );
             }
 
-            if ( !! $this->ask("> Run migrations? [No]", false) ) {
-                $this->alert("Migration database");
-                $this->output( exec('php artisan migrate') );
+            if ( $this->sanitizedAsk("> Run migrations? [No]", false) ) {
+                $this->alert("Migrating database");
+                $this->output( shell_exec('php artisan migrate') );
             }
         }
 
-        if ( $this->params->hasTag('frontend','any') ) {
-            if ( !! $this->ask("> Compile assets? [No]", false) ) {
+        if ( $this->params->hasTag(['frontend','npm'],'any') ) {
+            if ( $this->sanitizedAsk("> Install NPM Dependencies? [No]", false) ) {
+                $this->alert("Installing NPM Dependencies");
+                $this->output(Npm::install());
+            }
+
+            if ( $this->sanitizedAsk("> Compile assets? [No]", false) ) {
                 $this->alert("Compiling assets");
-                $this->output( exec('npm run dev') );
+                $this->output( shell_exec('npm run dev') );
             }
         }
     }
@@ -97,8 +105,13 @@ class TddSetup extends Command
     {
         $this->alert("Setting up base files.");
 
+        $this->params
+            ->setForce( $this->getForce() )
+            ->setBackup( $this->getBackup() );
+
         $this->output(
             SetupManager::base(),
+            Composer::setup(),
             Generator::setup( $this->params )
         );
     }
@@ -108,6 +121,8 @@ class TddSetup extends Command
         $this->alert("Setting up admin files.");
 
         $this->params
+            ->setForce( $this->getForce() )
+            ->setBackup( $this->getBackup() )
             ->setRoutes($this->getRoutesFile())
             ->setPrefix($this->getPrefix());
 
@@ -138,6 +153,10 @@ class TddSetup extends Command
     private function chat()
     {
         $this->alert("Setting up chat files.");
+
+        $this->params
+            ->setForce($this->getForce())
+            ->setBackup($this->getBackup());
 
         $this->output(
             Generator::chat($this->params),

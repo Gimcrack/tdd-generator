@@ -21,7 +21,6 @@ class AdminStubs {
             Stub::model("User"),
 
             // controllers
-            Stub::controller("HomeController"),
             Stub::controller("UserController"),
             Stub::controller("UserPromotionController"),
 

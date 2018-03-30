@@ -13,11 +13,11 @@ class Npm {
     public static function install()
     {
         $return = [];
-        if ( ! file_exists( base_path("node_modules") ) )
-            $return[] = exec('npm install');
+        //if ( ! file_exists( base_path("node_modules") ) )
+        $return[] = shell_exec('npm install');
 
-        if( ! file_exists( base_path("node_modules/bootstrap-sass") ) )
-            $return[] = exec('npm i -D ' . static::get() );
+        //if ( ! file_exists( base_path("node_modules/bootstrap-sass") ) )
+        $return[] = shell_exec('npm i -D ' . static::get() );
 
         return $return;
     }
@@ -41,8 +41,8 @@ class Npm {
             'moment-timezone',
             'sleep-promise',
             'vue-localstorage',
-            //'tdd-generator-ui',
-            'file:../tdd-generator-ui',
+            'tdd-generator-ui',
+            //'file:../tdd-generator-ui',
         ])->implode(" ");
     }
 }

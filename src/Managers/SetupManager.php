@@ -4,9 +4,12 @@ namespace Ingenious\TddGenerator\Managers;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 use Ingenious\TddGenerator\Helpers\Npm;
 
 class SetupManager {
+
+    use CanBeInitializedStatically;
 
     /**
      * The StubManager
@@ -109,7 +112,6 @@ class SetupManager {
         if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
 
         $setup->mergeOutput(
-            Npm::install(),
             FileManager::backup( $setup->paths->example_component ),
             FileManager::insert(
                 FileManager::layout('app'),

@@ -2,10 +2,14 @@
 
 namespace Ingenious\TddGenerator\Managers;
 
+use Ingenious\TddGenerator\Generator;
 use Ingenious\TddGenerator\Params;
+use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class RelationshipManager
 {
+    use CanBeInitializedStatically;
+
     /**
      * @var \Ingenious\TddGenerator\Params
      */
@@ -22,22 +26,26 @@ class RelationshipManager
     }
 
     /**
-     * Initialize a new RelationshipManager
-     *
-     * @param \Ingenious\TddGenerator\Params $params
-     * @return static
-     */
-    public static function init(Params $params)
-    {
-        return new static($params);
-    }
-
-    /**
      * Handle the model relationships
      *
      * @throws \Exception
      */
-    public function handle()
+    public function process()
+    {
+        if ( ! $this->params->hasTag('relationships') )
+            return;
+
+        return $this->cleanup()
+
+    }
+
+    /**
+     * Cleanup any old migrations
+     *
+     * @return $this
+     * @throws \Exception
+     */
+    private function cleanup()
     {
         $model = FileManager::model($this->params->model);
         $parent = FileManager::model($this->params->parent);
@@ -56,12 +64,32 @@ class RelationshipManager
         }
 
         if ( ! $parent )
-            return;
+            return $this;
 
         foreach( [$parent, $parent_migration] as $file )
         {
             FileManager::clean($this->childPatterns(), $file);
         }
+
+        return $this;
+    }
+
+    /**
+     * Process the nested relationship stubs
+     *
+     * @return $this
+     */
+    private function processNested()
+    {
+        if ( ! $this->params->parent->model )
+            return $this;
+
+        $this->output[] = "Setting up the parent files";
+
+        $this->output[] = Generator::init((StubManager::parent( $this->params ))
+                    ->processStubs();
+
+        return $this;
     }
 
     /**
