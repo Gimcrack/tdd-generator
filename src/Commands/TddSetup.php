@@ -26,6 +26,7 @@ class TddSetup extends Command
         { --tags= : The tags to include }
         { --prefix= : The route name prefix to use e.g. admin }
         { --routes= : The routes file to use }
+        { --admin : Admin only routes } 
         { --force : Force overwriting of existing files }
         { --backup : Backup and Replace existing fies }
         { --defaults : Suppress prompts, use defaults }
@@ -43,6 +44,7 @@ class TddSetup extends Command
      */
     private $params;
 
+
     /**
      * Execute the console command.
      *
@@ -50,8 +52,16 @@ class TddSetup extends Command
      */
     public function handle()
     {
-        $this->params = ( new Params )
-            ->setTags( $this->getTags() );
+        $this->params = ( new Params );
+
+        if ( $this->shouldUseDefaults() )
+        {
+            $this->params->loadDefaults($this->defaults);
+        }
+        else
+        {
+            $this->params->setTags( $this->getTags() );
+        }
 
         if ( $this->params->hasTag('setup','any') )
         {
@@ -74,7 +84,7 @@ class TddSetup extends Command
         }
 
         if ( $this->params->hasTag('all','any') ) {
-            if ( $this->sanitizedAsk("> Run tests? [No]", false) ) {
+            if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
 
                 $phpunit = base_path('vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c phpunit.xml');
                 $this->alert("Running Test Suite");
@@ -82,23 +92,33 @@ class TddSetup extends Command
                 $this->output( shell_exec($phpunit) );
             }
 
-            if ( $this->sanitizedAsk("> Run migrations? [No]", false) ) {
+            if ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) {
                 $this->alert("Migrating database");
                 $this->output( shell_exec('php artisan migrate') );
             }
         }
 
         if ( $this->params->hasTag(['frontend','npm'],'any') ) {
-            if ( $this->sanitizedAsk("> Install NPM Dependencies? [No]", false) ) {
+            if ( $this->params->npm || $this->sanitizedAsk("> Install NPM Dependencies? [No]", false) ) {
                 $this->alert("Installing NPM Dependencies");
                 $this->output(Npm::install());
             }
 
-            if ( $this->sanitizedAsk("> Compile assets? [No]", false) ) {
+            if ( $this->params->compile || $this->sanitizedAsk("> Compile assets? [No]", false) ) {
                 $this->alert("Compiling assets");
                 $this->output( shell_exec('npm run dev') );
             }
         }
+
+        if ( $this->sanitizedAsk("> Cleanup Backups? [No]",false) ) {
+            $this->call('tdd:cleanup-backups');
+        }
+
+        if ( $model = $this->sanitizedAsk("> Scaffold A Model? Enter the model name. [No]",false) ) {
+            $this->call('tdd:generate',[ 'model' => $model]);
+        }
+
+        $this->alert("Processing Complete");
     }
 
     private function setup()
@@ -122,6 +142,7 @@ class TddSetup extends Command
 
         $this->params
             ->setForce( $this->getForce() )
+            ->setAdmin( $this->getAdmin() )
             ->setBackup( $this->getBackup() )
             ->setRoutes($this->getRoutesFile())
             ->setPrefix($this->getPrefix());
@@ -163,4 +184,6 @@ class TddSetup extends Command
             ChatManager::setup()
         );
     }
+
+
 }

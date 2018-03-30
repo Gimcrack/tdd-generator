@@ -121,11 +121,12 @@ class UserAdminTest extends TestCase
     function a_user_cannot_be_promoted_to_admin_by_a_nonadmin()
     {
         $user = create(User::class);
+        $user2 = create(User::class);
 
         $this
             ->api()
-            ->actingAsUser()
-            ->post(["[prefix]users.promotion.store", $user])
+            ->actingAs($user)
+            ->post(["[prefix]users.promotion.store", $user2])
             ->response()
             ->assertStatus(422);
 
@@ -136,10 +137,11 @@ class UserAdminTest extends TestCase
     function a_admin_cannot_be_demoted_to_user_by_a_nonadmin()
     {
         $admin = create_state(User::class,'admin');
+        $user = create(User::class);
 
         $this
             ->api()
-            ->actingAsUser()
+            ->actingAs($user)
             ->delete(["[prefix]users.promotion.destroy", $admin])
             ->response()
             ->assertStatus(422);

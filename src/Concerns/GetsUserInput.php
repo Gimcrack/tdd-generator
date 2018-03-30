@@ -5,6 +5,92 @@ namespace Ingenious\TddGenerator\Concerns;
 use Illuminate\Support\Facades\File;
 
 trait GetsUserInput {
+    /**
+     * The default param values
+     *
+     * @var array
+     */
+    protected $defaults = [
+        "tags" => [
+            "value" => "all",
+            "help" => "all",
+            "friendly" => "Tags To Include"
+        ],
+        "prefix" => [
+            "value" => "admin",
+            "help" => "admin",
+            "friendly" => "Route Prefix"
+        ],
+        "routes" => [
+            "value" => "api-admin.php",
+            "help" => "api-admin.php",
+            "friendly" => "Routes File"
+        ],
+        "force" => [
+            "value" => false,
+            "help" => "Overwrite",
+            "friendly" => "Existing Files"
+        ],
+        "backup" => [
+            "value" => true,
+            "help" => "Backup and Replace",
+            "friendly" => "Existing Files"
+        ],
+        "admin" => [
+            "value" => true,
+            "help" => "Yes",
+            "friendly" => "Admin Only Routes"
+        ],
+        "tests" => [
+            "value" => true,
+            "help" => "Yes",
+            "friendly" => "Run Tests"
+        ],
+        "npm" => [
+            "value" => false,
+            "help" => "Yes",
+            "friendly" => "Install NPM Dependencies"
+        ],
+        "migrate" => [
+            "value" => false,
+            "help" => "No",
+            "friendly" => "Run Migrations"
+        ],
+        "compile" => [
+            "value" => false,
+            "help" => "No",
+            "friendly" => "Compile Assets"
+        ],
+    ];
+
+    /**
+     * Should the default values be used?
+     *
+     * @return bool
+     */
+    protected function shouldUseDefaults()
+    {
+        if ( $this->option('defaults') )
+            return true;
+
+        $ii = 0;
+        $this->alert("Defaults");
+        foreach ($this->defaults as $default) {
+
+            if ($default['value']) {
+                $key = $default['friendly'];
+                $value = $default['help'];
+
+                $padding = 50 - strlen($key) - strlen($value);
+
+                $method = $ii % 2 ? "warn" : "info";
+                $this->$method($key . " " . str_repeat(".", $padding) . " " . $value);
+                $ii++;
+            }
+        }
+
+        return ! ! $this->sanitizedAsk("> Use defaults? [N]", null);
+    }
 
     /**
      * Sanitize the input
@@ -100,9 +186,6 @@ trait GetsUserInput {
      */
     private function getTags()
     {
-        if ( isset($this->params->tags) )
-            return $this->params->tags;
-
         if ( $this->hasArgument('tags') )
             return $this->argument('tags');
 
@@ -169,9 +252,6 @@ trait GetsUserInput {
      */
     private function getParent()
     {
-        if ( isset($this->params->parent) )
-            return $this->params->parent;
-
         if ( $this->hasArgument('parent') )
             return $this->argument('parent');
 

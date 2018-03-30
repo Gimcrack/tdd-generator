@@ -41,6 +41,9 @@ class VueManager {
         if ( ! $this->converter->params->hasTag('component') )
             return [];
 
+        if ( ! $this->converter->params->hasModel() )
+            return [];
+
         $form_def = $this->converter->interpolator->run("\t\t\t[thing] : require('./components/forms/[thing]'),");
 
         return [

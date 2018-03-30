@@ -37,26 +37,42 @@ class TddGenerate extends Command
     protected $description = 'Generate new tdd stubs for the specified Model';
 
     /**
+     * The Params
+     *
+     * @var  Params
+     */
+    private $params;
+
+    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        $params = ( new Params )
-            ->setModel( $this->argument('model') )
-            ->setTags( $this->getTags() )
-            ->setParent( $this->getParent() )
-            ->setPrefix( $this->getPrefix() )
-            ->setRoutes( $this->getRoutesFile() )
-            ->setAdmin( $this->getAdmin() )
-            ->setForce( $this->getForce() )
-            ->setBackup( $this->getBackup() );
+        $this->params = ( new Params )
+            ->setModel( $this->argument('model') );
+
+        if ( $this->shouldUseDefaults() )
+        {
+            $this->params->loadDefaults($this->defaults);
+        }
+        else
+        {
+            $this->params
+                ->setTags( $this->getTags() )
+                ->setParent( $this->getParent() )
+                ->setPrefix( $this->getPrefix() )
+                ->setRoutes( $this->getRoutesFile() )
+                ->setAdmin( $this->getAdmin() )
+                ->setForce( $this->getForce() )
+                ->setBackup( $this->getBackup() );
+        }
 
         $this->alert("Beginning Processing");
 
         $this->output(
-            Generator::handle( $params )
+            Generator::handle( $this->params )
         );
 
         $this->alert("Processing Complete");

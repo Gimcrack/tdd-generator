@@ -8,6 +8,7 @@ use Ingenious\TddGenerator\Managers\StubManager;
 use Ingenious\TddGenerator\Managers\RoutesManager;
 use Ingenious\TddGenerator\Managers\MigrationManager;
 use Ingenious\TddGenerator\Managers\InitialStateManager;
+use Ingenious\TddGenerator\Managers\RelationshipManager;
 use Ingenious\TddGenerator\Concerns\CollectsManagers;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
@@ -40,8 +41,9 @@ class ManagerCollection {
 
         return static::init([
             "stubs"=> StubManager::base($params),
-            "routes" => RoutesManager::init($converter),
             "migrations" => MigrationManager::init($converter),
+            //"relationships" => RelationshipManager::init($converter),
+            "routes" => RoutesManager::init($converter),
             "vue" => VueManager::init($converter),
             "initial_state" => InitialStateManager::init($converter),
         ]);
@@ -55,9 +57,10 @@ class ManagerCollection {
     public function get()
     {
         return collect([
-            $this->stubs,
-            $this->routes,
             $this->migrations,
+            $this->stubs,
+            //$this->relationships,
+            $this->routes,
             $this->vue,
             $this->initial_state
         ]);

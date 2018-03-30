@@ -84,12 +84,40 @@ class Params {
      */
     public $tag_match_mode = "any";
 
+    /**
+     * Run the test suite
+     *
+     * @var  bool
+     */
+    public $tests;
+
+    /**
+     * Install the npm dependencies
+     *
+     * @var  bool
+     */
+    public $npm;
+
+    /**
+     * Run the migrations
+     *
+     * @var  bool
+     */
+    public $migrate;
+
+    /**
+     * Compile the assets
+     *
+     * @var  bool
+     */
+    public $compile;
+
     public function __construct()
     {
         $this->setModel("")
             ->setParent("")
             ->setChildren("")
-            ->setTags(collect("all"));
+            ->setTags();
     }
 
     /**
@@ -126,7 +154,8 @@ class Params {
      */
     public function setModel($model)
     {
-        $this->model = new ModelCase($model);
+        if ( ! is_object($model) )
+            $this->model = new ModelCase($model);
 
         return $this;
     }
@@ -140,7 +169,8 @@ class Params {
      */
     public function setParent($parent)
     {
-        $this->parent = new ModelCase($parent);
+        if ( ! is_object($parent) )
+            $this->parent = new ModelCase($parent);
 
         return $this;
     }
@@ -154,7 +184,8 @@ class Params {
      */
     public function setChildren($children)
     {
-        $this->children = new ModelCase($children);
+        if ( ! is_object($children) )
+            $this->children = new ModelCase($children);
 
         return $this;
     }
@@ -233,6 +264,34 @@ class Params {
         return $this;
     }
 
+    public function setTests($tests)
+    {
+        $this->tests = $tests;
+
+        return $this;
+    }
+
+    public function setNpm($npm)
+    {
+        $this->npm = $npm;
+
+        return $this;
+    }
+
+    public function setMigrate($migrate)
+    {
+        $this->migrate = $migrate;
+
+        return $this;
+    }
+
+    public function setCompile($compile)
+    {
+        $this->compile = $compile;
+
+        return $this;
+    }
+
     /**
      * Is the tag included
      *
@@ -262,5 +321,24 @@ class Params {
     public function hasModel()
     {
         return !! $this->model->model;
+    }
+
+    /**
+     * Load the default param values
+     *
+     * @param  array  $defaults
+     */
+    public function loadDefaults($defaults)
+    {
+        $this->setBackup($defaults['backup']['value'])
+            ->setPrefix($defaults['prefix']['value'])
+            ->setTags($defaults['tags']['value'])
+            ->setAdmin($defaults['admin']['value'])
+            ->setForce($defaults['force']['value'])
+            ->setRoutes($defaults['routes']['value'])
+            ->setNpm($defaults['npm']['value'])
+            ->setMigrate($defaults['migrate']['value'])
+            ->setTests($defaults['tests']['value'])
+            ->setCompile($defaults['compile']['value']);
     }
 }

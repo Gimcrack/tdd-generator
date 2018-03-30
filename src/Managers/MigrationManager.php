@@ -34,6 +34,9 @@ class MigrationManager
         if ( ! $params->hasTag('migration') )
             return "";
 
+        if ( ! $params->hasModel() )
+            return "";
+
         if ( ! $this->migrationExists() )
             return "";
 
@@ -47,7 +50,7 @@ class MigrationManager
         }
 
         elseif ( $params->force )
-            return $this->cleanUp();
+            return "[warn]***A Migration exists for {$params->model->model}.***";
 
     }
 

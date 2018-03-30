@@ -2,125 +2,129 @@
 
 namespace Ingenious\TddGenerator\Managers;
 
+use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Generator;
-use Ingenious\TddGenerator\Params;
+use Ingenious\TddGenerator\Helpers\Converter;
+use Ingenious\TddGenerator\Concerns\CollectsOutput;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class RelationshipManager
 {
-    use CanBeInitializedStatically;
+    use CanBeInitializedStatically,
+        CollectsOutput;
+
+    const MIGRATION_FOREIGN_KEY = "\t\t\t\$table->unsignedInteger('[parent]_id')->nullable();";
+
+    const HAS_MANY =
+<<<EOF
+    /**
+     * A [Thing] has many [Children]
+     *
+     * @return \\Illuminate\\Database\\Eloquent\\Relations\\HasMany
+     */
+    public function [children]()
+    {
+        return \$this->hasMany([Child]::class);
+    }
+EOF;
+
+    const BELONGS_TO =
+<<<EOF
+    /**
+	 * A [Thing] belongs to a [Parent]
+	 *
+	 * @return \\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo
+	 */
+    public function [parent]() {
+    	return \$this->belongsTo([Parent]::class);
+    }
+EOF;
+
 
     /**
-     * @var \Ingenious\TddGenerator\Params
+     * @var Converter
      */
-    private $params;
+    private $converter;
 
     /**
      * RelationshipManager constructor.
      *
-     * @param \Ingenious\TddGenerator\Params $params
+     * @param Converter $converter
      */
-    public function __construct(Params $params)
+    public function __construct(Converter $converter)
     {
-        $this->params = $params;
+        $this->converter = $converter;
     }
 
     /**
      * Handle the model relationships
      *
+     * @return  array|Collection
      * @throws \Exception
      */
     public function process()
     {
-        if ( ! $this->params->hasTag('relationships') )
-            return;
+        if ( ! $this->converter->params->hasModel() )
+            return [];
 
-        return $this->cleanup()
+        if ( $this->converter->params->parent->model )
+            $this->processParent();
 
+        if ( $this->converter->params->children->model )
+            $this->processChildren();
+
+        return $this->output;
     }
 
-    /**
-     * Cleanup any old migrations
-     *
-     * @return $this
-     * @throws \Exception
-     */
-    private function cleanup()
+    private function processChildren()
     {
-        $model = FileManager::model($this->params->model);
-        $parent = FileManager::model($this->params->parent);
-        $migration = FileManager::migration($this->params->model);
-        $parent_migration = FileManager::migration($this->params->parent);
+        $model = FileManager::model($this->converter->params->model);
 
-        if ( ! $model )
-            throw new \Exception("Could not locate model for {$this->params->model}");
-
-        if ( ! $migration )
-            throw new \Exception("Could not locate migration for {$this->params->model}");
-
-        foreach( [$model,$migration] as $file )
-        {
-            FileManager::clean($this->parentPatterns(), $file);
-        }
-
-        if ( ! $parent )
-            return $this;
-
-        foreach( [$parent, $parent_migration] as $file )
-        {
-            FileManager::clean($this->childPatterns(), $file);
-        }
-
-        return $this;
+        $this->appendOutput(
+            "Adding the hasMany relationship to the parent model",
+            FileManager::append(
+                $model,
+                $this->converter->interpolator->run(static::HAS_MANY),
+                -1
+            )
+        );
     }
 
-    /**
-     * Process the nested relationship stubs
-     *
-     * @return $this
-     */
-    private function processNested()
+    private function processParent()
     {
-        if ( ! $this->params->parent->model )
-            return $this;
+        $this->appendOutput(
+            "Scaffolding the nested relationship",
+            StubManager::parent($this->converter->params)->process(),
+            $this->setupParentBase()
+        );
 
-        $this->output[] = "Setting up the parent files";
+        $model = FileManager::model($this->converter->params->model);
+        $migration = FileManager::migration($this->converter->params->model);
 
-        $this->output[] = Generator::init((StubManager::parent( $this->params ))
-                    ->processStubs();
-
-        return $this;
+        $this->appendOutput(
+            "Adding the belongsTo relationship to the child model",
+            FileManager::append(
+                $model,
+                $this->converter->interpolator->run(static::BELONGS_TO),
+                -1
+            ),
+            "Adding the foreign key to the child migration",
+            FileManager::insert(
+                $migration,
+                $this->converter->interpolator->run(static::MIGRATION_FOREIGN_KEY),
+                FileManager::lineNum($migration, "\$table->increments('id')") +1
+            )
+        );
     }
 
-    /**
-     * Get the parent relationship patterns for cleanup
-     *
-     * @return array
-     */
-    private function parentPatterns()
+    private function setupParentBase()
     {
-        return ( ! $this->params->parent->model ) ? [
-            "/\/\/ -- PARENT --[\s\S]*\/\/ -- END PARENT --/",
-            "/\/\/ -- CHILDREN --[\s\S]*\/\/ -- END CHILDREN --/",
-        ] : [
-            "/\/\/ -- PARENT --/",
-            "/\/\/ -- END PARENT --/",
-            "/\/\/ -- CHILDREN --[\s\S]*\/\/ -- END CHILDREN --/"
-        ];
-    }
+        $params = clone($this->converter->params)
+            ->setModel( $this->converter->params->parent->model )
+            ->setChildren( $this->converter->params->model->model )
+            ->setParent( null );
 
-    /**
-     * Get the child relationship patterns for cleanup
-     *
-     * @return array
-     */
-    private function childPatterns()
-    {
-        return [
-            "/\/\/ -- CHILDREN --/",
-            "/\/\/ -- END CHILDREN --/",
-            "/\/\/ -- PARENT --[\s\S]*\/\/ -- END PARENT --/",
-        ];
+        return Generator::handle($params);
     }
 
 }

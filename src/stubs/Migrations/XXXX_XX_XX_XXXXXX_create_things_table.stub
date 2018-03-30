@@ -15,9 +15,6 @@ class Create[Things]Table extends Migration
     {
         Schema::create('[things]', function (Blueprint $table) {
             $table->increments('id');
-            // -- PARENT --
-			$table->unsignedInteger('[parent]_id')->nullable();
-			// -- END PARENT --
             $table->string('name')->unique();
             $table->timestamps();
         });

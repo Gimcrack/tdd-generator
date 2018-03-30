@@ -32,7 +32,7 @@ class RoutesManager {
     {
         $params = $this->converter->params;
 
-        if ( ! $params->hasTag('route') )
+        if ( ! $params->hasTag('route') || ! $params->hasModel() )
             return "";
 
         $routes = FileManager::route($params->routes);
@@ -69,10 +69,10 @@ class RoutesManager {
      */
     public function nested(Params $params)
     {
-        if ( ! $params->parent )
+        if ( ! $params->parent->model && ! $params->children->model )
             return "";
 
-        return vsprintf("%s%s%s%s%s%s%s%s%s",[
+        return ( $params->parent->model ) ? vsprintf("%s%s%s%s%s%s%s%s%s",[
             'Route::apiResource("',
             $params->parent->lower_plural,
             '.',
@@ -80,6 +80,16 @@ class RoutesManager {
             '","',
             $params->parent->capped,
             $params->model->capped,
+            'Controller");',
+            "\n"
+        ]) : vsprintf("%s%s%s%s%s%s%s%s%s",[
+            'Route::apiResource("',
+            $params->model->lower_plural,
+            '.',
+            $params->children->lower_plural,
+            '","',
+            $params->model->capped,
+            $params->children->capped,
             'Controller");',
             "\n"
         ]);

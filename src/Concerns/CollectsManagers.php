@@ -4,6 +4,7 @@ namespace Ingenious\TddGenerator\Concerns;
 
 use Ingenious\TddGenerator\Managers\InitialStateManager;
 use Ingenious\TddGenerator\Managers\MigrationManager;
+use Ingenious\TddGenerator\Managers\RelationshipManager;
 use Ingenious\TddGenerator\Managers\RoutesManager;
 use Ingenious\TddGenerator\Managers\StubManager;
 use Ingenious\TddGenerator\Managers\VueManager;
@@ -34,6 +35,11 @@ trait CollectsManagers
      * @var  StubManager
      */
     protected $stubs;
+
+    /**
+     * @var  RelationshipManager
+     */
+    protected $relationships;
 
     public function setStubs(StubManager $stubs)
     {
@@ -66,6 +72,13 @@ trait CollectsManagers
     public function setInitialState(InitialStateManager $initial_state)
     {
         $this->initial_state = $initial_state;
+
+        return $this;
+    }
+
+    public function setRelationships(RelationshipManager $relationships)
+    {
+        $this->relationships = $relationships;
 
         return $this;
     }

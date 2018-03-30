@@ -23,9 +23,12 @@ class FileManager {
         $files = is_array($path) ? $path : File::glob($path);
 
         foreach( $files as $file ) {
-            $short = str_replace(base_path(),"",$file);
-            $output[] = "[warn]Backing up {$short}";
-            File::move($file,"{$file}.bak");
+            if ( strpos($file,".bak") === false )
+            {
+                $short = str_replace(base_path(),"",$file);
+                $output[] = "[warn]Backing up {$short}";
+                File::move($file,"{$file}.bak");
+            }
         }
 
         return $output;

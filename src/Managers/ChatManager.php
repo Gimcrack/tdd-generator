@@ -10,7 +10,7 @@ namespace Ingenious\TddGenerator\Managers;
 
 
 use Ingenious\TddGenerator\Params;
-use Ingenious\TddGenerator\Utility\Converter;
+use Ingenious\TddGenerator\Helpers\Converter;
 
 class ChatManager
 {
@@ -35,7 +35,7 @@ class ChatManager
 
     public function __construct()
     {
-        $this->vue = new VueManager( new Converter(
+        $this->vue = VueManager::init( Converter::init(
             (new Params())->setModel("Chat")
         ));
     }
