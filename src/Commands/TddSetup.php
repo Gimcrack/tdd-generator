@@ -3,6 +3,7 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
+use Ingenious\TddGenerator\Managers\FileManager;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Generator;
 use Illuminate\Support\Facades\Artisan;
@@ -83,19 +84,12 @@ class TddSetup extends Command
             $this->chat();
         }
 
-        if ( $this->params->hasTag('all','any') ) {
-            if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
+        if ( $this->sanitizedAsk("> Cleanup Backups? [No]",false) ) {
+            $this->call('tdd:cleanup-backups');
+        }
 
-                $phpunit = base_path('vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c phpunit.xml');
-                $this->alert("Running Test Suite");
-                $this->info("$phpunit");
-                $this->output( shell_exec($phpunit) );
-            }
-
-            if ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) {
-                $this->alert("Migrating database");
-                $this->output( shell_exec('php artisan migrate') );
-            }
+        if ( $model = $this->sanitizedAsk("> Create Scaffolding? Enter model names, comma-separated. [No]",false) ) {
+            $this->call('tdd:generate',[ 'model' => $model, '--no-tests' => true, '--no-migrations' => true]);
         }
 
         if ( $this->params->hasTag(['frontend','npm'],'any') ) {
@@ -110,12 +104,19 @@ class TddSetup extends Command
             }
         }
 
-        if ( $this->sanitizedAsk("> Cleanup Backups? [No]",false) ) {
-            $this->call('tdd:cleanup-backups');
-        }
+        if ( $this->params->hasTag('all','any') ) {
+            if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
 
-        if ( $model = $this->sanitizedAsk("> Scaffold A Model? Enter the model name. [No]",false) ) {
-            $this->call('tdd:generate',[ 'model' => $model]);
+                $phpunit = base_path('vendor/bin/phpunit --verbose --colors -c phpunit.xml');
+                $this->alert("Running Test Suite");
+                $this->info("$phpunit");
+                $this->output( shell_exec($phpunit) );
+            }
+
+            if ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) {
+                $this->alert("Migrating database");
+                $this->output( $this->call('migrate') );
+            }
         }
 
         $this->alert("Processing Complete");
@@ -147,7 +148,7 @@ class TddSetup extends Command
             ->setRoutes($this->getRoutesFile())
             ->setPrefix($this->getPrefix());
 
-        Artisan::call('make:auth',['--no-interaction' => true]);
+        //Artisan::call('make:auth',['--no-interaction' => true]);
 
         $this->output(
             "Setting up Auth Scaffolding",
@@ -165,9 +166,19 @@ class TddSetup extends Command
             ->setBackup($this->getBackup())
             ->setPrefix($this->getPrefix());
 
+        $echo_host = $this->ask("> What is the Echo Host? [localhost]","localhost");
+
+        $dev_host = $this->ask("> What is the Dev Host? [http://tdd-generator-test.test]","http://tdd-generator-test.test");
+
         $this->output(
             Generator::frontend($this->params),
-            SetupManager::frontend()
+            SetupManager::frontend(),
+            FileManager::env("ECHO_HOST",$echo_host),
+            FileManager::replace(
+                base_path("webpack.mix.js"),
+                ".browserSync('http://tdd-generator-test.test/');",
+                ".browserSync('{$dev_host}');"
+            )
         );
     }
 

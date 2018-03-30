@@ -281,7 +281,7 @@ class FileManager {
         if ( $line > 0 )
             static::replace($env, $new, $line);
         else
-            static::append($env, $new);
+            static::append($env, "\n" . $new);
 
         return ["Setting env value {$key} to {$value}"];
     }

@@ -53,12 +53,12 @@ trait DisplaysOutput {
 
         if ( strpos($comment,"[warn]") !== false ) {
             $comment = str_replace("[warn]","",$comment);
-            $comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
+            //$comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
 
             $this->comment( $comment );
         }
         else {
-            $comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
+            //$comment = str_pad( trim($comment). " ", 80, "-") . " Done.";
             $this->info( $comment );
         }
     }
