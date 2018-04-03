@@ -383,14 +383,18 @@ class FileSystem {
     }
 
     /**
-     * Does the file exists
+     * Do all the given files exist?
      *
-     * @param $path
+     * @param  $paths
      * @return bool
      */
-    public static function exists($path)
+    public static function exists(...$paths)
     {
-        return !! count(File::glob( $path ));
+        return !! collect($paths)
+            ->map( function($path) {
+                return !! count(File::glob( $path ));
+            })
+            ->min();
     }
 
     /**

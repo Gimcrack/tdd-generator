@@ -1,7 +1,7 @@
 <template>
     <div class="chats relative" :class="{active:show}">
         <div class="panel panel-primary relative">
-            <div class="panel-heading">
+            <div class="panel-heading" :class="{animate : animate_header}">
                 <button @click="toggle" class="btn btn-xs btn-default pull-right">
                     <i class="fa fa-fw" :class="[show ? 'fa-window-minimize' : 'fa-window-maximize']"></i>
                 </button>
@@ -53,6 +53,9 @@
             sorted_models() {
                 return _(this.models).orderBy(o => o.id).value()
             },
+            animate_header() {
+                return ! this.show && this.newMessage;
+            }
         },
 
         data() {
@@ -63,7 +66,8 @@
                 show : Store.$ls.get('viewChat',true),
                 other_typing_name : [],
                 channel : null,
-                here: []
+                here: [],
+                newMessage : false
             }
         },
 
@@ -86,9 +90,10 @@
                     .listen('ChatMessageReceived', (event) => {
                         this.models.push(event.chat);
 
-                        if (event.chat.user.id != this.user.id) {
+                        if (event.chat.user.id !== this.user.id) {
                             if ( ! this.show ) {
-                                flash.notify(event.chat.user.name + ' : ' + event.chat.message);
+                                //flash.notify(event.chat.user.name + ' : ' + event.chat.message);
+                                this.newMessage = true;
                             }
                         }
 
@@ -175,13 +180,17 @@
 
             toggle() {
                 this.show = ! this.show;
+                this.newMessage = false;
                 Store.$ls.set('viewChat',this.show);
+                this.scroll();
             }
         }
     }
 </script>
 
 <style lang="scss">
+    @import "../../sass/variables";
+
     .chats {
         position: fixed;
 
@@ -196,7 +205,7 @@
         }
 
         &.active {
-            height: 300px;
+            height: 450px;
             width: 300px;
 
             .panel-body {
@@ -213,7 +222,7 @@
                 font-size: 10px;
                 font-weight: bold;
                 left: 0px;
-                bottom: 315px;
+                bottom: 465px;
                 height: auto;
                 width: 100%;
                 margin: 0;
@@ -236,6 +245,12 @@
 
         .panel-heading {
             border-radius: 0;
+
+            &.animate {
+                animation-name: color;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+            }
         }
 
         .panel-body {
@@ -270,6 +285,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+    }
+
+    @keyframes color {
+        0% {
+            background-color: $brand-primary;
+        }
+        50% {
+            background-color: $brand-warning;
+        }
+        100% {
+            background-color: $brand-primary;
         }
     }
 </style>

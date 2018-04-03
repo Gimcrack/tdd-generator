@@ -29,6 +29,9 @@ class Composer {
      */
     private static function checkDeps()
     {
-        return FileSystem::exists(base_path("vendor/predis/predis"));
+        return FileSystem::exists(
+            base_path("vendor/predis/predis"),
+            base_path("vendor/barryvdh/laravel-ide-helper")
+        );
     }
 }
