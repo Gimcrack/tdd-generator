@@ -32,13 +32,6 @@ class AuthenticateAsAdmin
     }
 
     private function isAdmin() {
-        return auth()->user()->isAdmin() ||
-            in_array(auth()->user()->email, [
-                'jeremy.bloomstrom@gmail.com',
-                'jeremy@stockwits.net',
-                'jeremy@stocksaber.com',
-                'jeremy@adgoalie.com',
-                'jeremy@jeremybloomstrom.com'
-            ]);
+        return auth()->user()->isAdmin();
     }
 }
