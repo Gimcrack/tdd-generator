@@ -9,6 +9,7 @@
 namespace Ingenious\TddGenerator\Managers;
 
 
+use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Helpers\Converter;
 
@@ -63,32 +64,32 @@ class ChatManager
     {
         $this->output[] = $this->vue->run($embed = false);
 
-        $this->output[] = FileManager::insert(
-            FileManager::layout("app"),
+        $this->output[] = FileSystem::insert(
+            FileSystem::layout("app"),
             "\t\t<chats :user=\"{{ Auth::user()->toJson() }}\"></chats>",
             static::LAYOUT_LINE_NUMBER
         );
 
-        $this->output[] = FileManager::insert(
-            FileManager::config("app"),
+        $this->output[] = FileSystem::insert(
+            FileSystem::config("app"),
             "\t\tApp\\Providers\\BroadcastServiceProvider::class,",
             static::CONFIG_LINE_NUMBER
         );
 
-        $this->output[] = FileManager::append(
-            FileManager::route("api"),
+        $this->output[] = FileSystem::append(
+            FileSystem::route("api"),
             "Route::get('chat', 'ChatController@index');\n" .
             "Route::post('chat', 'ChatController@store');\n"
         );
 
-        $this->output[] = FileManager::insert(
-            FileManager::controller("HomeController"),
+        $this->output[] = FileSystem::insert(
+            FileSystem::controller("HomeController"),
             "\t\t\t\"chats\" => \\App\\Chat::with('user')->latest()->limit(25)->get(),",
             static::CONTROLLER_LINE_NUMBER
         );
 
-        $this->output[] = FileManager::append(
-            FileManager::model("User"),
+        $this->output[] = FileSystem::append(
+            FileSystem::model("User"),
             "
     /**
      * A user can have many chat messages

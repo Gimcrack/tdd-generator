@@ -2,6 +2,7 @@
 
 namespace Ingenious\TddGenerator\Managers;
 
+use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
@@ -35,9 +36,9 @@ class RoutesManager {
         if ( ! $params->hasTag('route') || ! $params->hasModel() )
             return "";
 
-        $routes = FileManager::route($params->routes);
+        $routes = FileSystem::route($params->routes);
 
-        FileManager::append($routes, $this->newRoutes($params));
+        FileSystem::append($routes, $this->newRoutes($params));
 
         return "New routes added";
     }

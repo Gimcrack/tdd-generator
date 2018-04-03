@@ -2,9 +2,8 @@
 
 namespace Ingenious\TddGenerator\StubCollections;
 
-use Illuminate\Support\Collection;
-use Ingenious\TddGenerator\Helpers\StubCollection;
 use Ingenious\TddGenerator\Stub;
+use Ingenious\TddGenerator\Helpers\StubCollection;
 
 class SetupStubs {
 
@@ -12,7 +11,7 @@ class SetupStubs {
      * Get the stubs
      * @method get
      *
-     * @return   Collection
+     * @return   \Illuminate\Support\Collection
      */
     public static function get()
     {
@@ -25,6 +24,9 @@ class SetupStubs {
 
             // controller
             Stub::controller("HomeController"),
+
+            // provider
+            Stub::provider("AppServiceProvider"),
 
             // tests
             Stub::make("phpunit",base_path(),".xml"),

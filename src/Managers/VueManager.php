@@ -4,6 +4,7 @@ namespace Ingenious\TddGenerator\Managers;
 
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 
 class VueManager {
 
@@ -51,10 +52,10 @@ class VueManager {
             $this->run(),
 
             "Registering the form definitions",
-            FileManager::insert(
-                FileManager::js('app'),
+            FileSystem::insert(
+                FileSystem::js('app'),
                 $form_def,
-                FileManager::lineNum(FileManager::js('app'),"form_definitions") + 1
+                FileSystem::lineNum(FileSystem::js('app'),"form_definitions") + 1
             )
         ];
     }
@@ -75,10 +76,10 @@ class VueManager {
         });
 
         // register the components
-        $app = FileManager::js("app");
+        $app = FileSystem::js("app");
 
         $output = $components->map( function($component) use ($app) {
-            return FileManager::insert($app,$component,static::LINE_NUMBER);
+            return FileSystem::insert($app,$component,static::LINE_NUMBER);
         })->all();
 
 
@@ -93,15 +94,15 @@ class VueManager {
             );
 
             // embed them on the home page
-            $home = FileManager::component("Home");
+            $home = FileSystem::component("Home");
 
             // embed the tab
-            $tab_line = FileManager::lineNum( $home, "<!-- End Tabs -->" ) - 1;
-            $output[] = FileManager::insert($home, $tab, $tab_line);
+            $tab_line = FileSystem::lineNum( $home, "<!-- End Tabs -->" ) - 1;
+            $output[] = FileSystem::insert($home, $tab, $tab_line);
 
             // embed the pane
-            $pane_line = FileManager::lineNum( $home, "<!-- End Panes -->" ) - 1;
-            $output[] = FileManager::insert($home, $pane, $pane_line);
+            $pane_line = FileSystem::lineNum( $home, "<!-- End Panes -->" ) - 1;
+            $output[] = FileSystem::insert($home, $pane, $pane_line);
         }
 
         return $output;

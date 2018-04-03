@@ -2,8 +2,6 @@
 
 namespace Ingenious\TddGenerator\Helpers;
 
-use Illuminate\Support\Facades\File;
-
 class Composer {
 
     /**
@@ -18,7 +16,8 @@ class Composer {
             "Composer dependencies in place"
         ] : [
             "Installing composer dependencies",
-            exec('composer require predis/predis'),
+            shell_exec('composer require predis/predis'),
+            shell_exec('composer require --dev barryvdh/laravel-ide-helper')
         ];
     }
 
@@ -30,6 +29,6 @@ class Composer {
      */
     private static function checkDeps()
     {
-        return File::exists(base_path("vendor/predis/predis"));
+        return FileSystem::exists(base_path("vendor/predis/predis"));
     }
 }

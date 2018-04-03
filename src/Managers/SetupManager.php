@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Managers;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Helpers\Npm;
 
 class SetupManager {
@@ -60,12 +61,12 @@ class SetupManager {
 
         $setup
             ->mergeOutput(
-                FileManager::backup( $setup->paths->example_tests ),
-                FileManager::env("BROADCAST_DRIVER","redis"),
-                FileManager::env("CACHE_DRIVER","redis"),
-                FileManager::env("SESSION_DRIVER","redis"),
-                FileManager::insert(
-                    FileManager::config("app"),
+                FileSystem::backup( $setup->paths->example_tests ),
+                FileSystem::env("BROADCAST_DRIVER","redis"),
+                FileSystem::env("CACHE_DRIVER","redis"),
+                FileSystem::env("SESSION_DRIVER","redis"),
+                FileSystem::insert(
+                    FileSystem::config("app"),
                     "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",
                     18
                 )
@@ -91,7 +92,7 @@ class SetupManager {
                 'http_kernel',
                 'user_model'
             ])->map( function($key) use ($setup) {
-                return FileManager::backup( $setup->paths->$key );
+                return FileSystem::backup( $setup->paths->$key );
             })->all()
         );
 
@@ -112,16 +113,16 @@ class SetupManager {
         if ( $command ) $command->comment("Setting up NPM dependencies. This may take a few seconds.");
 
         $setup->mergeOutput(
-            FileManager::backup( $setup->paths->example_component ),
-            FileManager::insert(
-                FileManager::layout('app'),
+            FileSystem::backup( $setup->paths->example_component ),
+            FileSystem::insert(
+                FileSystem::layout('app'),
                 "\t\t<vform></vform>",
                 31
             ),
-            FileManager::insert(
-                FileManager::js('app'),
+            FileSystem::insert(
+                FileSystem::js('app'),
                 "\t\t\tuser : require('./components/forms/user'),",
-                FileManager::lineNum(FileManager::js('app'),"form_definitions") + 1
+                FileSystem::lineNum(FileSystem::js('app'),"form_definitions") + 1
             )
         );
 

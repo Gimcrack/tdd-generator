@@ -4,7 +4,7 @@ namespace Ingenious\TddGenerator\Managers;
 
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
-
+use Ingenious\TddGenerator\Helpers\FileSystem;
 
 class InitialStateManager {
 
@@ -43,8 +43,8 @@ class InitialStateManager {
 
         return [
             "Setting up the initial state",
-            FileManager::insert(
-                FileManager::controller("HomeController"),
+            FileSystem::insert(
+                FileSystem::controller("HomeController"),
                 $this->converter->interpolator->run("\t\t\t\"[url_prefix][things]\" => \\App\\[Thing]::all(),"),
                 static::LINE_NUMBER
             )

@@ -3,7 +3,7 @@
 namespace Ingenious\TddGenerator\Commands;
 
 use Illuminate\Console\Command;
-use Ingenious\TddGenerator\Managers\FileManager;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Generator;
 use Illuminate\Support\Facades\Artisan;
@@ -100,13 +100,18 @@ class TddSetup extends Command
 
             if ( $this->params->compile || $this->sanitizedAsk("> Compile assets? [No]", false) ) {
                 $this->alert("Compiling assets");
-                $this->output( shell_exec('npm run dev') );
+                $compile_output = shell_exec('npm run dev');
+
+                // run mix again if needed
+                if ( strpos($compile_output, "Please run Mix again.") !== false ) {
+                    $compile_output .= shell_exec('npm run dev');
+                }
+                $this->output( $compile_output );
             }
         }
 
         if ( $this->params->hasTag('all','any') ) {
             if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
-
                 $phpunit = base_path('vendor/bin/phpunit --verbose --colors -c phpunit.xml');
                 $this->alert("Running Test Suite");
                 $this->info("$phpunit");
@@ -173,8 +178,8 @@ class TddSetup extends Command
         $this->output(
             Generator::frontend($this->params),
             SetupManager::frontend(),
-            FileManager::env("ECHO_HOST",$echo_host),
-            FileManager::replace(
+            FileSystem::env("ECHO_HOST",$echo_host),
+            FileSystem::replace(
                 base_path("webpack.mix.js"),
                 ".browserSync('http://tdd-generator-test.test/');",
                 ".browserSync('{$dev_host}');"

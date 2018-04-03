@@ -4,7 +4,7 @@ namespace Ingenious\TddGenerator\Helpers;
 
 use Ingenious\TddGenerator\Stub;
 use Ingenious\TddGenerator\Params;
-use Ingenious\TddGenerator\Managers\FileManager;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 
 class Converter {
@@ -75,7 +75,7 @@ class Converter {
      */
     public function migrationExists()
     {
-        return FileManager::hasMigration($this->params->model->lower_plural);
+        return FileSystem::hasMigration($this->params->model->lower_plural);
     }
 
     /**
@@ -86,7 +86,7 @@ class Converter {
      */
     public function unchanged(Stub $stub)
     {
-        return FileManager::unchanged($this->destination($stub), $this->content($stub));
+        return FileSystem::unchanged($this->destination($stub), $this->content($stub));
     }
 
     /**
@@ -154,11 +154,11 @@ class Converter {
 
         $destination = $this->destination($stub);
 
-        if ( $this->params->force || ! FileManager::exists($destination) )
+        if ( $this->params->force || ! FileSystem::exists($destination) )
             return false; // don't skip
 
         if ( $this->params->backup ) {
-            $this->output[] = FileManager::backup($destination);
+            $this->output[] = FileSystem::backup($destination);
             return false; // don't skip
         }
 
@@ -176,7 +176,7 @@ class Converter {
      */
     private function write(Stub $stub)
     {
-        $this->output[] = FileManager::write(
+        $this->output[] = FileSystem::write(
             $this->destination($stub),
             $this->content($stub)
         );

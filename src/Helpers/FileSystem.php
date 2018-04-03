@@ -1,37 +1,33 @@
 <?php
 
-namespace Ingenious\TddGenerator\Managers;
+namespace Ingenious\TddGenerator\Helpers;
 
-use function file_get_contents;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Ingenious\TddGenerator\Utility\ModelCase;
-use function preg_replace;
 
-class FileManager {
+
+class FileSystem {
 
     /**
      * Backup the file at the specified path
      * @method backup
      *
-     * @param  string  $path
+     * @param  string|array  $path
      * @return array
      */
     public static function backup($path)
     {
-        $output = [];
-        $files = is_array($path) ? $path : File::glob($path);
-
-        foreach( $files as $file ) {
-            if ( strpos($file,".bak") === false )
-            {
-                $short = str_replace(base_path(),"",$file);
-                $output[] = "[warn]Backing up {$short}";
+        return collect(is_array($path) ? $path : File::glob($path))
+            ->reject( function($file) {
+                return strpos($file,".bak") !== false;
+            })
+            ->map( function($file) {
                 File::move($file,"{$file}.bak");
-            }
-        }
-
-        return $output;
+                $short = str_replace(base_path(),"",$file);
+                return "[warn]Backing up {$short}";
+            })
+            ->all();
     }
 
     /**

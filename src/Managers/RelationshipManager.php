@@ -7,6 +7,7 @@ use Ingenious\TddGenerator\Generator;
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CollectsOutput;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 
 class RelationshipManager
 {
@@ -78,11 +79,11 @@ EOF;
 
     private function processChildren()
     {
-        $model = FileManager::model($this->converter->params->model);
+        $model = FileSystem::model($this->converter->params->model);
 
         $this->appendOutput(
             "Adding the hasMany relationship to the parent model",
-            FileManager::append(
+            FileSystem::append(
                 $model,
                 $this->converter->interpolator->run(static::HAS_MANY),
                 -1
@@ -98,21 +99,21 @@ EOF;
             $this->setupParentBase()
         );
 
-        $model = FileManager::model($this->converter->params->model);
-        $migration = FileManager::migration($this->converter->params->model);
+        $model = FileSystem::model($this->converter->params->model);
+        $migration = FileSystem::migration($this->converter->params->model);
 
         $this->appendOutput(
             "Adding the belongsTo relationship to the child model",
-            FileManager::append(
+            FileSystem::append(
                 $model,
                 $this->converter->interpolator->run(static::BELONGS_TO),
                 -1
             ),
             "Adding the foreign key to the child migration",
-            FileManager::insert(
+            FileSystem::insert(
                 $migration,
                 $this->converter->interpolator->run(static::MIGRATION_FOREIGN_KEY),
-                FileManager::lineNum($migration, "\$table->increments('id')") +1
+                FileSystem::lineNum($migration, "\$table->increments('id')") +1
             )
         );
     }

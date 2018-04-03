@@ -5,6 +5,7 @@ namespace Ingenious\TddGenerator\Managers;
 
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
+use Ingenious\TddGenerator\Helpers\FileSystem;
 
 class MigrationManager
 {
@@ -59,7 +60,7 @@ class MigrationManager
      */
     public function cleanup()
     {
-        return FileManager::delete( FileManager::migration(
+        return FileSystem::delete( FileSystem::migration(
             $this->converter->params->model->lower_plural, $all = true
         ) );
     }
@@ -69,7 +70,7 @@ class MigrationManager
      */
     public function backup()
     {
-        return FileManager::backup( FileManager::migration(
+        return FileSystem::backup( FileSystem::migration(
             $this->converter->params->model->lower_plural, $all = true
         ) );
     }
