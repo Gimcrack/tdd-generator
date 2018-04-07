@@ -5,7 +5,7 @@ namespace Ingenious\TddGenerator\Helpers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Ingenious\TddGenerator\Utility\ModelCase;
-
+use function is_numeric;
 
 class FileSystem {
 
@@ -305,13 +305,16 @@ class FileSystem {
     /**
      * Replace the content in the specified file
      *
-     * @param $path
-     * @param $content
-     * @param $line
+     * @param  string  $path  The path to the file
+     * @param  string  $content  The new content
+     * @param  string|int  $line  The content to replace
      * @return array
      */
     public static function replace($path, $content, $line)
     {
+        if ( ! is_numeric($line) )
+            $line = static::lineNum($path, $line);
+
         return static::insert($path, $content, $line, $replace = true);
     }
 

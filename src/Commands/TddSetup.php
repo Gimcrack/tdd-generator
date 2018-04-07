@@ -45,7 +45,6 @@ class TddSetup extends Command
      */
     private $params;
 
-
     /**
      * Execute the console command.
      *
@@ -89,24 +88,18 @@ class TddSetup extends Command
         }
 
         if ( $model = $this->sanitizedAsk("> Create Scaffolding? Enter model names, comma-separated. [No]",false) ) {
-            $this->call('tdd:generate',[ 'model' => $model, '--no-tests' => true, '--no-migrations' => true]);
+            $this->call('tdd:generate',[ 'model' => $model, '--no-tests' => true, '--no-migrate' => true]);
         }
 
         if ( $this->params->hasTag(['frontend','npm'],'any') ) {
             if ( $this->params->npm || $this->sanitizedAsk("> Install NPM Dependencies? [No]", false) ) {
                 $this->alert("Installing NPM Dependencies");
-                $this->output(Npm::install());
+                $this->output( Npm::install() );
             }
 
             if ( $this->params->compile || $this->sanitizedAsk("> Compile assets? [No]", false) ) {
                 $this->alert("Compiling assets");
-                $compile_output = shell_exec('npm run dev');
-
-                // run mix again if needed
-                if ( strpos($compile_output, "Please run Mix again.") !== false ) {
-                    $compile_output .= shell_exec('npm run dev');
-                }
-                $this->output( $compile_output );
+                $this->output( Npm::compile() );
             }
         }
 
@@ -174,6 +167,7 @@ class TddSetup extends Command
         $echo_host = $this->ask("> What is the Echo Host? [localhost]","localhost");
 
         $dev_host = $this->ask("> What is the Dev Host? [http://tdd-generator-test.test]","http://tdd-generator-test.test");
+        $dev_host = str_start($dev_host,"http://");
 
         $this->output(
             Generator::frontend($this->params),
@@ -181,8 +175,8 @@ class TddSetup extends Command
             FileSystem::env("ECHO_HOST",$echo_host),
             FileSystem::replace(
                 base_path("webpack.mix.js"),
-                ".browserSync('http://tdd-generator-test.test/');",
-                ".browserSync('{$dev_host}');"
+                ".browserSync('{$dev_host}');",
+                ".browserSync('http://tdd-generator-test.test/');"
             )
         );
     }

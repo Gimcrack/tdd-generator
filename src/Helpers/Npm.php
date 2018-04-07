@@ -41,8 +41,26 @@ class Npm {
             'moment-timezone',
             'sleep-promise',
             'vue-localstorage',
-            'tdd-generator-ui',
-            //'file:../tdd-generator-ui',
+            //'tdd-generator-ui',
+            //'../tdd-generator-ui',
         ])->implode(" ");
+    }
+
+    /**
+     * Compile the assets
+     * @method compile
+     *
+     * @return string
+     */
+    public static function compile()
+    {
+        $compile_output = shell_exec('npm run dev');
+
+        // run mix again if needed
+        if ( strpos($compile_output, "Please run Mix again.") !== false ) {
+            $compile_output .= shell_exec('npm run dev');
+        }
+
+        return $compile_output;
     }
 }

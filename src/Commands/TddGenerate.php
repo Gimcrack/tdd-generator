@@ -27,7 +27,7 @@ class TddGenerate extends Command
         { --admin : Only allow admin access to the generated routes }
         { --defaults : Suppress prompts, use defaults }
         { --no-tests : Don\'t run tests }
-        { --no-migrations : Don\'t run migrations }
+        { --no-migrate : Don\'t run migrations }
     ';
 
     /**
@@ -91,7 +91,7 @@ class TddGenerate extends Command
                 $this->output( shell_exec($phpunit) );
             }
 
-            if ( ! $this->option('no-migrations') && ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) ) {
+            if ( ! $this->option('no-migrate') && ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) ) {
                 $this->alert("Migrating database");
                 $this->output( shell_exec('php artisan migrate') );
             }
