@@ -1,19 +1,39 @@
 <template>
     <div class="chat-container">
         <div v-if="mine" class="spacer"></div>
-        <div class="chat" :class="{mine}">
-            <small v-if="!mine">{{ name }} <br> </small>
-            {{ model.message }}
+
+        <div class="chat-wrapper">
+            <small v-if="!mine">
+                <div class="flex-wide">
+                    <i class="fa fa-fw fa-user"></i> {{ name }}
+                </div>
+                <div>
+                    <i class="fa fa-fw fa-clock-o"></i> {{ timestamp }}
+                </div>
+            </small>
+            <div class="chat" :class="{mine}">
+                {{ model.message }}
+            </div>
         </div>
+
         <div v-if="! mine" class="spacer"></div>
     </div>
 </template>
 
 <script>
+    import moment from "moment-timezone";
+
     export default {
         props : [
             'model'
         ],
+
+        data() {
+            return {
+                offset : new Date().getTimezoneOffset(),
+                tz : moment.tz.guess()
+            }
+        },
 
         computed : {
             mine() {
@@ -22,37 +42,56 @@
 
             name() {
                 return this.model.user.name.split(' ')[0];
+            },
+
+            timestamp() {
+                return moment.tz(this.model.created_at,"UTC").tz(this.tz).calendar();
             }
         }
     }
 </script>
 
 <style lang="scss">
+
+    @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
     .chat-container {
         display: flex;
         width: 100%;
-        margin-bottom: 1.3em;
+        margin-bottom: 1.5em;
 
         .spacer {
             width: 50px;
         }
 
-        .chat {
-            width: 250px;
-            padding: 6px;
-            border-radius: 8px;
+        small {
             font-size: 10px;
-            background: darken(#3097D1, 10%);
-            color: white;
-            box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+            font-style: italic;
+            margin: 5px 12px 0;
+            display: flex;
 
-            small {
-                font-size: 8px;
-                font-style: italic;
+            .flex-wide {
+                flex: 1;
             }
+        }
+
+        .chat-wrapper {
+            display:flex;
+            flex-direction: column;
+        }
+
+        .chat {
+            width: 225px;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            background: linear-gradient(to bottom, lighten(#3097D1, 5%), darken(#3097D1, 15%) );
+            color: white;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
+            font-family: "Open Sans", sans-serif;
 
             &.mine {
-                color: black;
+                color: #2e3436;
                 background: white;
                 text-align: right;
             }

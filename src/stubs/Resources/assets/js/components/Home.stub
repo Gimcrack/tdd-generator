@@ -1,5 +1,5 @@
 <template>
-    <div id="home-container" class="container">
+    <div id="home-container" class="">
         <div class="">
             <div class="col-xs-1"> <!-- required for floating -->
                 <!-- Nav tabs -->
@@ -13,7 +13,7 @@
                 <!-- End Tabs -->
             </div>
 
-            <div class="col-xs-11">
+            <div class="col-xs-10">
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="users-pane">
@@ -69,7 +69,7 @@
 <style lang="scss">
     #home-container {
         background: white;
-        width: 1400px;
+        //width: 1400px;
         padding: 0;
 
         .col-xs-1 {

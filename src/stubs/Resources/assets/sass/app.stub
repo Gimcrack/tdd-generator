@@ -62,9 +62,10 @@
 .tabs-left, .tabs-right {
     min-height: calc(100vh - 50px) !important;
     padding-top: 2em !important;
-    background-color: #f5f8fa;
+    background-color: $brand-gray;
     position: fixed;
     top: 50px;
+    padding-left: 1em;
 }
 
 .tab-content {
@@ -78,6 +79,15 @@
     margin-top: 50px;
 }
 
+.nav-tabs > li > a {
+    color: lighten($brand-info,15%);
+}
+
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus {
+    color: $brand-primary;
+}
+
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
@@ -85,7 +95,8 @@
 }
 
 body {
-    background: linear-gradient(to right, #f5f8fa 40%, white 40%);
+    //background: linear-gradient(to right, #f5f8fa 40%, white 40%);
+    background: none;
 }
 
 .table-hover {
