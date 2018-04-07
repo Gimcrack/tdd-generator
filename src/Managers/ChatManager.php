@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jeremy
- * Date: 2018-03-18
- * Time: 10:08 AM
- */
 
 namespace Ingenious\TddGenerator\Managers;
-
 
 use Ingenious\TddGenerator\Helpers\FileSystem;
 use Ingenious\TddGenerator\Params;
@@ -20,7 +13,6 @@ class ChatManager
      */
     const LAYOUT_LINE_NUMBER = 33;
     const CONFIG_LINE_NUMBER = 161;
-    const CONTROLLER_LINE_NUMBER = 31;
 
     /**
      * The vue Manager
@@ -85,7 +77,10 @@ class ChatManager
         $this->output[] = FileSystem::insert(
             FileSystem::controller("HomeController"),
             "\t\t\t\"chats\" => \\App\\Chat::with('user')->latest()->limit(25)->get(),",
-            static::CONTROLLER_LINE_NUMBER
+            FileSystem::lineNum(
+                FileSystem::controller("HomeController"),
+                '$initial_state = collect(['
+            ) + 1
         );
 
         $this->output[] = FileSystem::append(

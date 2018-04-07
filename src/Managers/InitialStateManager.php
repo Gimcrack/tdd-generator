@@ -5,18 +5,11 @@ namespace Ingenious\TddGenerator\Managers;
 use Ingenious\TddGenerator\Helpers\Converter;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;
 use Ingenious\TddGenerator\Helpers\FileSystem;
+use function vsprintf;
 
 class InitialStateManager {
 
     use CanBeInitializedStatically;
-
-    /**
-     * The line number in HomeController
-     *  to insert the initial state
-     *
-     * @var        integer
-     */
-    private const LINE_NUMBER = 31;
 
     /**
      * The converter
@@ -25,9 +18,30 @@ class InitialStateManager {
      */
     protected $converter;
 
+    /**
+     * The path to the HomeController file
+     *
+     * @var string
+     */
+    protected $controller;
+
+    /**
+     * The stub to interpolate
+     *
+     * @var string
+     */
+    protected $stub;
+
     public function __construct(Converter $converter)
     {
         $this->converter = $converter;
+
+        $this->controller = FileSystem::controller("HomeController");
+
+        $this->stub = vsprintf("%s%s",[
+            str_repeat(" ",12),
+            '"[url_prefix][things]" => \App\[Thing]::all(),'
+        ]);
     }
 
     /**
@@ -44,10 +58,18 @@ class InitialStateManager {
         return [
             "Setting up the initial state",
             FileSystem::insert(
-                FileSystem::controller("HomeController"),
-                $this->converter->interpolator->run("\t\t\t\"[url_prefix][things]\" => \\App\\[Thing]::all(),"),
-                static::LINE_NUMBER
+                $this->controller,
+                $this->converter->interpolator->run($this->stub),
+                $this->lineNumber()
             )
         ];
+    }
+
+    private function lineNumber()
+    {
+        return FileSystem::lineNum(
+            $this->controller,
+            '$initial_state = collect(['
+        );
     }
 }
