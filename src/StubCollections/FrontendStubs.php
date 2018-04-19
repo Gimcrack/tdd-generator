@@ -33,6 +33,7 @@ class FrontendStubs {
 
             // sass
             Stub::sass("_variables"),
+            Stub::sass("_themes"),
             Stub::sass("app"),
             Stub::sass("buttons"),
 
