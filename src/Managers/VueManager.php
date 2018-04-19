@@ -86,7 +86,7 @@ class VueManager {
         if ( $embed )
         {
             $tab = $this->converter->interpolator->run(
-                "\t\t\t\t\t<li>\n\t\t\t\t\t\t<a id=\"[things]-tab\" @click=\"nav('[things]',\$event)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-fw fa-2x fa-cogs\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</li>"
+                "\t\t\t\t\t<li>\n\t\t\t\t\t\t<a id=\"[things]-tab\" @click=\"nav('[things]',\$event)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-fw fa-2x fa-cogs\"></i>\n\t\t\t\t\t\t<div>[Things]</div>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</li>"
             );
 
             $pane = $this->converter->interpolator->run(

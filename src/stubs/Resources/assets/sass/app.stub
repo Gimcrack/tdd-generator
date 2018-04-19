@@ -1,47 +1,46 @@
-
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Fontawesome
 @import "~font-awesome/scss/font-awesome";
-
 // Variables
 @import "variables";
+@import "themes";
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 @import "buttons";
-
-
+// Vertical Tabs
+@import "~bootstrap-vertical-tabs/bootstrap.vertical-tabs";
 // SWAL
 @import "~sweetalert2/src/sweetalert2.scss";
 
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome and Opera */
 }
 
 .form-control {
-  width: unset;
-  flex: 1;
+    width: unset;
+    flex: 1;
 }
 
 .form-control.full {
-  width: 100% !important;
+    width: 100% !important;
 }
 
 .fa-badge {
-  position: absolute;
-  bottom: 8px;
-  right: 17px;
-  background: white;
-  border-radius: 50%;
-  padding: 2px;
+    position: absolute;
+    bottom: 8px;
+    right: 17px;
+    background: $body-bg;
+    border-radius: 50%;
+    padding: 2px;
 }
 
 .relative {
@@ -52,26 +51,18 @@
     margin-top: 2em;
 }
 
-.navbar {
+.navbar-custom {
     margin-bottom: 0 !important;
     position: fixed;
     width: 100vw;
     top: 0;
-}
-
-.tabs-left, .tabs-right {
-    min-height: calc(100vh - 50px) !important;
-    padding-top: 2em !important;
-    background-color: $brand-gray;
-    position: fixed;
-    top: 50px;
-    padding-left: 1em;
+    border-radius: 0;
+    z-index: 1;
 }
 
 .tab-content {
     min-height: calc(100vh - 80px) !important;
     padding-top: 2em !important;
-    background: white;
     margin-top: 50px;
 }
 
@@ -79,39 +70,46 @@
     margin-top: 50px;
 }
 
-.nav-tabs > li > a {
-    color: lighten($brand-info,15%);
-}
-
-.nav-tabs > li > a:hover,
-.nav-tabs > li > a:focus {
-    color: $brand-primary;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    background: white;
-}
 
 body {
     //background: linear-gradient(to right, #f5f8fa 40%, white 40%);
-    background: none;
+    background: $body-bg;
+    color: $body-color;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: $body-bg;
+}
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: lighten($body-bg,5%);
+}
+
+.table > thead > tr > th {
+    border-color: $border-color !important;
+}
+
+.table > thead > tr > td,
+.table > tbody > tr > th,
+.table > tbody > tr > td,
+.table > tfoot > tr > th,
+.table > tfoot > tr > td {
+    border-color: $border-color !important;
 }
 
 .table-hover {
     border-collapse: separate;
+    border-color: $body-color !important;
 }
 
- .table-hover tbody tr td {
+.table-hover tbody tr td {
     @extend .noselect;
     transition: all 0.3s linear;
- }
+}
 
- .table-hover tbody tr:hover td,
- .table-hover tbody tr.hover td {
-    background-color: #FFFF66;
- }
+.table-hover tbody tr:hover td,
+.table-hover tbody tr.hover td {
+    background-color: lighten($theme-color,60%);
+}
 
 .table-hover tbody tr.sticky td {
     background-color: lighten(#FFFF55, 20%);
@@ -151,7 +149,7 @@ body {
     position: absolute;
     display: flex;
     /* padding: 0 3px 3px; */
-    background: white;
+    background: $body-bg;
     z-index: 3;
     top: 50%;
     margin-top: -11px;
@@ -175,3 +173,4 @@ body {
 button.full-width {
     width: 100%;
 }
+

@@ -70,6 +70,6 @@ class InitialStateManager {
         return FileSystem::lineNum(
             $this->controller,
             '$initial_state = collect(['
-        );
+        )+1;
     }
 }

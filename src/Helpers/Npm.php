@@ -36,7 +36,7 @@ class Npm {
             'laravel-echo',
             'sweetalert2',
             'font-awesome',
-            'font-awesome-webpack',
+            //'font-awesome-webpack',
             'moment',
             'moment-timezone',
             'sleep-promise',

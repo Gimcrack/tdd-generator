@@ -1,40 +1,49 @@
 <template>
-    <div class="chats relative" :class="{active:show}">
-        <div class="panel panel-primary relative">
-            <div class="panel-heading" :class="{animate : animate_header}">
-                <button @click="toggle" class="btn btn-xs btn-default pull-right">
-                    <i class="fa fa-fw" :class="[show ? 'fa-window-minimize' : 'fa-window-maximize']"></i>
-                </button>
-                <i class="fa fa-fw fa-comment"></i> Chat
-            </div>
-            <div v-if="busy" class="spinner">
-                    <i class="fa fa-fw fa-refresh fa-spin fa-5x"></i>
+    <div class="tabs-right" :class="{active : show}">
+        <button @click="toggle" :class="{active : show, animate : animate_header}" class="btn btn-info btn-sm btn-toggle-chat">
+            <i class="fa fa-btn fa-comment"></i>
+        </button>
+
+        <div class="chats relative" :class="{active:show}">
+            <div class="panel relative">
+                <div class="panel-header" v-if="here.length">
+                    <ul class="fa-ul here-users">
+                        <li v-for="here_user in here" :key="here_user.id">
+                            <i class="fa-li fa fa-circle"></i> {{ (here_user.name != user.name) ? here_user.name : 'Me' }}
+                        </li>
+                    </ul>
                 </div>
-            <div ref="body" class="panel-body">
-
-                <template v-if="models.length">
-                    <chat v-for="chat in sorted_models" :key="chat.id" :model="chat"></chat>
-
-                    <div v-if="other_typing_name.length" class="chat-container">
-                        <div class="chat">
-                            <small>{{ other_typing_name.join(', ') }} typing <br> </small>
-                            ...
-                        </div>
-                        <div  class="spacer"></div>
+                <div v-if="busy" class="spinner">
+                        <i class="fa fa-fw fa-refresh fa-spin fa-5x"></i>
                     </div>
-                </template>
-            </div>
-            <div class="panel-footer">
-                <textarea ref="input" @keyup="type" @keydown.enter.prevent="send" class="form-control" placeholder="Say something intelligent..." v-model="message" rows="3"></textarea>
-            </div>
-        </div>
+                <div ref="body" class="panel-body">
 
-        <div class="here panel panel-primary panel-body" v-if="here.length">
-            <ul class="fa-ul">
-              <li v-for="here_user in here" :key="here_user.id"><i class="fa-li fa fa-circle text-success"></i> {{ (here_user.name != user.name) ? here_user.name : 'Me' }}</li>
-            </ul>
+                    <template v-if="models.length">
+                        <chat v-for="chat in sorted_models" :key="chat.id" :model="chat"></chat>
+
+                        <div v-if="other_typing_name.length" class="chat-container">
+                            <div class="chat">
+                                <small>{{ other_typing_name.join(', ') }} typing <br> </small>
+                                ...
+                            </div>
+                            <div  class="spacer"></div>
+                        </div>
+                    </template>
+                </div>
+                <div class="panel-footer">
+                    <textarea ref="input"
+                      @keyup="type"
+                      @keydown.enter.prevent="send"
+                      class="form-control"
+                      placeholder="Say something intelligent..."
+                      v-model="message"
+                      rows="3">
+                    </textarea>
+                </div>
+            </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -63,7 +72,7 @@
                 models : this.getInitialState(),
                 busy : false,
                 message : '',
-                show : Store.$ls.get('viewChat',true),
+                show : true, // Store.$ls.get('viewChat',true),
                 other_typing_name : [],
                 channel : null,
                 here: [],
@@ -110,6 +119,12 @@
                             this.other_typing_name.$remove(event.user.name.split(' ')[0]);
                         }
                     })
+            },
+
+            focus() {
+                sleep(500).then( () => {
+                    this.$refs.input.focus();
+                });
             },
 
             getInitialState() {
@@ -183,6 +198,10 @@
                 this.newMessage = false;
                 Store.$ls.set('viewChat',this.show);
                 this.scroll();
+
+                if ( this.show ) {
+                    this.focus();
+                }
             }
         }
     }
@@ -191,22 +210,32 @@
 <style lang="scss">
     @import "../../sass/variables";
 
-    .chats {
+    .btn-toggle-chat {
         position: fixed;
+        right:1em;
+        top:10px;
+        z-index: 6;
 
-        height: 45px;
-        width: 150px;
-        bottom: 15px;
-        left: 15px;
+        &.animate {
+            animation: color 2s infinite;
+        }
+    }
+
+    .chats {
+        position: relative;
+        width: 100%;
+        height: 100%;
         display: flex;
+        flex-direction:column;
 
-        .here {
-            display: none;
+        background: transparent;
+
+        .here-users {
+            margin: 1em 2em 0.5em;
+            color: $theme-color;
         }
 
         &.active {
-            height: 450px;
-            width: 300px;
 
             .panel-body {
                 display: block;
@@ -218,15 +247,15 @@
 
             .here {
                 display: block;
-                position: absolute;
-                font-size: 10px;
-                font-weight: bold;
-                left: 0px;
-                bottom: 465px;
-                height: auto;
-                width: 100%;
-                margin: 0;
-                padding: 0.5em;
+                //position: absolute;
+                /*font-size: 10px;*/
+                /*font-weight: bold;*/
+                /*left: 0px;*/
+                /*bottom: 465px;*/
+                /*height: auto;*/
+                /*width: 100%;*/
+                /*margin: 0;*/
+                /*padding: 0.5em;*/
 
                 ul {
                     margin: 0 0 0 16px;
@@ -238,25 +267,17 @@
             height: 100%;
             width: 100%;
             border-radius: 0;
-            box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            //box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
-        }
-
-        .panel-heading {
-            border-radius: 0;
-
-            &.animate {
-                animation-name: color;
-                animation-duration: 2s;
-                animation-iteration-count: infinite;
-            }
+            background: transparent;
+            margin:0;
         }
 
         .panel-body {
             display: none;
             flex: 1;
-            background: lighten(#3097D1, 45%);
+            background: transparent !important;
             overflow: auto;
         }
 
@@ -290,13 +311,13 @@
 
     @keyframes color {
         0% {
-            background-color: $brand-primary;
+            background-color: $brand-info;
         }
         50% {
-            background-color: $brand-warning;
+            background-color: $brand-primary;
         }
         100% {
-            background-color: $brand-primary;
+            background-color: $brand-info;
         }
     }
 </style>

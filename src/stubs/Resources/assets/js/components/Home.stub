@@ -1,28 +1,49 @@
 <template>
-    <div id="home-container" class="">
-        <div class="">
-            <div class="col-xs-1"> <!-- required for floating -->
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs tabs-left">
-                    <li>
-                        <a id="users-tab" @click="nav('users',$event)">
-                            <i class="fa fa-fw fa-2x fa-users"></i>
-                        </a>
-                    </li>
-                </ul>
-                <!-- End Tabs -->
+    <div id="home-container" :class="viewStyle">
+        <div class="column-container">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs tabs-left">
+                <li v-if="user.admin_flag">
+                    <a id="users-tab" @click="nav('users',$event)">
+                        <i class="fa fa-fw fa-2x fa-users"></i>
+                        <div>Users</div>
+                    </a>
+                </li>
+            </ul>
+            <!-- End Tabs -->
+
+            <div class="left">
+
             </div>
 
-            <div class="col-xs-10">
+            <div class="main">
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane active" id="users-pane">
+                    <div  v-if="user.admin_flag" class="tab-pane active" id="users-pane">
                         <div>
                             <users></users>
                         </div>
                     </div>
                 </div>
                 <!-- End Panes -->
+            </div>
+
+            <div class="right">
+            </div>
+
+            <div class="right-menu">
+                <chats :user="user"></chats>
+            </div>
+        </div>
+
+        <div class="view-toggles">
+            <div class="btn-group" role="group">
+                <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
+                    <i class="fa fa-fw fa-desktop"></i>
+                </button>
+                <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
+                    <i class="fa fa-fw fa-tablet"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -32,7 +53,9 @@
     export default {
         data() {
             return {
-
+                viewStyle : 'narrow',
+                showRightMenu : true,
+                user : INITIAL_STATE.user
             }
         },
 
@@ -61,19 +84,113 @@
                 {
                     this.nav( tab );
                 }
+                else {
+                    sleep(500).then(() => {
+                        tab = $('.nav-tabs').find('a').eq(0).prop('id').replace('-tab','');
+                        this.nav( tab );
+                    });
+                }
             }
         },
     }
 </script>
 
 <style lang="scss">
+    @import "../../sass/variables";
+
+    $padding: 4em;
+
     #home-container {
-        background: white;
+        background: $brand-white;
         //width: 1400px;
         padding: 0;
 
-        .col-xs-1 {
-            padding: 0;
+        .view-toggles {
+            position: fixed;
+            top: 10px;
+            right: 4em;
+
+            z-index: 3;
+        }
+
+        &.narrow {
+
+            .column-container {
+                margin: 0 auto;
+
+                .main {
+                    max-width: 1100px;
+                    //transition: width 0.3s linear;
+                    width:70vw;
+                }
+
+                .tabs-left {
+                    width:18vw;
+                    max-width:380px;
+                }
+            }
+        }
+
+        .column-container {
+            position: relative;
+            display: flex;
+
+            .left {
+                flex: 1;
+                min-width: $padding + (70/16) * 1em;
+                transition: all 0.5s linear;
+            }
+
+            .right {
+                flex: 1;
+                transition: all 0.5s linear;
+            }
+
+            .main {
+                margin: 0 $padding;
+                max-width: 1800px;
+                width:90vw;
+                transition: all 0.5s linear;
+            }
+
+            .tabs-left {
+                position: fixed !important;
+                padding-top: $padding !important;
+                transition: all 0.5s linear;
+                width: $padding + (70/16) * 1em;
+                flex:1;
+            }
+
+            .tabs-left, .tabs-right {
+                position: relative;
+                height: calc(100vh - 50px) !important;
+
+                //position: fixed;
+                margin-top: 50px;
+                padding-left: 1em;
+                z-index: 2;
+
+                display: flex;
+                flex-direction:column;
+                //justify-content:flex-end;
+                align-items: flex-end;
+
+
+            }
+
+            .tabs-right {
+                position: fixed;
+                right:0;
+                padding:0;
+
+                width:0;
+                z-index: 5;
+                transition: all 0.5s linear;
+
+                &.active {
+                    width: 350px;
+                }
+            }
         }
 
         .nav-tabs li:not(.active) a {

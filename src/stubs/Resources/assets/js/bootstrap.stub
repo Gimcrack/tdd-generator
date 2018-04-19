@@ -60,7 +60,8 @@ window.Echo = new Echo({
 
 require('bootstrap-vertical-tabs');
 
-window.sleep = require('sleep-promise');
+import Sleep from "sleep-promise";
+window.sleep = Sleep;
 
 import swal from 'sweetalert2';
 

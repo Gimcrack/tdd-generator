@@ -54,6 +54,7 @@
 <style lang="scss">
 
     @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+    @import "../../sass/variables";
 
     .chat-container {
         display: flex;
@@ -61,7 +62,7 @@
         margin-bottom: 1.5em;
 
         .spacer {
-            width: 50px;
+            flex: 1;
         }
 
         small {
@@ -78,6 +79,7 @@
         .chat-wrapper {
             display:flex;
             flex-direction: column;
+            color: $theme-color;
         }
 
         .chat {
@@ -89,6 +91,7 @@
             color: white;
             box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
             font-family: "Open Sans", sans-serif;
+            margin-right: 0.5em;
 
             &.mine {
                 color: #2e3436;
