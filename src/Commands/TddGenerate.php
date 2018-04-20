@@ -83,13 +83,13 @@ class TddGenerate extends Command
         }
 
         if ( $this->params->hasTag('all','any') ) {
-            if ( ! $this->option('no-tests') && ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) ) {
+            // if ( ! $this->option('no-tests') && ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) ) {
 
-                $phpunit = base_path('vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c phpunit.xml');
-                $this->alert("Running Test Suite");
-                $this->info("$phpunit");
-                $this->output( shell_exec($phpunit) );
-            }
+                // $phpunit = base_path('vendor/bin/phpunit --verbose --colors --debug --stop-on-failure -c ' . base_path('phpunit.xml') );
+                // $this->alert("Running Test Suite");
+                // $this->info("$phpunit");
+                // $this->output( shell_exec($phpunit) );
+            // }
 
             if ( ! $this->option('no-migrate') && ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) ) {
                 $this->alert("Migrating database");
