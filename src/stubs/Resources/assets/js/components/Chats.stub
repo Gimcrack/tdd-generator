@@ -35,7 +35,7 @@
                       @keyup="type"
                       @keydown.enter.prevent="send"
                       class="form-control"
-                      placeholder="Say something intelligent..."
+                      placeholder="Listen to this..."
                       v-model="message"
                       rows="3">
                     </textarea>

@@ -56,11 +56,11 @@ class ChatManager
     {
         $this->output[] = $this->vue->run($embed = false);
 
-        $this->output[] = FileSystem::insert(
-            FileSystem::layout("app"),
-            "\t\t<chats :user=\"{{ Auth::user()->toJson() }}\"></chats>",
-            static::LAYOUT_LINE_NUMBER
-        );
+        // $this->output[] = FileSystem::insert(
+        //     FileSystem::layout("app"),
+        //     "\t\t<chats :user=\"{{ Auth::user()->toJson() }}\"></chats>",
+        //     static::LAYOUT_LINE_NUMBER
+        // );
 
         $this->output[] = FileSystem::insert(
             FileSystem::config("app"),
