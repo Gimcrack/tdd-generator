@@ -86,8 +86,10 @@
                 }
                 else {
                     sleep(500).then(() => {
-                        tab = $('.nav-tabs').find('a').eq(0).prop('id').replace('-tab','');
-                        this.nav( tab );
+                        if ( $('.nav-tabs').find('a').length ) {
+                            tab = $('.nav-tabs').find('a').eq(0);
+                            this.nav( tab.prop('id').replace('-tab','') );
+                        }
                     });
                 }
             }
