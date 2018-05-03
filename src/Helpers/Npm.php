@@ -37,6 +37,8 @@ class Npm {
             'sleep-promise',
             'vue-localstorage',
             'tdd-generator-ui',
+            'sweetalert2',
+            'bootstrap-sass',
             //'../tdd-generator-ui',
         ])->implode(" ");
     }
