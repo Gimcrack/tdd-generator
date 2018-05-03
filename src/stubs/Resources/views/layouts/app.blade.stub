@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="dark-theme">
     <div id="app">
         @include('partials.nav')
 
@@ -28,6 +28,7 @@
         @if( Auth::check() )
 
         <reset-password></reset-password>
+		<vform></vform>
 
         <batch-update-selected></batch-update-selected>
         <flash message="{{ session('flash') }}"></flash>

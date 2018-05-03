@@ -44,6 +44,13 @@
                 <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
                     <i class="fa fa-fw fa-tablet"></i>
                 </button>
+                <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
+                    <i class="fa fa-fw fa-moon-o"></i>
+                </button>
+                <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
+                <i class="fa fa-fw fa-sun-o"></i>
+            </button>
+
             </div>
         </div>
     </div>
@@ -55,6 +62,7 @@
             return {
                 viewStyle : 'narrow',
                 showRightMenu : true,
+                theme : 'dark',
                 user : INITIAL_STATE.user
             }
         },
@@ -92,18 +100,26 @@
                         }
                     });
                 }
-            }
+            },
+
+            toggleDarkTheme() {
+                this.theme = 'dark';
+                $('body').removeClass('light-theme').addClass('dark-theme');
+            },
+
+            toggleLightTheme() {
+                this.theme = 'light';
+                $('body').removeClass('dark-theme').addClass('light-theme');
+            },
         },
     }
 </script>
 
 <style lang="scss">
-    @import "../../sass/variables";
-
     $padding: 4em;
 
     #home-container {
-        background: $brand-white;
+        //background: $body-bg;
         //width: 1400px;
         padding: 0;
 
@@ -140,25 +156,25 @@
             .left {
                 flex: 1;
                 min-width: $padding + (70/16) * 1em;
-                transition: all 0.5s linear;
+                transition: all 0.3s linear;
             }
 
             .right {
                 flex: 1;
-                transition: all 0.5s linear;
+                transition: all 0.3s linear;
             }
 
             .main {
                 margin: 0 $padding;
                 max-width: 1800px;
                 width:90vw;
-                transition: all 0.5s linear;
+                transition: all 0.3s linear;
             }
 
             .tabs-left {
                 position: fixed !important;
                 padding-top: $padding !important;
-                transition: all 0.5s linear;
+                transition: all 0.3s linear;
                 width: $padding + (70/16) * 1em;
                 flex:1;
             }
@@ -187,7 +203,7 @@
 
                 width:0;
                 z-index: 5;
-                transition: all 0.5s linear;
+                transition: all 0.3s linear;
 
                 &.active {
                     width: 350px;

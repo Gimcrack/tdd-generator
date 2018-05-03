@@ -31,17 +31,12 @@ class Npm {
     public static function get()
     {
         return collect([
-            'bootstrap-sass',
-            'bootstrap-vertical-tabs',
             'laravel-echo',
-            'sweetalert2',
-            'font-awesome',
-            //'font-awesome-webpack',
             'moment',
             'moment-timezone',
             'sleep-promise',
             'vue-localstorage',
-            //'tdd-generator-ui',
+            'tdd-generator-ui',
             //'../tdd-generator-ui',
         ])->implode(" ");
     }

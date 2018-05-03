@@ -32,10 +32,7 @@ class FrontendStubs {
             Stub::form('user'),
 
             // sass
-            Stub::sass("_variables"),
-            Stub::sass("_themes"),
             Stub::sass("app"),
-            Stub::sass("buttons"),
 
             // views
             Stub::view("layouts/app.blade"),

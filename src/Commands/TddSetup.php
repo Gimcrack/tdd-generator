@@ -104,12 +104,14 @@ class TddSetup extends Command
         }
 
         if ( $this->params->hasTag('all','any') ) {
-            if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
-                $phpunit = base_path('vendor/bin/phpunit --verbose --colors -c phpunit.xml');
-                $this->alert("Running Test Suite");
-                $this->info("$phpunit");
-                $this->output( shell_exec($phpunit) );
-            }
+
+            // Not sure why, but when running the test suite, it wipes out the database and ignores the settings in phpunit.xml
+            //if ( $this->params->tests || $this->sanitizedAsk("> Run tests? [No]", false) ) {
+            //    $phpunit = base_path('vendor/bin/phpunit --verbose --colors -c phpunit.xml');
+            //    $this->alert("Running Test Suite");
+            //    $this->info("$phpunit");
+            //    $this->output( shell_exec($phpunit) );
+            //}
 
             if ( $this->params->migrate || $this->sanitizedAsk("> Run migrations? [No]", false) ) {
                 $this->alert("Migrating database");
