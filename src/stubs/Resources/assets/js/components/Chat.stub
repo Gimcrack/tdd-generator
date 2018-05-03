@@ -54,7 +54,7 @@
 <style lang="scss">
 
     @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-    @import "../../sass/variables";
+    @import "~tdd-generator-ui/src/sass/variables";
 
     .chat-container {
         display: flex;

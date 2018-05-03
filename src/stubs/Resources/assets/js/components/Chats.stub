@@ -208,7 +208,7 @@
 </script>
 
 <style lang="scss">
-    @import "../../sass/variables";
+    @import "~tdd-generator-ui/src/sass/variables";
 
     .btn-toggle-chat {
         position: fixed;
