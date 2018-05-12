@@ -57,9 +57,6 @@ window.Echo = new Echo({
     host: window.location.hostname + ':6001'
 });
 
-
-require('bootstrap-vertical-tabs');
-
 import Sleep from "sleep-promise";
 window.sleep = Sleep;
 

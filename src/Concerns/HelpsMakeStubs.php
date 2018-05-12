@@ -2,6 +2,8 @@
 
 namespace Ingenious\TddGenerator\Concerns;
 
+use const DIRECTORY_SEPARATOR;
+
 trait HelpsMakeStubs {
 
     public static $paths = [
@@ -165,9 +167,11 @@ trait HelpsMakeStubs {
      */
     public static function controller($name)
     {
+        $subdir = trim( dirname($name), "." );
+
         return static::make(
             "Controllers" . DIRECTORY_SEPARATOR . $name,
-            app_path("Http/Controllers")
+            app_path("Http/Controllers" . DIRECTORY_SEPARATOR . $subdir)
         )->tag(__FUNCTION__);
     }
 

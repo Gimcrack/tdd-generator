@@ -115,9 +115,9 @@ class SetupManager {
         $setup->mergeOutput(
             FileSystem::backup( $setup->paths->example_component ),
             FileSystem::insert(
-                FileSystem::layout('app'),
+                FileSystem::component('Home'),
                 "\t\t<vform></vform>",
-                31
+                FileSystem::lineNum( FileSystem::component('Home'), '<!-- End Home Container -->' )
             ),
             FileSystem::insert(
                 FileSystem::js('app'),

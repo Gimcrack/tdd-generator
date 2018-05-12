@@ -24,6 +24,10 @@ class SetupStubs {
 
             // controller
             Stub::controller("HomeController"),
+            Stub::controller("Auth/ForgotPasswordController"),
+            Stub::controller("Auth/ResetPasswordController"),
+            Stub::controller("Auth/LoginController"),
+            Stub::controller("Auth/RegisterController"),
 
             // provider
             Stub::provider("AppServiceProvider"),

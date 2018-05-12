@@ -21,6 +21,8 @@ class TddGeneratorServiceProvider extends ServiceProvider
             TddCleanupBackups::class,
             TddGenerate::class,
         ]);
+
+        $this->loadViewsFrom( base_path('vendor/ingenious/tdd-generator/src/resources/views'), 'tdd-generator');
     }
 
     /**

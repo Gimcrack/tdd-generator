@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('tdd-generator::layouts.app')
 
 @section('content')
 <home></home>

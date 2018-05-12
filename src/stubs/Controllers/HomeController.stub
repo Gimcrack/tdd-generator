@@ -34,6 +34,6 @@ class HomeController extends Controller
             "admin/users" => $is_admin ? User::all() : [],
         ]);
 
-        return view('home', compact('initial_state') );
+        return view('tdd-generator::home', compact('initial_state') );
     }
 }

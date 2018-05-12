@@ -35,13 +35,13 @@ class FrontendStubs {
             Stub::sass("app"),
 
             // views
-            Stub::view("layouts/app.blade"),
-            Stub::view("partials/nav.blade"),
-            Stub::view("home.blade"),
-            Stub::view("auth/login.blade"),
-            Stub::view("auth/register.blade"),
-            Stub::view("auth/passwords/reset.blade"),
-            Stub::view("auth/passwords/email.blade"),
+            //Stub::view("layouts/app.blade"),
+            //Stub::view("partials/nav.blade"),
+            //Stub::view("home.blade"),
+            //Stub::view("auth/login.blade"),
+            //Stub::view("auth/register.blade"),
+            //Stub::view("auth/passwords/reset.blade"),
+            //Stub::view("auth/passwords/email.blade"),
 
             // mix config
             Stub::make("webpack.mix",base_path(),".js"),

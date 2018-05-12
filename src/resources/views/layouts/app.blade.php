@@ -22,7 +22,7 @@
 </head>
 <body class="dark-theme">
     <div id="app">
-        @include('partials.nav')
+        @include('tdd-generator::partials.nav')
 
         @yield('content')
         @if( Auth::check() )
