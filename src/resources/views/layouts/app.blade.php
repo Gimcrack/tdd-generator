@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="dark-theme">
+<body class="dark-theme {{ isset($body_class) ? $body_class : '' }}">
     <div id="app">
         @include('tdd-generator::partials.nav')
 

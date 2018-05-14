@@ -1,4 +1,4 @@
-@extends('tdd-generator::layouts.app')
+@extends('tdd-generator::layouts.app', ['body_class' => 'auth'])
 
 @section('content')
     <div class="container">

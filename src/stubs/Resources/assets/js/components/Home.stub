@@ -32,28 +32,52 @@
             </div>
 
             <div class="right-menu">
-                <chats :user="user"></chats>
+                <div class="tabs-right" :class="{active:showRightMenu}">
+
+
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fa fa-fw fa-gears"></i> Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-fw fa-comment"></i> Chat
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    <div class="view-toggles">
+                        <div class="btn-group" role="group">
+                            <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
+                                <i class="fa fa-fw fa-desktop"></i>
+                            </button>
+                            <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
+                                <i class="fa fa-fw fa-tablet"></i>
+                            </button>
+                            <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
+                                <i class="fa fa-fw fa-moon-o"></i>
+                            </button>
+                            <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
+                                <i class="fa fa-fw fa-sun-o"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <chats :user="user"></chats>
+                </div>
             </div>
         </div>
 
-        <div class="view-toggles">
-            <div class="btn-group" role="group">
-                <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
-                    <i class="fa fa-fw fa-desktop"></i>
-                </button>
-                <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
-                    <i class="fa fa-fw fa-tablet"></i>
-                </button>
-                <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
-                    <i class="fa fa-fw fa-moon-o"></i>
-                </button>
-                <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
-                <i class="fa fa-fw fa-sun-o"></i>
-            </button>
 
-            </div>
-        </div>
+        <button @click="toggleRight" :class="{active : showRightMenu, animate : animate_chat}" class="btn btn-info btn-sm btn-toggle-chat">
+            <i class="fa fa-btn fa-bars"></i>
+        </button>
 
+		<vform></vform>
         <!-- End Home Container -->
 
     </div>
@@ -64,9 +88,10 @@
         data() {
             return {
                 viewStyle : 'narrow',
-                showRightMenu : true,
+                showRightMenu : false,
                 theme : 'dark',
-                user : INITIAL_STATE.user
+                user : INITIAL_STATE.user,
+                animate_chat : false
             }
         },
 
@@ -82,6 +107,10 @@
         },
 
         methods : {
+
+            toggleRight() {
+                this.showRightMenu = ! this.showRightMenu;
+            },
 
             nav(tab, event) {
                 history.pushState( {tab : tab}, `${tab.$ucfirst()}`, `/#${tab}`);
@@ -127,9 +156,9 @@
         padding: 0;
 
         .view-toggles {
-            position: fixed;
-            top: 10px;
-            right: 4em;
+            //position: fixed;
+            //top: 10px;
+            //right: 4em;
 
             z-index: 3;
         }
@@ -187,7 +216,7 @@
                 height: calc(100vh - 50px) !important;
 
                 //position: fixed;
-                margin-top: 50px;
+                margin-top: 52px;
                 padding-left: 1em;
                 z-index: 2;
 
