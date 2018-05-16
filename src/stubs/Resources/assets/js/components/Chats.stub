@@ -1,49 +1,42 @@
 <template>
-    <div class="tabs-right" :class="{active : show}">
-        <button @click="toggle" :class="{active : show, animate : animate_header}" class="btn btn-info btn-sm btn-toggle-chat">
-            <i class="fa fa-btn fa-comment"></i>
-        </button>
-
-        <div class="chats relative" :class="{active:show}">
-            <div class="panel relative">
-                <div class="panel-header" v-if="here.length">
-                    <ul class="fa-ul here-users">
-                        <li v-for="here_user in here" :key="here_user.id">
-                            <i class="fa-li fa fa-circle"></i> {{ (here_user.name != user.name) ? here_user.name : 'Me' }}
-                        </li>
-                    </ul>
+    <div class="chats relative">
+        <div class="panel relative">
+            <div class="panel-header" v-if="here.length">
+                <ul class="fa-ul here-users">
+                    <li v-for="here_user in here" :key="here_user.id">
+                        <i class="fa-li fa fa-circle"></i> {{ (here_user.name != user.name) ? here_user.name : 'Me' }}
+                    </li>
+                </ul>
+            </div>
+            <div v-if="busy" class="spinner">
+                    <i class="fa fa-fw fa-refresh fa-spin fa-5x"></i>
                 </div>
-                <div v-if="busy" class="spinner">
-                        <i class="fa fa-fw fa-refresh fa-spin fa-5x"></i>
-                    </div>
-                <div ref="body" class="panel-body">
+            <div ref="body" class="panel-body">
 
-                    <template v-if="models.length">
-                        <chat v-for="chat in sorted_models" :key="chat.id" :model="chat"></chat>
+                <template v-if="models.length">
+                    <chat v-for="chat in sorted_models" :key="chat.id" :model="chat"></chat>
 
-                        <div v-if="other_typing_name.length" class="chat-container">
-                            <div class="chat">
-                                <small>{{ other_typing_name.join(', ') }} typing <br> </small>
-                                ...
-                            </div>
-                            <div  class="spacer"></div>
+                    <div v-if="other_typing_name.length" class="chat-container">
+                        <div class="chat">
+                            <small>{{ other_typing_name.join(', ') }} typing <br> </small>
+                            ...
                         </div>
-                    </template>
-                </div>
-                <div class="panel-footer">
-                    <textarea ref="input"
-                      @keyup="type"
-                      @keydown.enter.prevent="send"
-                      class="form-control"
-                      placeholder="Listen to this..."
-                      v-model="message"
-                      rows="3">
-                    </textarea>
-                </div>
+                        <div  class="spacer"></div>
+                    </div>
+                </template>
+            </div>
+            <div class="panel-footer">
+                <textarea ref="input"
+                  @keyup="type"
+                  @keydown.enter.prevent="send"
+                  class="form-control"
+                  placeholder="Listen to this..."
+                  v-model="message"
+                  rows="3">
+                </textarea>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -210,23 +203,15 @@
 <style lang="scss">
     @import "~tdd-generator-ui/src/sass/variables";
 
-    .btn-toggle-chat {
-        position: fixed;
-        right:1em;
-        top:10px;
-        z-index: 6;
+    .chats-container {
 
-        &.animate {
-            animation: color 2s infinite;
-        }
     }
 
     .chats {
-        position: relative;
         width: 100%;
-        height: 100%;
         display: flex;
         flex-direction:column;
+        flex: 1;
 
         background: transparent;
 
@@ -275,14 +260,12 @@
         }
 
         .panel-body {
-            display: none;
             flex: 1;
             background: transparent !important;
             overflow: auto;
         }
 
         .panel-footer {
-            display: none;
             padding: 0;
 
             textarea {

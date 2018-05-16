@@ -33,51 +33,73 @@
 
             <div class="right-menu">
                 <div class="tabs-right" :class="{active:showRightMenu}">
-
-
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-jeremy nav-fill w-100 mb-4">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a href="#" @click.prevent="rightActive='settings'" class="nav-link" :class="{active:rightActive=='settings'}">
                                 <i class="fa fa-fw fa-gears"></i> Settings
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a href="#" @click.prevent="rightActive='chat'" class="nav-link" :class="{active:rightActive=='chat'}">
                                 <i class="fa fa-fw fa-comment"></i> Chat
                             </a>
                         </li>
                     </ul>
 
 
-                    <div class="view-toggles">
-                        <div class="btn-group" role="group">
-                            <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
-                                <i class="fa fa-fw fa-desktop"></i>
-                            </button>
-                            <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
-                                <i class="fa fa-fw fa-tablet"></i>
-                            </button>
-                            <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
-                                <i class="fa fa-fw fa-moon-o"></i>
-                            </button>
-                            <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
-                                <i class="fa fa-fw fa-sun-o"></i>
-                            </button>
-
+                    <template v-if="rightActive=='settings'">
+                        <div class="p-4 w-100">
+                            <div class="w-100 mb-2 border-bottom border-info">
+                                <div class="p-2 d-flex justify-content-center">
+                                    <span class="flex-grow-1 align-self-center">Layout</span>
+                                    <div class="btn-group" role="group">
+                                        <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
+                                            <i class="fa fa-fw fa-desktop"></i> Wide
+                                        </button>
+                                        <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
+                                            <i class="fa fa-fw fa-tablet"></i> Narrow
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-100 mb-2 border-bottom border-info">
+                                <div class="p-2 d-flex justify-content-center">
+                                    <div class="flex-grow-1 align-self-center">Theme</div>
+                                    <div class="btn-group" role="group">
+                                        <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
+                                            <i class="fa fa-fw fa-moon-o"></i> Dark
+                                        </button>
+                                        <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
+                                            <i class="fa fa-fw fa-sun-o"></i> Light
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-100 mb-2 border-bottom border-info">
+                                <div class="p-2 d-flex justify-content-center">
+                                    <div class="flex-grow-1 align-self-center">View</div>
+                                    <div class="btn-group" role="group">
+                                        <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
+                                            <i class="fa fa-fw fa-moon-o"></i> Normal
+                                        </button>
+                                        <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
+                                            <i class="fa fa-fw fa-sun-o"></i> Compact
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </template>
 
-                    <chats :user="user"></chats>
+                    <template v-if="rightActive=='chat'">
+                        <chats :user="user"></chats>
+                    </template>
+
                 </div>
             </div>
         </div>
 
-
-        <button @click="toggleRight" :class="{active : showRightMenu, animate : animate_chat}" class="btn btn-info btn-sm btn-toggle-chat">
-            <i class="fa fa-btn fa-bars"></i>
-        </button>
-
-		<vform></vform>
+        <vform></vform>
         <!-- End Home Container -->
 
     </div>
@@ -89,6 +111,7 @@
             return {
                 viewStyle : 'narrow',
                 showRightMenu : false,
+                rightActive : 'settings',
                 theme : 'dark',
                 user : INITIAL_STATE.user,
                 animate_chat : false
@@ -104,6 +127,8 @@
                     this.nav(event.state.tab);
                 }
             });
+
+            Bus.$on('ToggleRight',this.toggleRight);
         },
 
         methods : {
@@ -230,15 +255,17 @@
 
             .tabs-right {
                 position: fixed;
-                right:0;
+                display: flex;
+                flex-direction: column;
+                right:-348px;
                 padding:0;
 
-                width:0;
+                width:350px;
                 z-index: 5;
                 transition: all 0.3s linear;
 
                 &.active {
-                    width: 350px;
+                    right: 0;
                 }
             }
         }
