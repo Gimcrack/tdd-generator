@@ -1,5 +1,13 @@
 <template>
-    <div id="home-container" :class="viewStyle">
+    <div id="home-container" :class="ui.layout">
+        <button @click="toggleRight" :class="{active : showRightMenu, animate : animate.button}" class="btn btn-info btn-sm btn-toggle-right-menu">
+            <i class="fa fa-fw fa-bars"></i>
+        </button>
+
+        <div class="menu-overlay cursor-pointer" @click="toggleRight" :class="{active : showRightMenu}">
+            <i class="fa fa-fw fa-times fa-2x m-4"></i>
+        </div>
+
         <div class="column-container">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs tabs-left">
@@ -19,7 +27,7 @@
             <div class="main">
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div  v-if="user.admin_flag" class="tab-pane active" id="users-pane">
+                    <div v-if="user.admin_flag" class="tab-pane active" id="users-pane">
                         <div>
                             <users></users>
                         </div>
@@ -35,28 +43,58 @@
                 <div class="tabs-right" :class="{active:showRightMenu}">
                     <ul class="nav nav-jeremy nav-fill w-100 mb-4">
                         <li class="nav-item">
-                            <a href="#" @click.prevent="rightActive='settings'" class="nav-link" :class="{active:rightActive=='settings'}">
+                            <a href="#" @click.prevent="updateUi('rightActive','settings')" class="nav-link" :class="{active:ui.rightActive=='settings'}">
                                 <i class="fa fa-fw fa-gears"></i> Settings
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" @click.prevent="rightActive='chat'" class="nav-link" :class="{active:rightActive=='chat'}">
+                        <li class="nav-item" :class="{animate:animate.chat}">
+                            <a href="#" @click.prevent="updateUi('rightActive','chat'); animate.chat = false;" class="nav-link" :class="{active:ui.rightActive=='chat'}">
                                 <i class="fa fa-fw fa-comment"></i> Chat
+                            </a>
+                        </li>
+                        <li class="nav-item" :class="{animate:animate.notifications}">
+                            <a href="#" @click.prevent="updateUi('rightActive','notifications'); animate.notifications = false" class="nav-link" :class="{active:ui.rightActive=='notifications'}">
+                                <i class="fa fa-fw fa-bell"></i> Notifications
                             </a>
                         </li>
                     </ul>
 
 
-                    <template v-if="rightActive=='settings'">
+                    <template v-if="ui.rightActive=='settings'">
                         <div class="p-4 w-100">
+                            <div class="w-100 mb-4">
+                                <div class="p-2 w-100 mb-2 d-flex align-items-center justify-content-center flex-column">
+                                    <img class="avatar mb-3" :src="this.avatar_image" alt="">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-fw fa-user"></i>
+                                        <span class="mr-1">{{ short_name }}</span>
+                                        <span v-if="user.admin_flag" class="badge badge-primary">Admin</span>
+                                    </h4>
+                                </div>
+
+                                <div class="p-2 d-flex justify-content-center">
+                                    <a class="btn btn-info mr-2" href="/logout"
+                                       onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                        <i class="fa fa-fw fa-sign-out"></i> Logout
+                                    </a>
+
+                                    <a class="btn btn-info" href="#"
+                                       onclick="event.preventDefault();
+                                             Bus.$emit('ShowPasswordForm')">
+                                        <i class="fa fa-fw fa-refresh"></i> Reset Password
+                                    </a>
+                                </div>
+                            </div>
+
                             <div class="w-100 mb-2 border-bottom border-info">
                                 <div class="p-2 d-flex justify-content-center">
                                     <span class="flex-grow-1 align-self-center">Layout</span>
                                     <div class="btn-group" role="group">
-                                        <button @click="viewStyle=null" type="button" class="btn btn-sm btn-info" :class="{active : !viewStyle}">
+                                        <button @click="updateUi('layout','wide')" type="button" class="btn btn-sm btn-info" :class="{active : ui.layout=='wide'}">
                                             <i class="fa fa-fw fa-desktop"></i> Wide
                                         </button>
-                                        <button @click="viewStyle='narrow'" type="button" class="btn btn-sm btn-info" :class="{active : !!viewStyle}">
+                                        <button @click="updateUi('layout','narrow')" type="button" class="btn btn-sm btn-info" :class="{active : ui.layout=='narrow'}">
                                             <i class="fa fa-fw fa-tablet"></i> Narrow
                                         </button>
                                     </div>
@@ -66,10 +104,10 @@
                                 <div class="p-2 d-flex justify-content-center">
                                     <div class="flex-grow-1 align-self-center">Theme</div>
                                     <div class="btn-group" role="group">
-                                        <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
+                                        <button @click="updateUi('theme','dark')" type="button" class="btn btn-sm btn-info" :class="{active : ui.theme=='dark'}">
                                             <i class="fa fa-fw fa-moon-o"></i> Dark
                                         </button>
-                                        <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
+                                        <button @click="updateUi('theme','light')" type="button" class="btn btn-sm btn-info" :class="{active : ui.theme=='light'}">
                                             <i class="fa fa-fw fa-sun-o"></i> Light
                                         </button>
                                     </div>
@@ -77,13 +115,13 @@
                             </div>
                             <div class="w-100 mb-2 border-bottom border-info">
                                 <div class="p-2 d-flex justify-content-center">
-                                    <div class="flex-grow-1 align-self-center">View</div>
+                                    <div class="flex-grow-1 align-self-center">Data View</div>
                                     <div class="btn-group" role="group">
-                                        <button @click="toggleDarkTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='dark'}">
-                                            <i class="fa fa-fw fa-moon-o"></i> Normal
+                                        <button @click="updateUi('view','normal')" type="button" class="btn btn-sm btn-info" :class="{active : ui.view=='normal'}">
+                                            <i class="fa fa-fw fa-list-ul"></i> Normal
                                         </button>
-                                        <button @click="toggleLightTheme" type="button" class="btn btn-sm btn-info" :class="{active : theme=='light'}">
-                                            <i class="fa fa-fw fa-sun-o"></i> Compact
+                                        <button @click="updateUi('view','compact')" type="button" class="btn btn-sm btn-info" :class="{active : ui.view=='compact'}">
+                                            <i class="fa fa-fw fa-list"></i> Compact
                                         </button>
                                     </div>
                                 </div>
@@ -91,15 +129,17 @@
                         </div>
                     </template>
 
-                    <template v-if="rightActive=='chat'">
+                    <template v-if="ui.rightActive=='chat'">
                         <chats :user="user"></chats>
+                    </template>
+
+                    <template v-if="ui.rightActive=='notifications'">
+                        Notifications go here.
                     </template>
 
                 </div>
             </div>
         </div>
-
-        <vform></vform>
         <!-- End Home Container -->
 
     </div>
@@ -109,12 +149,21 @@
     export default {
         data() {
             return {
-                viewStyle : 'narrow',
-                showRightMenu : false,
-                rightActive : 'settings',
-                theme : 'dark',
+                showRightMenu : true,
                 user : INITIAL_STATE.user,
-                animate_chat : false
+
+                animate : {
+                    button : false,
+                    chat : false,
+                    notifications : false
+                },
+
+                ui : {
+                    layout : this.getSetting('layout','narrow'),
+                    theme : this.getSetting('theme','dark'),
+                    view : this.getSetting('view','normal'),
+                    rightActive : this.getSetting('rightActive','settings'),
+                }
             }
         },
 
@@ -128,13 +177,34 @@
                 }
             });
 
-            Bus.$on('ToggleRight',this.toggleRight);
+
+            Bus.$on('ChatMessageReceived', () => {
+                if ( ! this.showRightMenu ) {
+                    this.animate.button = true;
+                    this.animate.chat = true;
+                } else if ( this.rightActive !== 'chat' ) {
+                    this.animate.chat = true;
+                }
+            });
+
+            this.refreshUi();
+        },
+
+        computed : {
+            avatar_image() {
+                return 'https://www.gravatar.com/avatar/' + this.user.email_hash + '.png?s=512&';
+            },
+
+            short_name() {
+                return this.user.name.split(' ').slice(0,2).map( (name,i) => { return !i ? name : name.slice(0,1) }).join(' ');
+            }
         },
 
         methods : {
 
             toggleRight() {
                 this.showRightMenu = ! this.showRightMenu;
+                this.animate.button = false;
             },
 
             nav(tab, event) {
@@ -159,15 +229,33 @@
                 }
             },
 
-            toggleDarkTheme() {
-                this.theme = 'dark';
-                $('body').removeClass('light-theme').addClass('dark-theme');
+            getSetting(setting, def) {
+                if ( ! Store.$ls.get(setting) ) {
+                    this.setSetting(setting,def);
+                }
+
+                return Store.$ls.get(setting,def);
             },
 
-            toggleLightTheme() {
-                this.theme = 'light';
-                $('body').removeClass('dark-theme').addClass('light-theme');
+            setSetting(setting, value) {
+                return Store.$ls.set(setting, value);
             },
+
+            updateUi(setting, value) {
+                this.ui[setting] = value;
+                this.setSetting(setting,value);
+                this.refreshUi();
+            },
+
+            refreshUi() {
+                // layout
+
+                // theme
+                $('body').removeClass('light-theme').removeClass('dark-theme').addClass( `${this.ui.theme}-theme` );
+
+                // view
+                $('.table').removeClass('table-sm').addClass( (this.ui.view === 'compact') ? 'table-sm' : '' );
+            }
         },
     }
 </script>
@@ -175,10 +263,38 @@
 <style lang="scss">
     $padding: 4em;
 
+    .menu-overlay {
+        position: fixed;
+        top: 50px;
+        width:100vw;
+        height: calc(100vh - 50px) !important;
+        z-index: 4;
+        background: rgba(0,0,20,0.0);
+        display: none;
+        cursor: pointer;
+
+        & > * {
+            cursor: pointer;
+        }
+
+        transition: all 0.1s linear;
+
+        &.active {
+            display: block;
+            background: rgba(0,0,20,0.3);
+        }
+    }
+
     #home-container {
         //background: $body-bg;
         //width: 1400px;
         padding: 0;
+
+        .avatar {
+            border-radius: 100%;
+            height:185px;
+            width:185px;
+        }
 
         .view-toggles {
             //position: fixed;
@@ -262,7 +378,7 @@
 
                 width:350px;
                 z-index: 5;
-                transition: all 0.3s linear;
+                transition: all 0.1s linear;
 
                 &.active {
                     right: 0;
@@ -272,6 +388,25 @@
 
         .nav-tabs li:not(.active) a {
             cursor: pointer;
+        }
+
+        .btn-toggle-right-menu {
+            position: fixed;
+            z-index: 2;
+            top: 12px;
+            right: 12px;
+
+            &.animate {
+                animation: color 4s linear 0s infinite normal;
+            }
+        }
+
+        .nav-item.animate {
+            animation: color-tab 4s linear 0s infinite normal;
+        }
+
+        .table th, .table td {
+            transition: all 0.3s linear;
         }
     }
 </style>

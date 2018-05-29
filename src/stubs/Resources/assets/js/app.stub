@@ -38,10 +38,15 @@ Vue.component('user', require('./components/User.vue'));
 
 const app = new Vue({
     el: '#app',
+
     data : {
         form_definitions : {
             //category : require('./components/forms/category')
-        }
+        },
+
+        remember : false,
+        showRightMenu : false,
+        animateChat : false,
     }
 });
 

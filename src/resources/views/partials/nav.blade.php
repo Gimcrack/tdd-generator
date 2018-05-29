@@ -22,46 +22,11 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                 @else
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <i class="fa fa-fw fa-user"></i>
-                            {{ Auth::user()->name }}
-                            @if( Auth::user()->isAdmin() )
-                            <span class="badge badge-info">Admin</span>
-                            @endif
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"
-                                    onclick="event.preventDefault();
-                                             Bus.$emit('ShowPasswordForm')">
-                                    Reset Password
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-
-
-
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
                 @endif
             </ul>
-            @auth
-                <button onclick="Bus.$emit('ToggleRight')" :class="{active : showRightMenu, animate : animateChat}" class="btn btn-info btn-sm ml-2">
-                    <i class="fa fa-fw fa-bars"></i>
-                </button>
-            @endauth
+
         </div>
 </nav>
