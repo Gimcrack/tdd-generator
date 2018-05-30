@@ -28,7 +28,6 @@
         @if( Auth::check() )
 
         <reset-password></reset-password>
-		<vform></vform>
 
         <batch-update-selected></batch-update-selected>
         <flash message="{{ session('flash') }}"></flash>

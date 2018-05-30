@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center h-full d-flex">
             <div class="col-lg-4 col-md-6 col-sm-8 mt-5 my-auto">
-                <div class="card">
+                <div class="card card-custom">
                     <div class="card-img-top login-img h-25"></div>
 
                     <div class="card-body">

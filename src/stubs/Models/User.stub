@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property int $id
  * @property string api_token
  * @property bool $admin_flag
+ * @property string $email_hash
  * @property bool $approver_flag
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -51,6 +52,10 @@ class User extends Authenticatable
     protected $casts = [
         'admin_flag' => 'bool',
         'approver_flag' => 'bool',
+    ];
+
+    protected $appends = [
+    	'email_hash'
     ];
 
     protected $dispatchesEvents = [
@@ -137,4 +142,15 @@ class User extends Authenticatable
         $this->approver_flag = 0;
         $this->save();
     }
+
+    /**
+	 * Get the email_hash attribute
+	 * @method getEmailHashAttribute
+	 *
+	 * @return   string
+	 */
+	public function getEmailHashAttribute()
+	{
+		return md5( strtolower( trim($this->email) ) );
+	}
 }
