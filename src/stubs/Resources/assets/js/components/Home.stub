@@ -64,7 +64,7 @@
                         <div class="p-4 w-100">
                             <div class="w-100 mb-4">
                                 <div class="p-2 w-100 mb-2 d-flex align-items-center justify-content-center flex-column">
-                                    <img class="avatar mb-3" :src="this.avatar_image" alt="">
+                                    <img class="avatar mb-3 border border-info" :src="this.avatar_image" alt="">
                                     <h4 class="mb-0">
                                         <i class="fa fa-fw fa-user"></i>
                                         <span class="mr-1">{{ short_name }}</span>
@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-100 mb-2 border-bottom border-info">
+                            <div class="w-100 mb-2 border-bottom border-info" style="display:none">
                                 <div class="p-2 d-flex justify-content-center">
                                     <div class="flex-grow-1 align-self-center">Theme</div>
                                     <div class="btn-group" role="group">
@@ -126,6 +126,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="w-100 mb-2 border-bottom border-info">
+                                <div class="p-2 d-flex justify-content-center">
+                                    <div class="flex-grow-1 align-self-center">Effects</div>
+                                    <div class="btn-group" role="group">
+                                        <button @click="updateUi('effects','on')" type="button" class="btn btn-sm btn-info" :class="{active : ui.effects=='on'}">
+                                            <i class="fa fa-fw fa-toggle-on"></i> On
+                                        </button>
+                                        <button @click="updateUi('effects','off')" type="button" class="btn btn-sm btn-info" :class="{active : ui.effects=='off'}">
+                                            <i class="fa fa-fw fa-toggle-off"></i> Off
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </template>
 
@@ -140,6 +153,7 @@
                 </div>
             </div>
         </div>
+		<vform></vform>
         <!-- End Home Container -->
 
     </div>
@@ -149,7 +163,7 @@
     export default {
         data() {
             return {
-                showRightMenu : true,
+                showRightMenu : false,
                 user : INITIAL_STATE.user,
 
                 animate : {
@@ -160,9 +174,10 @@
 
                 ui : {
                     layout : this.getSetting('layout','narrow'),
-                    theme : this.getSetting('theme','dark'),
+                    theme : this.getSetting('theme','light'),
                     view : this.getSetting('view','normal'),
                     rightActive : this.getSetting('rightActive','settings'),
+                    effects : this.getSetting('effects','on')
                 }
             }
         },
@@ -255,6 +270,9 @@
 
                 // view
                 $('.table').removeClass('table-sm').addClass( (this.ui.view === 'compact') ? 'table-sm' : '' );
+
+                // effects
+                $('body').toggleClass('no-effects',this.ui.effects === 'off');
             }
         },
     }
