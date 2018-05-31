@@ -5,15 +5,24 @@
         @new="create"
         @created="created"
         @deleted="deleted"
-    ></page>
+    >
+        <template slot="selection-dropdown-menu">
+            <button @click.prevent="page.update()" :disabled="page.toggledCount>1" class="dropdown-item" :class="{ disabled : page.toggledCount>1 }">
+                <i class="fa fa-fw fa-edit"></i> Edit
+            </button>
+        </template>
+    </page>
 </template>
 
 <script>
     export default {
         data() {
             return {
+                page : {},
+
                 toggles : {
                     new : true,
+                    do_with_selected : true
                 },
 
                 details : {
@@ -28,7 +37,7 @@
                     ],
                     type : 'user',
                     heading : 'Users',
-                    endpoint : '[url_prefix]users',
+                    endpoint : 'admin/users',
                     help : 'System Users',
                     events : {
                         channel : 'users',

@@ -14,9 +14,10 @@
         <td><span class="label" :class="[ model.admin_flag ? 'label-primary' : 'label-success']" v-text="model.admin_flag ? 'Admin' : 'User'"></span></td>
 
         <template slot="menu">
-            <button v-show="! model.admin_flag" @click.prevent="toggleAdmin" :disabled="busy" class="btn btn-success btn-xs btn-outline" :class="{disabled : busy}"> 
-                <i :class="[ model.admin_flag ? 'fa-arrow-down' : 'fa-arrow-up', {'fa-spin' : updating}]" class="fa fa-fw"></i> 
-            </button>
+            <a v-if="showToggleAdmin" href="#" @click.prevent="toggleAdmin" :disabled="busy" class="dropdown-item" :class="{disabled : busy}">
+                <i :class="[ model.admin_flag ? 'fa-arrow-down' : 'fa-arrow-up', {'fa-spin' : updating}]" class="fa fa-fw"></i>
+                <span v-text="model.admin_flag ? 'Demote To User' : 'Promote To Admin'"></span>
+            </a>
         </template>
     </item>
 </template>
@@ -30,6 +31,10 @@
         computed : {
             updated() {
                 return fromNow(this.model.updated_at);
+            },
+
+            showToggleAdmin() {
+                return this.model.id !== window.INITIAL_STATE.user.id;
             }
         },
 
@@ -38,7 +43,7 @@
                 item : {
                     key : 'id',
                     type : 'user',
-                    endpoint : '[url_prefix]users',
+                    endpoint : 'admin/users',
                     channel : `users.${this.initial.id}`,
                     updated : 'UserWasUpdated',
                 },
@@ -57,27 +62,27 @@
             },
 
             update() {
-                Bus.$emit('ShowForm', { type : 'user', model : this.initial })
+                Bus.$emit('ShowForm', { type : 'user', model : this.model })
             },
 
             toggleAdmin() {
-                if ( this.model.admin_flag ) 
+                if ( this.model.admin_flag )
                     return this.unpromote();
 
-                return this.promote(); 
+                return this.promote();
             },
 
             unpromote() {
                 this.updating = true;
 
-                Api.delete(`[url_prefix]users/${this.initial.id}/promotion`)
+                Api.delete(`admin/users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
 
             promote() {
                 this.updating = true;
 
-                Api.post(`[url_prefix]users/${this.initial.id}/promotion`)
+                Api.post(`admin/users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
         }
