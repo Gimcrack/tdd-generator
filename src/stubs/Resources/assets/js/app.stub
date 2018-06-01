@@ -45,8 +45,6 @@ const app = new Vue({
         },
 
         remember : false,
-        showRightMenu : false,
-        animateChat : false,
     }
 });
 
