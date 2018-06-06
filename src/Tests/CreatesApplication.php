@@ -20,6 +20,8 @@ namespace Ingenious\TddGenerator\Tests {
          */
         public function createApplication()
         {
+
+
             if ( env('APP_BOOTSTRAP_PATH') )
                 $app = require(env('APP_BOOTSTRAP_PATH'));
 

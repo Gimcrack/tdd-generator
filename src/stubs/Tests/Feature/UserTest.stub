@@ -176,7 +176,7 @@ class UserAdminTest extends TestCase
             ->response()
             ->assertStatus(202);
 
-        $this->assertDatabaseMissing('users', $user->toArray());
+        $this->assertDatabaseMissing('users', [ 'id' => $user->id ]);
     }
 
     /** @test */
@@ -191,7 +191,7 @@ class UserAdminTest extends TestCase
             ->response()
             ->assertStatus(403);
 
-        $this->assertDatabaseHas('users', $user->toArray());
+        $this->assertDatabaseHas('users', [ 'id' => $user->id ]);
     }
 
     /** @test */
