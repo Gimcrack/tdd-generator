@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Ingenious\TddGenerator\Utility\ModelCase;
 use function is_numeric;
+use function strrchr;
 
 class FileSystem {
 
@@ -366,8 +367,13 @@ class FileSystem {
         $original = static::get($path);
         $lines = explode("\n",$original);
 
-        if ( $offset ) {
-            return static::insert($path, $content, count($lines)-$offset);
+
+        $line = ( $offset === "end" ) ?
+            count($lines) :
+            count($lines) - $offset +1;
+
+        if ( $line ) {
+            return static::insert($path, $content, $line);
         }
 
         array_push($lines, $content);

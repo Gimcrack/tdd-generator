@@ -44,14 +44,13 @@ class MigrationManager
         if ( ! $params->force && ! $params->backup )
             return "[warn]***Skipping Migration file. It already exists.***";
 
-
-        elseif ( $params->backup ) {
+        else {
             $this->backup();
             return "[warn]***Backing up Migration file. It already exists.***";
         }
 
-        elseif ( $params->force )
-            return "[warn]***A Migration exists for {$params->model->model}.***";
+        //elseif ( $params->force )
+        //    return "[warn]***A Migration exists for {$params->model->model}.***";
 
     }
 
@@ -61,7 +60,7 @@ class MigrationManager
     public function cleanup()
     {
         return FileSystem::delete( FileSystem::migration(
-            $this->converter->params->model->lower_plural, $all = true
+            $this->migrationPath(), $all = true
         ) );
     }
 
@@ -71,7 +70,7 @@ class MigrationManager
     public function backup()
     {
         return FileSystem::backup( FileSystem::migration(
-            $this->converter->params->model->lower_plural, $all = true
+            $this->migrationPath(), $all = true
         ) );
     }
 
@@ -84,5 +83,19 @@ class MigrationManager
     public function migrationExists()
     {
         return $this->converter->migrationExists();
+    }
+
+    /**
+     * Get the migration path
+     *
+     * @return string
+     */
+    private function migrationPath()
+    {
+        if ( $this->converter->params->m2m ) {
+            return "{$this->converter->params->parent->lower}_{$this->converter->params->model->lower}";
+        }
+
+        return $this->converter->params->model->lower_plural;
     }
 }

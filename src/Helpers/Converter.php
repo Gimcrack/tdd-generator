@@ -75,6 +75,10 @@ class Converter {
      */
     public function migrationExists()
     {
+        if ( $this->params->m2m ) {
+            return FileSystem::hasMigration("{$this->params->parent->lower}_{$this->params->model->lower}");
+        }
+
         return FileSystem::hasMigration($this->params->model->lower_plural);
     }
 

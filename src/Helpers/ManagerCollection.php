@@ -59,10 +59,10 @@ class ManagerCollection {
         return collect([
             $this->migrations,
             $this->stubs,
-            //$this->relationships,
+            $this->relationships,
             $this->routes,
             $this->vue,
             $this->initial_state
-        ]);
+        ])->filter()->values();
     }
 }

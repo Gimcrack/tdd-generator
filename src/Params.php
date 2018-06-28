@@ -112,11 +112,14 @@ class Params {
      */
     public $compile;
 
+    public $m2m;
+
     public function __construct()
     {
         $this->setModel("")
             ->setParent("")
             ->setChildren("")
+            ->setM2M(false)
             ->setTags();
     }
 
@@ -292,6 +295,13 @@ class Params {
         return $this;
     }
 
+    public function setM2M($m2m)
+    {
+        $this->m2m = $m2m;
+
+        return $this;
+    }
+
     /**
      * Is the tag included
      *
@@ -339,6 +349,7 @@ class Params {
             ->setNpm($defaults['npm']['value'])
             ->setMigrate($defaults['migrate']['value'])
             ->setTests($defaults['tests']['value'])
-            ->setCompile($defaults['compile']['value']);
+            ->setCompile($defaults['compile']['value'])
+            ->setM2M(false);
     }
 }

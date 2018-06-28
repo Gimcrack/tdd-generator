@@ -38,7 +38,10 @@ class RoutesManager {
 
         $routes = FileSystem::route($params->routes);
 
-        FileSystem::append($routes, $this->newRoutes($params));
+        FileSystem::append($routes, ( ! $params->parent->model ) ?
+            $this->base($params) :
+            $this->parent($params)
+        );
 
         return "New routes added";
     }
@@ -49,10 +52,9 @@ class RoutesManager {
      * @param Params $params
      * @return string
      */
-    private function newRoutes(Params $params)
+    private function base(Params $params)
     {
-        return vsprintf("%s%s%s%s%s%s",[
-            $this->nested($params),
+        return vsprintf("%s%s%s%s%s",[
             'Route::apiResource("',
             $params->model->lower_plural,
             '","',
@@ -63,17 +65,14 @@ class RoutesManager {
 
     /**
      * Handle the nested route, if applicable
-     * @method process
+     * @method parent
      *
      * @param Params $params
      * @return string
      */
-    public function nested(Params $params)
+    public function parent(Params $params)
     {
-        if ( ! $params->parent->model && ! $params->children->model )
-            return "";
-
-        return ( $params->parent->model ) ? vsprintf("%s%s%s%s%s%s%s%s%s",[
+        return vsprintf("%s%s%s%s%s%s%s%s%s",[
             'Route::apiResource("',
             $params->parent->lower_plural,
             '.',
@@ -81,16 +80,6 @@ class RoutesManager {
             '","',
             $params->parent->capped,
             $params->model->capped,
-            'Controller");',
-            "\n"
-        ]) : vsprintf("%s%s%s%s%s%s%s%s%s",[
-            'Route::apiResource("',
-            $params->model->lower_plural,
-            '.',
-            $params->children->lower_plural,
-            '","',
-            $params->model->capped,
-            $params->children->capped,
             'Controller");',
             "\n"
         ]);

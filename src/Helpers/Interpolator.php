@@ -55,6 +55,7 @@ class Interpolator
             '[prefix]' => $params->prefix,
             '[url_prefix]' => $params->urlPrefix ?: "",
             'actingAsUser()' => ( $params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()',
+            '.MM' => ''
         ]);
 
         $this->search = $replacements->keys()->all();

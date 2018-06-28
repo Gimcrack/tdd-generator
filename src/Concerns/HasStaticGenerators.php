@@ -9,6 +9,10 @@
 namespace Ingenious\TddGenerator\Concerns;
 
 
+use Ingenious\TddGenerator\Helpers\Converter;
+use Ingenious\TddGenerator\Managers\MigrationManager;
+use Ingenious\TddGenerator\Managers\RelationshipManager;
+use Ingenious\TddGenerator\Managers\RoutesManager;
 use Ingenious\TddGenerator\Params;
 use Ingenious\TddGenerator\Generator;
 use Ingenious\TddGenerator\Managers\StubManager;
@@ -63,7 +67,7 @@ trait HasStaticGenerators
     }
 
     /**
-     * Setup the parent files
+     * Setup the parent files for m21 relationship
      * @method parent
      *
      * @param Params $params
@@ -71,7 +75,38 @@ trait HasStaticGenerators
      */
     public static function parent(Params $params)
     {
-        return static::handle($params, __FUNCTION__);
+        /** @var Generator $gen */
+        $gen = static::init($params);
+
+        $gen->managers
+            ->clear()
+            ->setStubs( StubManager::parent($params) )
+            ->setRoutes( RoutesManager::init( Converter::init($params) ) )
+            ->setRelationships( RelationshipManager::init( Converter::init($params) ));
+
+        return $gen->process();
+    }
+
+    /**
+     * Setup the parent files for m2m relationship
+     * @method m2m
+     *
+     * @param Params $params
+     * @return Generator
+     */
+    public static function m2m(Params $params)
+    {
+        /** @var Generator $gen */
+        $gen = static::init($params);
+
+        $gen->managers
+            ->clear()
+            ->setMigrations( MigrationManager::init( Converter::init($params) ))
+            ->setStubs( StubManager::m2m($params) )
+            ->setRoutes( RoutesManager::init( Converter::init($params) ) )
+            ->setRelationships( RelationshipManager::init( Converter::init($params) ));
+
+        return $gen->process();
     }
 
     /**

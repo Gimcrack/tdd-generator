@@ -1,0 +1,111 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\[Thing];
+use App\[Parent];
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class [Parent][Thing]Test extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function it_can_get_a_listing_of_[parent]_[things]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[things] = create([Thing]::class, 3);
+
+            $[parent]
+                ->[things]()
+                ->attach( $[things]->map->id );
+
+            $this->actingAsUser()
+                ->get( ["[prefix][parents].[things].index", $[parent]] )
+                ->response()
+                ->assertStatus(200)
+                ->assertJsonCount(3)
+                ->assertJsonModelCollection( $[things] );
+        });
+    }
+
+    /** @test */
+    public function it_can_get_a_single_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[thing] = create([Thing]::class);
+
+            $[parent]
+                ->[things]()
+                ->attach( $[thing]->id );
+
+            $this->actingAsUser()
+                ->get(["[prefix][parents].[things].show", $[parent], $[thing]])
+                ->response()
+                ->assertStatus(200)
+                ->assertJsonFragment(['id' => $[thing]->id]);
+        });
+    }
+
+    /** @test */
+    public function it_can_sync_[parent]_[things]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+
+            $[thing] = create([Thing]::class);
+
+            $this->actingAsUser()
+                ->post(["[prefix][parents].update", $[parent]], [
+                    '[thing]_ids' => [ $[thing]->id ]
+                ])
+                ->response()
+                ->assertStatus(202);
+
+            $this->assertDatabaseHas('[parent]_[thing]', [
+                '[parent]_id' => $[parent]->id,
+                '[thing]_id' => $[thing]->id
+            ] );
+        });
+    }
+
+    /** @test */
+    public function it_can_sync_[thing]_[parents]()
+    {
+        tap( create([Thing]::class), function([Thing] $[thing]) {
+
+            $[parent] = create([Parent]::class);
+
+            $this->actingAsUser()
+                ->post(["[prefix][things].update", $[thing]], [
+                    '[parent]_ids' => [ $[parent]->id ]
+                ])
+                ->response()
+                ->assertStatus(202);
+
+            $this->assertDatabaseHas('[parent]_[thing]', [
+                '[parent]_id' => $[parent]->id,
+                '[thing]_id' => $[thing]->id
+            ] );
+        });
+    }
+
+    /** @test */
+    public function it_can_delete_a_[parent]_[thing]()
+    {
+        tap( create([Parent]::class), function([Parent] $[parent]) {
+            $[thing] = create([Thing]::class);
+
+            $this->actingAsUser()
+                 ->delete(["[prefix][parents].[things].destroy", $[parent], $[thing]])
+                 ->response()
+                 ->assertStatus(202);
+
+            $this->assertCount(0, $[parent]->[things]);
+        });
+    }
+ }

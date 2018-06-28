@@ -33,11 +33,12 @@
                         {
                             title : 'User Type',
                             key : 'admin_flag',
+                            options : [{ label : 'Admin', id : true }, { label : 'User', id : false }],
                         }
                     ],
                     type : 'user',
                     heading : 'Users',
-                    endpoint : 'admin/users',
+                    endpoint : 'users',
                     help : 'System Users',
                     events : {
                         channel : 'users',

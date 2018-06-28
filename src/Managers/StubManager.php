@@ -10,6 +10,7 @@ use Ingenious\TddGenerator\StubCollections\ChatStubs;
 use Ingenious\TddGenerator\StubCollections\AdminStubs;
 use Ingenious\TddGenerator\StubCollections\BaseStubs;
 use Ingenious\TddGenerator\StubCollections\ParentStubs;
+use Ingenious\TddGenerator\StubCollections\ParentStubsMM;
 use Ingenious\TddGenerator\StubCollections\SetupStubs;
 use Ingenious\TddGenerator\StubCollections\FrontendStubs;
 
@@ -102,6 +103,18 @@ class StubManager {
     public static function parent(Params $params)
     {
         return new static( new Converter($params), ParentStubs::get() );
+    }
+
+    /**
+     * Parent Stub manager m2m
+     * @method m2m
+     *
+     * @param Params $params
+     * @return static
+     */
+    public static function m2m(Params $params)
+    {
+        return new static( new Converter($params), ParentStubsMM::get() );
     }
 
     /**

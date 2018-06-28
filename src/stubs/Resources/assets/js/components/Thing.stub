@@ -1,20 +1,36 @@
 <template>
-    <item 
-        :id="model.id"
-        :deleting="deleting"
-        :updating="updating"
-        :toggles="toggles"
-        @view="view"
-        @update="update"
-        @destroy="destroy"
-        @ToggledHasChanged="$emit('ToggledHasChanged')"
-    >
-        <td>{{ model.name }}</td>
+    <component
+		:is="itemLayout"
+		class="[thing]"
+		:id="model.id"
+		:deleting="deleting"
+		:updating="updating"
+		:toggles="toggles"
+		:externalUrl="url"
+		:item-border="itemBorder"
+		:meta="meta"
+		@view="view"
+		@update="update"
+		@ToggledHasChanged="$emit('ToggledHasChanged')"
+	>
 
         <template slot="menu">
+			<!--
+			<dropdown-item :show="toggles.trello" :busy="busy" @clicked="trello" icon="fa-trello">
+				Send To Trello
+				<i v-if="trellod || trelloing" class="fa fa-fw ml-2"
+				   :class="trellod ? ['fa-check-square-o','text-success'] : ['fa-circle-o-notch','fa-spin']">
+				</i>
+			</dropdown-item>
+			-->
+		</template>
 
-        </template>
-    </item>
+
+		<template slot="row2">
+			<!-- -->
+		</template>
+
+    </component>
 </template>
 
 <script>
@@ -24,13 +40,24 @@
         ],
 
         computed : {
-            updated() {
-                return fromNow(this.model.updated_at);
-            }
+        	meta() {
+
+				return [
+					/*{
+						key: 'assignee',
+						badge: this.absent,
+						badge_class: 'badge-danger'
+					},*/
+					'name',
+					'description',
+				]
+			},
         },
 
         data() {
             return {
+            	component_type : "item-table",
+
                 item : {
                     key : 'id',
                     type : '[thing]',

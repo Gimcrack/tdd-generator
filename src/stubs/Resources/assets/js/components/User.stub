@@ -1,17 +1,16 @@
 <template>
-    <item 
+    <component
+        :is="itemLayout"
         :id="model.id"
         :deleting="deleting"
         :updating="updating"
         :toggles="toggles"
+        :meta="meta"
         @view="view"
         @update="update"
         @destroy="destroy"
         @ToggledHasChanged="$emit('ToggledHasChanged')"
     >
-        <td>{{ model.name }}</td>
-        <td>{{ model.email }}</td>
-        <td><span class="label" :class="[ model.admin_flag ? 'label-primary' : 'label-success']" v-text="model.admin_flag ? 'Admin' : 'User'"></span></td>
 
         <template slot="menu">
             <a v-if="showToggleAdmin" href="#" @click.prevent="toggleAdmin" :disabled="busy" class="dropdown-item" :class="{disabled : busy}">
@@ -19,7 +18,7 @@
                 <span v-text="model.admin_flag ? 'Demote To User' : 'Promote To Admin'"></span>
             </a>
         </template>
-    </item>
+    </component>
 </template>
 
 <script>
@@ -29,6 +28,19 @@
         ],
 
         computed : {
+            meta() {
+
+                return [
+                    'name',
+                    'email',
+                    {
+                        text: this.model.admin_flag ? 'Admin' : 'User',
+                        badge: true,
+                        badge_class: this.model.admin_flag ? 'badge-primary' : 'badge-success',
+                    },
+                ];
+            },
+
             updated() {
                 return fromNow(this.model.updated_at);
             },
@@ -40,6 +52,8 @@
 
         data() {
             return {
+                component_type : 'item-table',
+
                 item : {
                     key : 'id',
                     type : 'user',
@@ -47,11 +61,11 @@
                     channel : `users.${this.initial.id}`,
                     updated : 'UserWasUpdated',
                 },
-
                 toggles : {
                     info : false,
                     delete : false,
                     update : true,
+                    always_show_checked : true
                 }
             }
         },
@@ -75,14 +89,14 @@
             unpromote() {
                 this.updating = true;
 
-                Api.delete(`admin/users/${this.initial.id}/promotion`)
+                Api.delete(`users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
 
             promote() {
                 this.updating = true;
 
-                Api.post(`admin/users/${this.initial.id}/promotion`)
+                Api.post(`users/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
         }

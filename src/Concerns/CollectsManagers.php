@@ -82,4 +82,16 @@ trait CollectsManagers
 
         return $this;
     }
+
+    public function clear()
+    {
+        $this->relationships = null;
+        $this->initial_state = null;
+        $this->vue = null;
+        $this->migrations = null;
+        $this->stubs = null;
+        $this->routes = null;
+
+        return $this;
+    }
 }

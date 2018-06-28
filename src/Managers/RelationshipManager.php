@@ -18,6 +18,7 @@ class RelationshipManager
 
     const HAS_MANY =
 <<<EOF
+
     /**
      * A [Thing] has many [Children]
      *
@@ -31,13 +32,43 @@ EOF;
 
     const BELONGS_TO =
 <<<EOF
+
     /**
 	 * A [Thing] belongs to a [Parent]
 	 *
 	 * @return \\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo
 	 */
-    public function [parent]() {
+    public function [parent]() 
+    {
     	return \$this->belongsTo([Parent]::class);
+    }
+EOF;
+
+    const BELONGS_TO_MANY_BASE =
+<<<EOF
+
+    /**
+	 * A [Thing] has many [Parents]
+	 *
+	 * @return \\Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany
+	 */
+    public function [parents]() 
+    {
+    	return \$this->belongsToMany([Parent]::class);
+    }
+EOF;
+
+    const BELONGS_TO_MANY_PARENT =
+<<<EOF
+
+    /**
+	 * A [Parent] has many [Things]
+	 *
+	 * @return \\Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany
+	 */
+    public function [things]() 
+    {
+    	return \$this->belongsToMany([Thing]::class);
     }
 EOF;
 
@@ -68,11 +99,53 @@ EOF;
         if ( ! $this->converter->params->hasModel() )
             return [];
 
-        if ( $this->converter->params->parent->model )
-            $this->processParent();
+        if ( $this->converter->params->m2m ){
+            return $this->m2m();
+        }
 
-        if ( $this->converter->params->children->model )
-            $this->processChildren();
+        $this->appendOutput([
+           "TODO: Finish implementing m21 RelationshipManager"
+        ]);
+
+        //if ( $this->converter->params->parent->model )
+        //    $this->processParent();
+        //
+        //if ( $this->converter->params->children->model )
+        //    $this->processChildren();
+
+        return $this->output;
+    }
+
+    /**
+     * Process a many-to-many relationship
+     *
+     * @return Collection|array
+     */
+    private function m2m()
+    {
+        // base model
+        $model = FileSystem::model($this->converter->params->model);
+
+        $this->appendOutput(
+            "Adding the belongsToMany relationship to the base model",
+            FileSystem::append(
+                $model,
+                $this->converter->interpolator->run(static::BELONGS_TO_MANY_BASE),
+                "end"
+            )
+        );
+
+        // parent model
+        $parent = FileSystem::model($this->converter->params->parent);
+
+        $this->appendOutput(
+            "Adding the belongsToMany relationship to the base model",
+            FileSystem::append(
+                $parent,
+                $this->converter->interpolator->run(static::BELONGS_TO_MANY_PARENT),
+                "end"
+            )
+        );
 
         return $this->output;
     }
