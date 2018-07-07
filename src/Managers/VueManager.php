@@ -82,29 +82,6 @@ class VueManager {
             return FileSystem::insert($app,$component,static::LINE_NUMBER);
         })->all();
 
-
-        if ( $embed )
-        {
-            $tab = $this->converter->interpolator->run(
-                "\t\t\t\t\t<li>\n\t\t\t\t\t\t<a id=\"[things]-tab\" @click=\"nav('[things]',\$event)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-fw fa-2x fa-cogs\"></i>\n\t\t\t\t\t\t<div>[Things]</div>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</li>"
-            );
-
-            $pane = $this->converter->interpolator->run(
-                "\t\t\t\t\t<div class=\"tab-pane\" id=\"[things]-pane\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<[things]></[things]>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>"
-            );
-
-            // embed them on the home page
-            $home = FileSystem::component("Home");
-
-            // embed the tab
-            $tab_line = FileSystem::lineNum( $home, "<!-- End Tabs -->" ) - 1;
-            $output[] = FileSystem::insert($home, $tab, $tab_line);
-
-            // embed the pane
-            $pane_line = FileSystem::lineNum( $home, "<!-- End Panes -->" ) - 1;
-            $output[] = FileSystem::insert($home, $pane, $pane_line);
-        }
-
         return $output;
     }
 

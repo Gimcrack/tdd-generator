@@ -45,7 +45,7 @@ class ManagerCollection {
             //"relationships" => RelationshipManager::init($converter),
             "routes" => RoutesManager::init($converter),
             "vue" => VueManager::init($converter),
-            "initial_state" => InitialStateManager::init($converter),
+            //"initial_state" => InitialStateManager::init($converter),
         ]);
     }
 

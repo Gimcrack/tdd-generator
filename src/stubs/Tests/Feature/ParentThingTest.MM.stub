@@ -60,7 +60,7 @@ class [Parent][Thing]Test extends TestCase
             $[thing] = create([Thing]::class);
 
             $this->actingAsUser()
-                ->post(["[prefix][parents].update", $[parent]], [
+                ->patch(["[prefix][parents].update", $[parent]], [
                     '[thing]_ids' => [ $[thing]->id ]
                 ])
                 ->response()
@@ -81,7 +81,7 @@ class [Parent][Thing]Test extends TestCase
             $[parent] = create([Parent]::class);
 
             $this->actingAsUser()
-                ->post(["[prefix][things].update", $[thing]], [
+                ->patch(["[prefix][things].update", $[thing]], [
                     '[parent]_ids' => [ $[parent]->id ]
                 ])
                 ->response()
