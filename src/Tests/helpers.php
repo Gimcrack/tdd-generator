@@ -71,6 +71,6 @@ function make_array($what, $overrides = [], $qty = 1)
         $overrides = null;
     }
     return ($qty > 1) ?
-        factory($what, $qty)->make($overrides)->toArray() :
-        factory($what)->make($overrides)->toArray();
+        factory($what, $qty)->make($overrides)->map->getAttributes() :
+        factory($what)->make($overrides)->getAttributes();
 }

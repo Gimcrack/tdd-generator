@@ -61,10 +61,13 @@ abstract class TestCase extends BaseTestCase
         });
 
         TestResponse::macro('assertJsonMissingModel', function(Model $model) {
+            //$appends = $model->getAppends()
+            //$model->setAppends([]);
             return $this->assertJsonMissingExact($model->toArray());
         });
 
         TestResponse::macro('assertJsonModel', function (Model $model) {
+            //$model->setAppends([]);
             return $this->assertJsonFragment($model->toArray());
         });
 
