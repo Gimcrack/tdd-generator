@@ -11,6 +11,19 @@ use function strrchr;
 class FileSystem {
 
     /**
+     * Get the asset_path
+     * @method asset_path
+     *
+     * @return   string
+     */
+    public static function asset_path($path = null)
+    {
+        return ( app()->version() > "5.7" ) ?
+            base_path("resources/$path") :
+            base_path("resources/assets/$path");
+    }
+
+    /**
      * Backup the file at the specified path
      * @method backup
      *
@@ -102,7 +115,7 @@ class FileSystem {
      */
     public static function js($name)
     {
-        $js = File::glob( base_path("resources/assets/js") . DIRECTORY_SEPARATOR . str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name) . ".js" );
+        $js = File::glob( static::asset_path("js") . DIRECTORY_SEPARATOR . str_replace(['\\','/'], DIRECTORY_SEPARATOR, $name) . ".js" );
 
         if ( ! count($js) )
             return "";
@@ -151,7 +164,7 @@ class FileSystem {
      */
     public static function component($name)
     {
-        return base_path("resources/assets/js/components/{$name}.vue");
+        return static::asset_path("js/components/{$name}.vue");
     }
 
     /**

@@ -38,7 +38,7 @@ class SetupManager {
 
         $this->paths = (object) [
             'example_tests' => base_path("tests") . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*Example*",
-            'example_component' => base_path("resources/assets/js/components") . DIRECTORY_SEPARATOR . "*Example*",
+            'example_component' => FileSystem::asset_path("components") . DIRECTORY_SEPARATOR . "*Example*",
             'user_factory' => database_path("Factories") . DIRECTORY_SEPARATOR . "UserFactory*",
             'user_migration' => database_path("Migrations") . DIRECTORY_SEPARATOR . "2014_10_12_000000_create_users_table*",
             'route_service_provider' => app_path("Providers") . DIRECTORY_SEPARATOR . "RouteServiceProvider*",

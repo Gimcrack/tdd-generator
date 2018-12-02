@@ -7,12 +7,12 @@ use const DIRECTORY_SEPARATOR;
 trait HelpsMakeStubs {
 
     public static $paths = [
-        "assets" => "Resources/assets",
-        "js" => "Resources/assets/js",
-        "components" => "Resources/assets/js/components",
-        "forms" => "Resources/assets/js/components/forms",
-        "mixins" => "Resources/assets/js/components/mixins",
-        "sass" => "Resources/assets/sass",
+        "assets" => "Resources",
+        "js" => "Resources/js",
+        "components" => "Resources/js/components",
+        "forms" => "Resources/js/components/forms",
+        "mixins" => "Resources/js/components/mixins",
+        "sass" => "Resources/sass",
         "views" => "Resources/views"
     ];
 

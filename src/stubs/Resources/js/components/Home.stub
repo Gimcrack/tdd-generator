@@ -1,0 +1,150 @@
+<template>
+    <ui-home :menu="menu">
+
+    </ui-home>
+</template>
+
+<script>
+
+    export default {
+
+        data() {
+            return {
+                menu: [
+                    {
+                        label: 'Admin',
+                        id: 'admin',
+                        icon: 'fa-lock',
+                        admin: true,
+                        sub: [
+                            {
+                                label: 'Users',
+                                id: 'users',
+                                icon: 'fa-users',
+                                pane: {
+                                    component: 'users'
+                                }
+                            },
+                        ]
+                    },
+                    // {
+                    //     label: 'My Tickets',
+                    //     id: 'my',
+                    //     icon: 'fa-user',
+                    //     pane: {
+                    //         component: 'my-tickets'
+                    //     }
+                    // },
+                    // {
+                    //     label: 'Tickets',
+                    //     id: 'tickets',
+                    //     icon: 'fa-ticket',
+                    //     sub: [
+                    //         {
+                    //             label: 'Hot',
+                    //             id: 'hot',
+                    //             icon: 'fa-circle',
+                    //             text: 'text-success',
+                    //             pane: {
+                    //                 component: 'tickets',
+                    //                 options: {
+                    //                     view: 'hot'
+                    //                 }
+                    //             }
+                    //         },
+                    //         {
+                    //             label: 'Absent',
+                    //             id: 'problem',
+                    //             icon: 'fa-exclamation-circle',
+                    //             text: 'text-danger',
+                    //             pane: {
+                    //                 component: 'problem-tickets',
+                    //             }
+                    //         },
+                    //         {
+                    //             label: 'Aging',
+                    //             id: 'aging',
+                    //             icon: 'fa-circle',
+                    //             text: 'text-warning',
+                    //             pane: {
+                    //                 component: 'tickets',
+                    //                 options: {
+                    //                     view: 'aging'
+                    //                 }
+                    //             }
+                    //         },
+                    //         {
+                    //             label: 'Stale',
+                    //             id: 'stale',
+                    //             icon: 'fa-circle',
+                    //             text: 'text-danger',
+                    //             pane: {
+                    //                 component: 'tickets',
+                    //                 options: {
+                    //                     view: 'stale'
+                    //                 }
+                    //             }
+                    //         },
+                    //         {
+                    //             label: 'Closed',
+                    //             id: 'closed',
+                    //             icon: 'fa-check-circle',
+                    //             text: 'text-success',
+                    //             pane: {
+                    //                 component: 'closed-tickets',
+                    //             }
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     label: 'Metrics',
+                    //     id: 'metrics',
+                    //     icon: 'fa-dashboard',
+                    //     sub : [
+                    //         {
+                    //             label : 'Ticket Metrics',
+                    //             id : 'ticket-metrics',
+                    //             icon : 'fa-ticket',
+                    //             text: 'text-success',
+                    //             pane: {
+                    //                 component: 'ticket-metrics'
+                    //             }
+                    //         },
+                    //     ],
+                    // },
+                    // {
+                    //     label: 'Health',
+                    //     id: 'health',
+                    //     icon: 'fa-heart',
+                    //     sub : [
+                    //         {
+                    //             label : 'Groups',
+                    //             id : 'monitor-groups',
+                    //             icon : 'fa-cogs',
+                    //             pane : {
+                    //                 component : 'service-groups'
+                    //             }
+                    //         },
+                    //         {
+                    //             label : 'Monitors',
+                    //             id : 'monitors',
+                    //             icon : 'fa-cog',
+                    //             pane: {
+                    //                 component: 'services'
+                    //             }
+                    //         },
+                    //         {
+                    //             label : 'Clients',
+                    //             id : 'clients',
+                    //             icon : 'fa-desktop',
+                    //             pane: {
+                    //                 component: 'clients'
+                    //             }
+                    //         },
+                    //     ],
+                    // },
+                ]
+            }
+        }
+    }
+</script>
