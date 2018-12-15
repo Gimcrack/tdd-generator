@@ -1,4 +1,4 @@
-@extends('tdd-generator::layouts.app', ['body_class' => 'auth'])
+@extends('tdd-generator::layouts.app', ['body_class' => 'auth no-nav'])
 
 @section('content')
     <div class="container">
@@ -8,9 +8,7 @@
                     <div class="card-img-top login-img h-25"></div>
 
                     <div class="card-body">
-                        <h3 class="card-title">
-                            {{ __('Login') }}
-                        </h3>
+                        <div class="logo"></div>
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
@@ -49,13 +47,13 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-12 d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-primary flex-fill mr-2">
+                                    <button type="submit" class="btn btn-outline-primary mr-2 flex-1">
                                         Go
                                     </button>
 
-                                    <button @click.prevent="remember=!remember" class="btn btn-primary" :class="{active : remember}">
+                                    <button @click.prevent="remember=!remember" class="btn btn-outline-primary flex-1" :class="{active : remember}">
                                         <label class="form-check-label" for="remember">
-                                            <i class="fa fa-fw" :class="[ remember ? 'fa-check-square-o' : 'fa-square-o']"></i>
+                                            <i class="fal" :class="[ remember ? 'fa-check-square' : 'fa-square']"></i>
                                             <input class="form-check-input" id="remember" type="hidden" v-model="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
                                             {{ __('Remember Me') }}
                                         </label>
