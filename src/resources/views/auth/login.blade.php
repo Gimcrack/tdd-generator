@@ -1,4 +1,4 @@
-@extends('tdd-generator::layouts.app', ['body_class' => 'auth no-nav'])
+@extends('tdd-generator::layouts.app', ['body_class' => 'auth'])
 
 @section('content')
     <div class="container">
@@ -8,7 +8,7 @@
                     <div class="card-img-top login-img h-25"></div>
 
                     <div class="card-body">
-                        <div class="logo"></div>
+                        {{--<div class="logo"></div>--}}
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
