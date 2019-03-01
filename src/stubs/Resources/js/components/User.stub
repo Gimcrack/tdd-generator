@@ -89,14 +89,14 @@
             unpromote() {
                 this.updating = true;
 
-                Api.delete(`users/${this.initial.id}/promotion`)
+                Api.delete(`${this.item.endpoint}/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
 
             promote() {
                 this.updating = true;
 
-                Api.post(`users/${this.initial.id}/promotion`)
+                Api.post(`${this.item.endpoint}/${this.initial.id}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
         }

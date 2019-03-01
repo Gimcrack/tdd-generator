@@ -377,7 +377,7 @@ class FileSystem {
             return ["[warn] File {$short} already contains content"];
         }
 
-        $original = static::get($path);
+        $original = trim(static::get($path));
         $lines = explode("\n",$original);
 
 

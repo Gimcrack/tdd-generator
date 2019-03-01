@@ -38,7 +38,9 @@
 
 
     <!-- Scripts -->
+    @if(config('broadcasting.default') === 'redis')
     <script src="//{{ config('app.echo_host') }}:6001/socket.io/socket.io.js"></script>
+    @endif
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
