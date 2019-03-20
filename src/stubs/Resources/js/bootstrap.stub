@@ -50,11 +50,15 @@ if (api_token) {
  * allows your team to easily build robust real-time web applications.
  */
 
+let echo_host = document.head.querySelector('meta[name="echo-host"]');
+echo_host = echo_host ? echo_host.content : window.location.hostname;
+
+
 import Echo from "laravel-echo"
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
+    host: echo_host + ':6001'
 });
 
 import Sleep from "sleep-promise";
