@@ -21,6 +21,7 @@
                                 label: 'Users',
                                 id: 'users',
                                 icon: 'fa-users',
+                                admin : true,
                                 pane: {
                                     component: 'users'
                                 }

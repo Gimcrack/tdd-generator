@@ -50,6 +50,13 @@ class Params {
     public $urlPrefix;
 
     /**
+     * The channel prefix
+     *
+     * @var  string
+     */
+    public $channelPrefix;
+
+    /**
      * Admin only routes
      *
      * @var  bool
@@ -235,6 +242,8 @@ class Params {
         $this->prefix = ( $prefix ) ? "{$prefix}." : "";
 
         $this->urlPrefix = ( $prefix ) ? "{$prefix}/" : "";
+        
+        $this->channelPrefix = ( $prefix ) ? "{$prefix}:" : "";
 
         return $this;
     }

@@ -74,6 +74,40 @@ class UserTest extends TestCase
         $user = create_state(User::class,'admin');
 
         $this->assertTrue( $user->isAdmin() );
+
+        $user2 = create(User::class, [
+            'email' => 'john@example.com'
+        ]);
+
+        config(['app.admins' => ['john@example.com']]);
+
+        $this->assertTrue($user2->isAdmin());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_configured_as_an_editor()
+    {
+        $user = create_state(User::class,'editor');
+
+        $this->assertTrue( $user->isEditor() );
+
+        $user2 = create(User::class, [
+            'email' => 'john@example.com'
+        ]);
+
+        config(['app.admins' => ['john@example.com']]);
+
+        $this->assertTrue($user2->isEditor());
+
+        $user3 = create(User::class, [
+            'email' => 'jane@example.com'
+        ]);
+
+        config(['app.editors' => ['jane@example.com']]);
+
+        $this->assertTrue($user3->isEditor());
     }
 
     /** @test */
@@ -87,6 +121,16 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    function it_can_be_promoted_to_an_editor()
+    {
+        $user = create(User::class);
+        $this->assertFalse( $user->isEditor() );
+
+        $user->promoteToEditor();
+        $this->assertTrue( $user->fresh()->isEditor() );
+    }
+
+    /** @test */
     function it_can_be_demoted_to_a_user()
     {
         $user = create_state(User::class,'admin');
@@ -94,6 +138,12 @@ class UserTest extends TestCase
 
         $user->demoteToUser();
         $this->assertFalse( $user->fresh()->isAdmin() );
+
+        $user = create_state(User::class,'editor');
+        $this->assertTrue( $user->isEditor() );
+
+        $user->demoteToUser();
+        $this->assertFalse( $user->fresh()->isEditor() );
     }
 
     /** @test */

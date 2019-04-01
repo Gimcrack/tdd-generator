@@ -21,3 +21,15 @@ Broadcast::channel('chat', function ($user) {
         'name' => $user->name
     ];
 });
+
+Broadcast::channel('{channel}', function(User $user, $channel) {
+    \Log::debug(['channel' => $channel, 'user' => $user->toArray()]);
+
+    if (Str::startsWith($channel,'admin:'))
+        return $user->isAdmin();
+
+    if (Str::startsWith($channel,'editor:'))
+        return $user->isEditor();
+
+    return true;
+});

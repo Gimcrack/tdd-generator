@@ -19,10 +19,18 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->boolean('admin_flag')->default(false);
+            $table->boolean('editor_flag')->default(false);
             $table->string('api_token',60)->nullable()->unique(); //our api token
             $table->rememberToken();
             $table->timestamps();
         });
+
+    	App\User::forceCreate([
+    		'name' => 'Admin User',
+    		'email' => 'admin@example.com',
+    		'admin_flag' => 1,
+    		'password' => '$2y$10$2chvC5DBjIo.SxNxK.B4WOGWYkXN4Nb2OyF93tao4iD0zb9KhpBum'
+    	]);
     }
 
     /**

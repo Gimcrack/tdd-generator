@@ -1,21 +1,25 @@
 <template>
     <component
-        :is="itemLayout"
-        :id="model.id"
-        :deleting="deleting"
-        :updating="updating"
-        :toggles="toggles"
-        :meta="meta"
-        @view="view"
-        @update="update"
-        @destroy="destroy"
-        @ToggledHasChanged="$emit('ToggledHasChanged')"
+            :is="itemLayout"
+            :id="model.id"
+            :deleting="deleting"
+            :updating="updating"
+            :toggles="toggles"
+            :meta="meta"
+            @view="view"
+            @update="update"
+            @destroy="destroy"
+            @ToggledHasChanged="$emit('ToggledHasChanged')"
     >
 
         <template slot="menu">
             <a v-if="showToggleAdmin" href="#" @click.prevent="toggleAdmin" :disabled="busy" class="dropdown-item" :class="{disabled : busy}">
                 <i :class="[ model.admin_flag ? 'fa-arrow-down' : 'fa-arrow-up', {'fa-spin' : updating}]" class="fa fa-fw"></i>
                 <span v-text="model.admin_flag ? 'Demote To User' : 'Promote To Admin'"></span>
+            </a>
+            <a v-if="showToggleEditor" href="#" @click.prevent="toggleEditor" :disabled="busy" class="dropdown-item" :class="{disabled : busy}">
+                <i :class="[ model.editor_flag ? 'fa-arrow-down' : 'fa-arrow-up', {'fa-spin' : updating}]" class="fa fa-fw"></i>
+                <span v-text="model.editor_flag ? 'Demote To User' : 'Promote To Editor'"></span>
             </a>
         </template>
     </component>
@@ -34,9 +38,9 @@
                     'name',
                     'email',
                     {
-                        text: this.model.admin_flag ? 'Admin' : 'User',
+                        text: this.model.admin_flag ? 'Admin' : this.model.editor_flag ? 'Editor' : 'User',
                         badge: true,
-                        badge_class: this.model.admin_flag ? 'badge-primary' : 'badge-success',
+                        badge_class: this.model.admin_flag || this.model.editor_flag ? 'badge-primary' : 'badge-success',
                     },
                 ];
             },
@@ -47,7 +51,11 @@
 
             showToggleAdmin() {
                 return this.model.id !== window.INITIAL_STATE.user.id;
-            }
+            },
+
+            showToggleEditor() {
+                return this.model.id !== window.INITIAL_STATE.user.id && ! this.model.admin_flag;
+            },
         },
 
         data() {
@@ -58,7 +66,7 @@
                     key : 'id',
                     type : 'user',
                     endpoint : 'admin/users',
-                    channel : `users.${this.initial.id}`,
+                    channel : `admin.users.${this.initial.id}`,
                     updated : 'UserWasUpdated',
                 },
                 toggles : {
@@ -81,22 +89,29 @@
 
             toggleAdmin() {
                 if ( this.model.admin_flag )
-                    return this.unpromote();
+                    return this.unpromote('admin');
 
-                return this.promote();
+                return this.promote('admin');
             },
 
-            unpromote() {
+            toggleEditor() {
+                if ( this.model.editor_flag )
+                    return this.unpromote('editor');
+
+                return this.promote('editor');
+            },
+
+            unpromote(type) {
                 this.updating = true;
 
-                Api.delete(`${this.item.endpoint}/${this.initial.id}/promotion`)
+                Api.delete(`${this.item.endpoint}/${this.initial.id}/${type}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
 
-            promote() {
+            promote(type) {
                 this.updating = true;
 
-                Api.post(`${this.item.endpoint}/${this.initial.id}/promotion`)
+                Api.post(`${this.item.endpoint}/${this.initial.id}/${type}/promotion`)
                     .then(this.updateSuccess, this.error)
             },
         }

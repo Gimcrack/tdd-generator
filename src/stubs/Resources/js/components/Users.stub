@@ -41,7 +41,7 @@
                     endpoint : 'admin/users',
                     help : 'System Users',
                     events : {
-                        channel : 'users',
+                        channel : 'admin.users',
                         created : 'UserWasCreated',
                         destroyed : 'UserWasDestroyed',
                     }

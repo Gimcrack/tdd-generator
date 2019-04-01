@@ -69,7 +69,12 @@ class SetupManager {
                     FileSystem::config("app"),
                     "\t'echo_host' => env('ECHO_HOST','tdd-generator-test.test'),\n",
                     18
-                )
+                ),
+                FileSystem::insert(
+                    FileSystem::config("app"),
+                    "\t'admins' => [\n\t\t'jeremy.bloomstrom@gmail.com',\n\t\t'jeremy.bloomstrom@matsugov.us',\n\t\t'jeremy@jeremybloomstrom.com',\n\t\t'jeremy@stockwits.net'\n\t],\n",
+                    20
+                ),
             );
 
         return $setup;

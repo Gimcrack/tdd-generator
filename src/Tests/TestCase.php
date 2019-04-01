@@ -102,6 +102,19 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Create an editor and login
+     * @method actingAsEditor
+     *
+     * @return   $this
+     */
+    public function actingAsEditor()
+    {
+        $user = create_state(User::class,'editor');
+
+        return $this->actingAs($user);
+    }
+
+    /**
      * Create a user and login
      * @method actingAsUser
      *

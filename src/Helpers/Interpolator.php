@@ -53,6 +53,7 @@ class Interpolator
             // 'child' => $params->children->lower, // don't use. it breaks js files
             'XXXX_XX_XX_XXXXXX' => date('Y_m_d_His'),
             '[prefix]' => $params->prefix,
+            '[channel_prefix]' => $params->channelPrefix ?: "",
             '[url_prefix]' => $params->urlPrefix ?: "",
             'actingAsUser()' => ( $params->admin ) ? 'actingAsAdmin()' : 'actingAsUser()',
             '.MM' => ''

@@ -86,6 +86,7 @@ class ChatManager
         $this->output[] = FileSystem::append(
             FileSystem::model("User"),
             "
+            
     /**
      * A user can have many chat messages
      * @method chats
@@ -96,7 +97,7 @@ class ChatManager
     {
         return \$this->hasMany(Chat::class);
     }",
-            1 // 1 line from the end
+            2 // 2 lines from the end
         );
     }
 }

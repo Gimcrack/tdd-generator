@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property int $id
  * @property string api_token
  * @property bool $admin_flag
+ * @property bool $editor_flag
  * @property string $email_hash
  * @property bool $approver_flag
  * @property \Carbon\Carbon $created_at
@@ -52,6 +53,7 @@ class User extends Authenticatable
     protected $casts = [
         'admin_flag' => 'bool',
         'approver_flag' => 'bool',
+        'editor_flag' => 'bool'
     ];
 
     protected $appends = [
@@ -76,24 +78,34 @@ class User extends Authenticatable
     }
 
     /**
-     * Is the user an approver?
-     *
-     * @return bool
-     */
-    public function isApprover()
-    {
-        return (bool) $this->admin_flag || $this->approver_flag;
-    }
+	 * Is the user an approver?
+	 *
+	 * @return bool
+	 */
+	public function isApprover()
+	{
+		return (bool) $this->admin_flag || in_array($this->email, config('app.approvers',[]) );
+	}
 
-    /**
-     * Is the user an admin?
-     *
-     * @return bool
-     */
-    public function isAdmin()
-    {
-        return (bool) $this->admin_flag || in_array($this->email, config('app.approvers',[]) );
-    }
+	/**
+	 * Is the user an admin?
+	 *
+	 * @return bool
+	 */
+	public function isAdmin()
+	{
+		return (bool) $this->admin_flag || in_array($this->email, config('app.admins',[]) );
+	}
+
+	/**
+	 * Is the user an admin?
+	 *
+	 * @return bool
+	 */
+	public function isEditor()
+	{
+		return (bool) $this->admin_flag || $this->editor_flag || in_array($this->email, config('app.editors',[]) );
+	}
 
     /**
      * Promote the user to an admin
@@ -108,6 +120,18 @@ class User extends Authenticatable
     }
 
     /**
+	 * Promote the user to an admin
+	 * @method promoteToAdmin
+	 *
+	 * @return   void
+	 */
+	public function promoteToEditor()
+	{
+		$this->editor_flag = 1;
+		$this->save();
+	}
+
+    /**
      * Demote the admin to a user
      * @method demoteToUser
      *
@@ -116,6 +140,7 @@ class User extends Authenticatable
     public function demoteToUser()
     {
         $this->admin_flag = 0;
+        $this->editor_flag = 0;
         $this->save();
     }
 

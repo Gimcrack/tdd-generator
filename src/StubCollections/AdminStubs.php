@@ -27,6 +27,7 @@ class AdminStubs {
             // middleware
             Stub::make("Middleware/Kernel", app_path("Http") ),
             Stub::middleware("AuthenticateAsAdmin"),
+            Stub::middleware("AuthenticateAsEditor"),
 
             // migrations
             Stub::migration("2014_10_12_000000_create_users_table"),

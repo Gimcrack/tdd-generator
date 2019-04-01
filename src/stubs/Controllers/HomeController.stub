@@ -26,11 +26,13 @@ class HomeController extends Controller
     public function index()
     {
         $is_admin = auth()->user()->isAdmin();
+        $is_editor = auth()->user()->isEditor();
 
         // initial state
         $initial_state = collect([
             "user" => auth()->user(),
             "is_admin" => $is_admin,
+            "is_editor" => $is_editor,
             "admin/users" => $is_admin ? User::all() : [],
         ]);
 

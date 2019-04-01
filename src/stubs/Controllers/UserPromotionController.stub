@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function in_array;
+use InvalidArgumentException;
 
 class UserPromotionController extends Controller
 {
@@ -13,11 +15,19 @@ class UserPromotionController extends Controller
      * @method store
      *
      * @param User $user
+     * @param string $type
      * @return JsonResponse
      */
-    public function store(User $user)
+    public function store(User $user, $type)
     {
-        $user->promoteToAdmin();
+        if ( ! in_array($type, ['admin','editor']) )
+            throw new InvalidArgumentException("Invalid promotion type");
+
+        if ( $type === 'admin' )
+            $user->promoteToAdmin();
+
+        if ( $type === 'editor' )
+            $user->promoteToEditor();
 
         return response()->json([],202);
     }
