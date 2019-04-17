@@ -18,7 +18,7 @@
     @if( Auth::check() )
     <meta name="token" content="{{ auth()->user()->api_token }}">
 
-    <meta name="echo-host" content="{{ env('ECHO_HOST') }}">
+    <meta name="echo-host" content="{{ config('broadcasting.echo_host') }}">
 
     <script>
         window.INITIAL_STATE = {!! isset($initial_state) ? $initial_state->toJson() : '{}' !!}
