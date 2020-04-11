@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingenious\TddGenerator\Utility;
+namespace Ingenious\TddGenerator\Helpers;
 
 use Illuminate\Support\Str;
 use Ingenious\TddGenerator\Concerns\CanBeInitializedStatically;

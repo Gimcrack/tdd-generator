@@ -26,7 +26,7 @@ abstract class TestCase extends BaseTestCase
     protected $api_prefix = "api/v1";
     protected $api = false;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -68,7 +68,7 @@ abstract class TestCase extends BaseTestCase
 
         TestResponse::macro('assertJsonModel', function (Model $model) {
             //$model->setAppends([]);
-            return $this->assertJsonFragment($model->toArray());
+            return $this->assertJsonFragment(['id' => $model->id]);
         });
 
         TestResponse::macro('assertJsonModelCollection', function (Collection $models) {
@@ -98,7 +98,7 @@ abstract class TestCase extends BaseTestCase
     {
         $user = create_state(User::class,'admin');
 
-        return $this->actingAs($user);
+        return $this->actingAs($user,'api');
     }
 
     /**
@@ -111,7 +111,7 @@ abstract class TestCase extends BaseTestCase
     {
         $user = create_state(User::class,'editor');
 
-        return $this->actingAs($user);
+        return $this->actingAs($user,'api');
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class TestCase extends BaseTestCase
     {
         $user = create(User::class);
 
-        return $this->actingAs($user);
+        return $this->actingAs($user,'api');
     }
 
     /**

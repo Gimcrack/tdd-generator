@@ -3,7 +3,7 @@
 namespace Ingenious\TddGenerator;
 
 use Illuminate\Support\Collection;
-use Ingenious\TddGenerator\Utility\ModelCase;
+use Ingenious\TddGenerator\Helpers\ModelCase;
 
 class Params {
 
