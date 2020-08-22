@@ -39,7 +39,7 @@ namespace Ingenious\TddGenerator\Tests {
             //Event::fake();
             Notification::fake();
 
-            Hash::setRounds(4);
+            Hash::setRounds(1);
 
             return $app;
         }
