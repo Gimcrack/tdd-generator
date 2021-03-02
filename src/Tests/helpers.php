@@ -18,8 +18,8 @@ function create($what, $overrides = [], $qty = 1)
         $overrides = [];
     }
     return ($qty > 1) ?
-        factory($what, $qty)->create($overrides)->map->fresh() :
-        factory($what)->create($overrides)->fresh();
+        factory($what, $qty)->create($overrides) :
+        factory($what)->create($overrides);
 }
 
 /**
