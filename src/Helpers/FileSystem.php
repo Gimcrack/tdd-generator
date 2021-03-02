@@ -4,7 +4,7 @@ namespace Ingenious\TddGenerator\Helpers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Ingenious\TddGenerator\Utility\ModelCase;
+use Ingenious\TddGenerator\Helpers\ModelCase;
 use function is_numeric;
 use function strrchr;
 

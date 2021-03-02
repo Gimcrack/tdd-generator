@@ -17,8 +17,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @if( Auth::check() )
     <meta name="token" content="{{ auth()->user()->api_token }}">
+    <meta name="echo-host" content="{{ config('broadcasting.echo.host') }}">
+    <meta name="echo-port" content="{{ config('broadcasting.echo.port') }}">
 
-    <meta name="echo-host" content="{{ config('app.echo_host') }}">
 
     <script>
         window.INITIAL_STATE = {!! isset($initial_state) ? $initial_state->toJson() : '{}' !!}
@@ -49,7 +50,7 @@
 
     <!-- Scripts -->
     @if(config('broadcasting.default') === 'redis')
-    <script src="//{{ config('app.echo_host') }}:6001/socket.io/socket.io.js"></script>
+    <script src="//{{ config('broadcasting.echo.host') }}:{{ config('broadcasting.echo.port') }}/socket.io/socket.io.js"></script>
     @endif
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
