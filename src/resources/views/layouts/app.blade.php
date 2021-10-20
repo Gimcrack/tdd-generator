@@ -15,7 +15,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @if( Auth::check() )
+    @auth
     <meta name="token" content="{{ auth()->user()->api_token }}">
     <meta name="echo-host" content="{{ config('broadcasting.echo.host') }}">
     <meta name="echo-port" content="{{ config('broadcasting.echo.port') }}">
@@ -24,7 +24,13 @@
     <script>
         window.INITIAL_STATE = {!! isset($initial_state) ? $initial_state->toJson() : '{}' !!}
     </script>
-    @endif
+    @endauth
+
+    @guest
+    <script>
+        window.INITIAL_STATE = { user : { name : 'Guest', default_group : 'Guests' } }
+    </script>
+    @endguest
 
     <title>
         {{ config('app.name', 'Laravel') }}
@@ -38,13 +44,13 @@
         @include('tdd-generator::partials.nav')
 
         @yield('content')
-        @if( Auth::check() )
+        @auth
 
         <reset-password></reset-password>
 
         <batch-update-selected></batch-update-selected>
         <flash message="{{ session('flash') }}"></flash>
-        @endif
+        @endauth
     </div>
 
 
